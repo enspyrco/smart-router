@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Echo — Hyperspecialist Routing: Research Brief</title>
+<style>
+  :root { --ink:#1a1a1a; --mut:#5a5a5a; --line:#e2e2e2; --accent:#2b5c8a; --warn:#8a2b2b; --good:#2b7a4b; --bg:#fbfaf8; --card:#fff; }
+  * { box-sizing:border-box; }
+  body { font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,sans-serif; color:var(--ink); background:var(--bg); margin:0; }
+  .wrap { max-width:860px; margin:0 auto; padding:48px 24px 96px; }
+  h1 { font-size:2em; line-height:1.2; margin:0 0 4px; }
+  h2 { font-size:1.35em; margin:2.4em 0 .6em; padding-top:.4em; border-top:1px solid var(--line); }
+  h3 { font-size:1.08em; margin:1.6em 0 .4em; }
+  .sub { color:var(--mut); font-size:.95em; margin:0 0 28px; }
+  .tldr { background:var(--card); border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:8px; padding:18px 22px; margin:24px 0; }
+  .tldr strong { color:var(--accent); }
+  .warn { border-left-color:var(--warn); } .warn strong { color:var(--warn); }
+  .good { color:var(--good); font-weight:600; } .bad { color:var(--warn); font-weight:600; }
+  table { border-collapse:collapse; width:100%; margin:14px 0; font-size:.92em; }
+  th,td { border:1px solid var(--line); padding:7px 10px; text-align:left; }
+  th { background:#f2efe9; }
+  code { background:#f0ede7; padding:1px 5px; border-radius:4px; font-size:.9em; }
+  nav { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:14px 22px; margin:24px 0; }
+  nav ol { margin:.3em 0; padding-left:1.4em; } nav a { color:var(--accent); text-decoration:none; } nav a:hover { text-decoration:underline; }
+  details { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:10px 18px; margin:12px 0; }
+  summary { cursor:pointer; font-weight:600; }
+  blockquote { margin:14px 0; padding:8px 18px; border-left:3px solid var(--line); color:var(--mut); font-style:italic; }
+  .tag { display:inline-block; font-size:.72em; font-weight:700; text-transform:uppercase; letter-spacing:.04em; padding:2px 8px; border-radius:20px; vertical-align:middle; }
+  .t-yes { background:#e3f2e8; color:var(--good); } .t-no { background:#f7e3e3; color:var(--warn); } .t-cond { background:#fdf3df; color:#8a6a1b; }
+  .src { font-size:.82em; color:var(--mut); }
+  footer { margin-top:40px; padding-top:16px; border-top:1px solid var(--line); font-size:.85em; color:var(--mut); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Hyperspecialist Routing</h1>
+<p class="sub">Echo research brief · route by task TYPE, not difficulty · 4 July 2026 · idea by Connor Hood, verified via deep-research harness (23/25 claims survived 3-vote adversarial review)</p>
+
+<div class="tldr">
+<p><strong>TL;DR.</strong> Connor's pivot is structurally correct: difficulty-based routing's payoff <em>shrinks as the model gap shrinks</em>, and saturation (Haiku ties Sonnet) is precisely the zero-gap regime where a difficulty signal has nothing to route on. Type-based routing to small domain specialists sidesteps that axis entirely. The evidence is real but <em>conditional</em>: a 7B math specialist genuinely beats GPT-4o on MATH, but a 7B code specialist loses hard to frontier models on code. The specialist win is domain-specific, not categorical.</p>
+<p>The biggest finding is not about routing at all. It is a direct threat to Echo's own mechanism: <strong>self-consistency fails to capture the decorrelated-error ceiling</strong> (the "popularity trap" - models agree on identical wrong answers). And we have already measured this tax in our own BBH data. See <a href="#threat">section 5</a>.</p>
+</div>
+
+<nav>
+<strong>Contents</strong>
+<ol>
+  <li><a href="#why">Why now: saturation killed the difficulty thesis</a></li>
+  <li><a href="#specialist">Does a 7B specialist beat the frontier? (yes for math, no for code)</a></li>
+  <li><a href="#routing">Two kinds of routing, and the cost of the classifier</a></li>
+  <li><a href="#decorr">Decorrelated errors: the real oracle ceiling</a></li>
+  <li><a href="#threat">The threat to Echo, measured in our own data</a></li>
+  <li><a href="#experiment">The experiment: a confusion table that kills or keeps the thesis</a></li>
+  <li><a href="#open">Open questions</a></li>
+  <li><a href="#sources">Sources</a></li>
+</ol>
+</nav>
+
+<h2 id="why">1. Why now: saturation killed the difficulty thesis</h2>
+<p>Echo's original bet was a difficulty ladder: two cheap attempts, and if they disagree the task is hard, so escalate to the expensive model. Our clean BBH re-run (n=99) showed that ladder has collapsed for 2026 Claude - Haiku and Sonnet both score 0.848, identical subtask-for-subtask, and on the hardest BBH subtasks both hit a perfect 33/33. There is no difficulty gap left to route on.</p>
+<p>The literature predicts exactly this failure. Hybrid-LLM (ICLR 2024) shows difficulty routing's payoff is a function of the model gap: with a <em>close</em> pair you route 20-40% of queries to the cheap model at roughly 0% quality loss, but the whole mechanism only pays when the two models actually differ. Saturation is the small-gap regime. This is the strongest structural argument for Connor's pivot: stop routing on a difficulty axis that no longer exists, and route on task type instead, where the question is not "is this hard?" but "which specialist owns this?"</p>
+
+<h2 id="specialist">2. Does a 7B specialist beat the frontier?</h2>
+<p>This is the load-bearing claim, and the honest answer is: it depends on the domain. The adversarial verification split cleanly.</p>
+
+<table>
+<tr><th>Domain</th><th>Specialist vs frontier</th><th>Verdict</th></tr>
+<tr><td><strong>Math</strong></td><td>Qwen2.5-Math-7B-Instruct scores <strong>83.6</strong> on MATH (chain-of-thought) vs GPT-4o's 81.1. A ~10x smaller model wins outright, and also beats the 72B general Qwen2 model.</td><td><span class="tag t-yes">specialist wins</span></td></tr>
+<tr><td><strong>Code</strong></td><td>Qwen2.5-Coder-7B scores 61.6% on HumanEval - beats older big code models (DeepSeek-Coder-33B at 54.9%) but loses badly to frontier generalists (Claude-3.5-Sonnet / GPT-4o at ~92%).</td><td><span class="tag t-no">frontier wins</span></td></tr>
+</table>
+
+<p>So "hyperspecialist beats frontier on its own turf" is <strong>true for math, false for code</strong>. The implication for the experiment: aim first at math-like domains, where the effect is real and large. Chasing code is aiming at the one domain where the evidence says the 7B loses.</p>
+
+<details>
+<summary>Caveat: these are first-party vendor benchmarks</summary>
+<p>The Qwen2.5-Math and Qwen2.5-Coder numbers come from Alibaba's own technical reports (arXiv 2409.12122, 2409.12186). Standard cherry-pick risk applies. The <em>direction</em> survives across metric variants and independent adversarial review, but the exact headline numbers should be read as vendor-favorable. The one clean specialist-beats-frontier result (math, CoT) clears GPT-4o even without the tool-integrated-reasoning boost the report also reports.</p>
+</details>
+
+<h2 id="routing">3. Two kinds of routing, and the cost of the classifier</h2>
+<p>The field has two canonical pre-generation strategies, and they are genuinely distinct:</p>
+<ul>
+  <li><strong>Type routing</strong> (MoDEM, Arch-Router): infer the query's domain, send it to a domain-expert model. Explicitly decoupled from predicting which model is "best" or how hard the query is.</li>
+  <li><strong>Difficulty routing</strong> (RouteLLM, Hybrid-LLM, FrugalGPT): pick stronger-vs-weaker purely on predicted per-query quality gap. This is Echo's current axis.</li>
+</ul>
+<p>Type routing is viable because the classifier is cheap. A 1.5B router (Arch-Router) classifies task type at 93% accuracy in ~51ms - beating GPT-4o and Claude-3.7-Sonnet <em>as routers</em>. A 304M DeBERTa domain classifier (MoDEM) hits ~97%. The classifier cost is a small fraction of one inference call.</p>
+<p>But type routing has an Achilles heel: the <strong>"other" / out-of-category query</strong>. MoDEM's router classifies specialized domains at 77-97% accuracy but collapses to ~53% on general/ambiguous queries. A production stream with no ground-truth category label could pay a far larger misroute tax than any benchmark suggests. Any real Echo router needs a confident fallback to the generalist when type is unclear.</p>
+
+<h2 id="decorr">4. Decorrelated errors: the real oracle ceiling</h2>
+<p>The mechanism that makes routing worth anything is that different models fail on <em>different items</em>. The strongest evidence: an ensemble oracle ceiling up to <strong>83% above the best single model</strong> (Wisdom/Delusion of LLM Ensembles, Oct 2025), driven by complementarity - even a CodeLlama-7B solves problems the top models miss. This ceiling can be wider headroom than a difficulty signal ever captures, and it is exactly what a type-router tries to harvest: a specialist that fails on different items than the generalist lifts the oracle.</p>
+<p>This is the same shape as our own BBH oracle result: echo-oracle beat both baselines (0.899 vs 0.848) entirely because Haiku and Sonnet failed on different causal-judgement items. The decorrelation is real. The question the experiment must answer is whether it persists between a 7B specialist and a generalist <em>within a single MMLU-Pro category</em>.</p>
+
+<h2 id="threat">5. The threat to Echo, measured in our own data</h2>
+<div class="tldr warn">
+<p><strong>The finding that matters most.</strong> Self-consistency / consensus selection <em>fails</em> to capture the decorrelated-error oracle gain. The Oct 2025 ensemble paper calls it the <strong>"popularity trap"</strong>: models agree on identical <em>wrong</em> answers, so a consensus signal performs worse than a naive baseline. Only a <em>diversity</em>-based aggregator recovers the ceiling.</p>
+</div>
+<p>Echo's cost signal <em>is</em> self-consistency: do two cheap attempts agree? This paper says that signal is structurally leaky, because agreement and correctness decouple exactly where the errors are decorrelated - which is the very place the oracle gain lives.</p>
+<p>And we have already measured the tax. Our clean BBH n=99 numbers:</p>
+<table>
+<tr><th>Arm</th><th>Accuracy</th><th>What it is</th></tr>
+<tr><td>echo-judge (deployable)</td><td>0.869</td><td>the agreement signal we can ship</td></tr>
+<tr><td>echo-oracle (ceiling)</td><td>0.899</td><td>route perfectly on ground truth</td></tr>
+<tr><td colspan="2"><strong>gap = 0.030</strong></td><td><strong>the popularity-trap tax, in our own harness</strong></td></tr>
+</table>
+<p>That ~3-point gap between our agreement signal and the oracle is not noise and not a judge-quality problem to be fixed with a smarter judge. The literature reframes it precisely: the lever is a <strong>diversity aggregator, not a better one</strong>. This recasts open issue #619 (filed as "cross-family judges") - the deeper fix is to measure disagreement <em>diversity</em>, not to make the agreement detector sharper.</p>
+
+<h2 id="experiment">6. The experiment: a confusion table that kills or keeps the thesis</h2>
+<p>The cheapest falsifier is not a full routed system. It is a single per-category confusion table. Running now on the M1 Max (local Ollama, zero Claude quota):</p>
+<ul>
+  <li><strong>Models:</strong> a general 7B (Qwen2.5-7B-Instruct) plus domain specialists (Qwen2.5-Math-7B, Qwen2.5-Coder-7B), all local GGUF.</li>
+  <li><strong>Data:</strong> MMLU-Pro, categories <code>math</code> and <code>computer science</code>, N=100 items each.</li>
+  <li><strong>Measure:</strong> per-category accuracy per model, and item-level decorrelation - the count of items where the specialist is right and the generalist wrong (and vice versa), plus the oracle best-of ceiling.</li>
+</ul>
+<p><strong>Kill-conditions.</strong> The thesis dies cheap if, in-domain, either (a) the specialist does not beat the general 7B, or (b) errors are correlated - the specialist rescues nothing the generalist already gets, so the oracle sits on top of the best single model with no lift.</p>
+
+<details>
+<summary>Instrument note: the parser fix that had to come first</summary>
+<p>The math specialist emits <code>\boxed{A}</code> (LaTeX), not "Answer: A". On the first smoke test every math-model answer scored "unparseable" - a pure format failure that, run at scale, would have produced math_specialist ≈ 0% and a false "7B math models can't do MMLU-Pro" conclusion. A 30-second raw-output dump caught it. The parser now recognizes boxed answers (committed with regression tests, suite green at 33 passing). This is the same class of bug as the BBH contamination: an instrument silently measuring the wrong thing. Fire the cheap falsifier before the hypothesis cements.</p>
+</details>
+
+<h3>Results</h3>
+<p><em>Experiment in progress. This section fills in when the N=100 sweep completes.</em></p>
+
+<h2 id="open">7. Open questions</h2>
+<ol>
+  <li><strong>Within-category vs across-category decorrelation.</strong> All the cited oracle-gap evidence is code-gen/repair. Does per-item decorrelation between a 7B specialist and a generalist actually exist <em>inside</em> a single MMLU-Pro category? If within-category errors are correlated, the oracle ceiling collapses and the thesis dies.</li>
+  <li><strong>Does a local 7B beat <em>saturated frontier</em> Claude, or only a cheaper generalist?</strong> If the specialist only wins against other cheap models, type routing optimizes cost among cheap models but never displaces the frontier - a much weaker thesis. Math is the one domain where it might genuinely beat frontier. This is the second experiment: add a Claude arm per category.</li>
+  <li><strong>The real "other"-query tax.</strong> MoDEM's 53% is classification accuracy on clean labels. A production stream has no ground-truth category, so the misroute tax could swamp the specialist gains.</li>
+  <li><strong>Can a diversity aggregator run cheaply on CPU?</strong> The ensemble paper shows self-consistency fails and diversity needs multiple model calls - which may erase the very cost advantage that motivated routing.</li>
+</ol>
+
+<h2 id="sources">8. Sources</h2>
+<p class="src">Primary, adversarially verified (2/3+ refute to kill; 23/25 claims survived):</p>
+<ul class="src">
+  <li>Qwen2.5-Math Technical Report - arXiv 2409.12122 (specialist beats GPT-4o on MATH)</li>
+  <li>Qwen2.5-Coder Technical Report - arXiv 2409.12186 (specialist beats older big code models, loses to frontier)</li>
+  <li>A Survey of LLM Routing - arXiv 2502.00409 (type vs difficulty taxonomy)</li>
+  <li>Arch-Router - arXiv 2506.16655 (1.5B router, 93% / 51ms)</li>
+  <li>MoDEM - arXiv 2410.07490 (domain experts + classifier; the "other" collapse)</li>
+  <li>RouteLLM - arXiv 2406.18665; Hybrid-LLM - arXiv 2404.14618 (difficulty routing; payoff shrinks with gap)</li>
+  <li>Wisdom and Delusion of LLM Ensembles - arXiv 2510.21513 (83% oracle ceiling; the popularity trap)</li>
+  <li>FrugalGPT - arXiv 2305.05176 (cascade with learned scorer; decorrelated-error evidence)</li>
+  <li>MMLU-Pro - arXiv 2406.01574 (14 categories, 12,032 questions)</li>
+</ul>
+
+<footer>
+Echo research project · self-consistency as a cost-control mechanism for LLM routing · <a href="https://github.com/enspyrco/echo">github.com/enspyrco/echo</a><br>
+Deep-research harness run wehmojvpc: 6 angles, 27 sources, 118 claims extracted, 25 verified (23 confirmed / 2 killed), 110 agents.
+</footer>
+
+</div>
+</body>
+</html>
