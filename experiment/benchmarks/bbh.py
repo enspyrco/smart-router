@@ -172,6 +172,9 @@ def extract_choice(text: str) -> str | None:
         r"(?i)\b(?:option|choice)\s+\(?\s*([A-Z])(?![A-Za-z])\s*\)?\s+(?:is\s+)?(?:correct|best|right)",
         r"(?i)\b(?:therefore|so|thus),?\s+\(?\s*([A-Z])(?![A-Za-z])\s*\)?\s+(?:is\s+)?(?:correct|best|right)",
         r"(?i)\b(?:therefore|so|thus),?\s+(?:the\s+)?(?:answer|correct\s+answer|choice)\s+is\s+\(?\s*([A-Z])(?![A-Za-z])\s*\)?",
+        # CoT-tuned math/reasoning models (Qwen2.5-Math etc.) emit a boxed final
+        # answer instead of "Answer: X" — recognise \boxed{A}, \boxed{(A)}, \boxed A.
+        r"(?i)\\boxed\s*\{?\s*\(?\s*([A-Z])(?![A-Za-z])\s*\)?\s*\}?",
     ]
     # Pick the high-confidence match with the largest source offset, so the
     # final declaration wins regardless of which pattern family caught it.
@@ -226,6 +229,8 @@ def extract_choice_text(text: str, task: dict) -> str | None:
     patterns = [
         r"(?im)^\s*answer\s*:\s*(.+?)\s*\.?\s*$",
         r"(?i)\b(?:final\s+answer|answer|correct\s+answer)\s*(?:is|:)\s*(.+?)(?:\.|\n|$)",
+        # Boxed free-text answer (a math model may box the option TEXT, not a letter).
+        r"(?i)\\boxed\s*\{(.+?)\}",
     ]
     for pat in patterns:
         matches = re.findall(pat, body)

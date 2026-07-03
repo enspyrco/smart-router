@@ -28,6 +28,21 @@ class TestExtractChoice(unittest.TestCase):
     def test_unparseable(self) -> None:
         self.assertIsNone(extract_choice("I have no idea"))
 
+    def test_boxed_letter(self) -> None:
+        # CoT math models (Qwen2.5-Math) box the final answer instead of "Answer: X".
+        self.assertEqual(extract_choice("Solving...\n\\[\n\\boxed{A}\n\\]"), "A")
+
+    def test_boxed_with_parens(self) -> None:
+        self.assertEqual(extract_choice("...\\boxed{ (E) }"), "E")
+
+    def test_boxed_loses_to_later_answer_line(self) -> None:
+        # Offset-max recency: a scratch box early, explicit answer later -> later wins.
+        self.assertEqual(extract_choice("\\boxed{A}\nOn reflection, Answer: C"), "C")
+
+    def test_boxed_word_does_not_yield_false_letter(self) -> None:
+        # The (?![A-Za-z]) guard must stop \boxed{True...} yielding "T".
+        self.assertIsNone(extract_choice("\\boxed{True, False}"))
+
     def test_last_line_letter(self) -> None:
         self.assertEqual(
             extract_choice("Step by step...\nThe best option is D"),
