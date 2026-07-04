@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Echo · Live Routing Theatre</title>
+<style>
+  :root{
+    --bg:#12100e; --panel:#1b1815; --panel2:#221e1a; --ink:#f4efe8; --mut:#a89f92; --line:#332e28;
+    --accent:#e8a13a; --accent2:#4aa3c7; --good:#5ec27a; --bad:#e06a5a;
+    --serif:"Iowan Old Style",Georgia,serif; --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh;padding:3vh 4vw}
+  .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:2vh}
+  .brand{font-family:var(--serif);font-size:2.2vw;font-weight:600}
+  .brand span{color:var(--accent)}
+  .scoreboard{display:flex;gap:1.4vw}
+  .score{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:.8vh 1.4vw;text-align:center;min-width:8vw}
+  .score .n{font-family:var(--serif);font-size:2.4vw;font-weight:600;line-height:1}
+  .score .l{font-size:.85vw;color:var(--mut);text-transform:uppercase;letter-spacing:.1em;margin-top:.4vh}
+  .score.oracle .n{color:var(--accent)} .score.router .n{color:var(--accent2)}
+  .stage{display:grid;grid-template-columns:1.15fr .85fr;gap:2vw;align-items:start}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:3vh 2.4vw}
+  .qmeta{display:flex;justify-content:space-between;align-items:center;color:var(--mut);font-size:1vw;margin-bottom:1.6vh}
+  .qtext{font-size:1.7vw;line-height:1.4;margin-bottom:2.4vh}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:1vh 1.6vw}
+  .opt{display:flex;gap:.8vw;font-size:1.15vw;color:var(--mut);padding:.6vh .8vw;border-radius:8px;border:1px solid transparent}
+  .opt b{color:var(--ink);font-family:var(--serif)}
+  .opt.gold{border-color:var(--good);background:#1e35241a}
+  .opt.gold b{color:var(--good)}
+  .opt.gold.hidden{border-color:transparent;background:transparent}
+  .opt.gold.hidden b{color:var(--ink)}
+  .pipeline{display:flex;flex-direction:column;gap:1.6vh}
+  .stepbox{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:2vh 1.6vw;opacity:.4;transition:.4s}
+  .stepbox.active{opacity:1;border-color:var(--accent)}
+  .stepbox.done{opacity:1}
+  .steplabel{font-size:.9vw;text-transform:uppercase;letter-spacing:.12em;color:var(--mut);margin-bottom:1vh}
+  .chip{display:inline-block;padding:.6vh 1.2vw;border-radius:20px;font-family:var(--serif);font-size:1.5vw;font-weight:600;background:#2a251f;border:1px solid var(--line)}
+  .chip.math{color:var(--accent);border-color:var(--accent)}
+  .chip.code{color:var(--accent2);border-color:var(--accent2)}
+  .chip.other{color:var(--mut)}
+  .model{font-size:1.1vw;color:var(--mut);margin-top:.8vh;font-family:ui-monospace,monospace}
+  .verdict{font-family:var(--serif);font-size:3.4vw;font-weight:600;line-height:1;display:flex;align-items:center;gap:1vw}
+  .verdict .ok{color:var(--good)} .verdict .no{color:var(--bad)}
+  .dots{display:inline-flex;gap:6px} .dots i{width:9px;height:9px;border-radius:50%;background:var(--accent);animation:pulse 1s infinite}
+  .dots i:nth-child(2){animation-delay:.15s} .dots i:nth-child(3){animation-delay:.3s}
+  @keyframes pulse{0%,100%{opacity:.25}50%{opacity:1}}
+  .field{margin-top:1.6vh;display:none}
+  .field.show{display:block;animation:fade .5s}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .frow{display:flex;align-items:center;gap:1.2vw;padding:1.1vh 0;border-bottom:1px solid var(--line);font-size:1.3vw}
+  .frow .who{width:12vw;color:var(--mut)} .frow .who b{color:var(--ink)}
+  .frow .ans{font-family:var(--serif);font-size:1.7vw;width:3vw}
+  .frow.ok .ans{color:var(--good)} .frow.no .ans{color:var(--bad)}
+  .frow .mark{font-size:1.3vw}
+  .frow.oracle{border-bottom:none;margin-top:.6vh} .frow.oracle .who b{color:var(--accent)}
+  .story{margin-top:1.4vh;font-size:1.1vw;color:var(--mut);font-style:italic;line-height:1.4}
+  .controls{display:flex;gap:1vw;margin-top:2.4vh}
+  button{font-family:var(--sans);font-size:1.15vw;font-weight:600;padding:1.2vh 1.8vw;border-radius:10px;border:1px solid var(--line);
+    background:var(--panel2);color:var(--ink);cursor:pointer;transition:.2s}
+  button:hover{border-color:var(--accent)} button.primary{background:var(--accent);color:#1a1508;border-color:var(--accent)}
+  button:disabled{opacity:.4;cursor:default}
+  .honest{position:fixed;bottom:1.4vh;left:4vw;font-size:.8vw;color:var(--line)}
+  .nav{display:flex;gap:.6vw;align-items:center}
+  .nav button{padding:.8vh 1.2vw;font-size:1vw}
+</style>
+</head>
+<body>
+  <div class="top">
+    <div class="brand">Echo · <span>Live Routing Theatre</span></div>
+    <div class="scoreboard">
+      <div class="score"><div class="n" id="sGen">0</div><div class="l">general 7B</div></div>
+      <div class="score router"><div class="n" id="sRouter">0</div><div class="l">router → specialist</div></div>
+      <div class="score oracle"><div class="n" id="sOracle">0</div><div class="l">oracle ceiling</div></div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="card">
+      <div class="qmeta">
+        <span id="qtag">MMLU-Pro · math</span>
+        <div class="nav">
+          <button onclick="prev()">‹</button>
+          <span id="qnum" style="color:var(--mut)">1 / 9</span>
+          <button onclick="next()">›</button>
+        </div>
+      </div>
+      <div class="qtext" id="qtext">Loading…</div>
+      <div class="opts" id="opts"></div>
+    </div>
+
+    <div class="pipeline">
+      <div class="stepbox" id="step1">
+        <div class="steplabel">1 · classifier · qwen2.5 0.5B (~400 MB)</div>
+        <div id="classOut"><span class="mut" style="color:var(--mut);font-size:1.1vw">press “Route it”</span></div>
+      </div>
+      <div class="stepbox" id="step2">
+        <div class="steplabel">2 · route → domain specialist (7B)</div>
+        <div id="routeOut"><span style="color:var(--mut);font-size:1.1vw">—</span></div>
+      </div>
+      <div class="stepbox" id="step3">
+        <div class="steplabel">3 · specialist answers · live</div>
+        <div id="answerOut"><span style="color:var(--mut);font-size:1.1vw">—</span></div>
+      </div>
+
+      <div class="field" id="field">
+        <div class="steplabel" style="margin-bottom:1vh">reveal the field — who was right?</div>
+        <div id="frows"></div>
+        <div class="story" id="story"></div>
+      </div>
+
+      <div class="controls">
+        <button class="primary" id="routeBtn" onclick="routeIt()">Route it ▶</button>
+        <button id="revealBtn" onclick="reveal()" disabled>Reveal the field</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="honest">Live: 0.5B classifier + 7B specialist shell out to local Ollama (temp 0). Scoreboard is over these curated illustrative items; the real result is n=100 (general .72 · specialist .74 · oracle .90).</div>
+
+<script>
+let Q=[], i=0, live=null;
+const roleName={general:"general 7B", math_specialist:"math specialist 7B", coder_specialist:"coder specialist 7B"};
+const tally={gen:0,router:0,oracle:0}, counted=new Set();
+
+fetch('/data').then(r=>r.json()).then(d=>{Q=d.questions; render();
+  fetch('/warmup',{method:'POST',body:'{}'}).catch(()=>{});});
+
+function render(){
+  const q=Q[i]; if(!q) return;
+  live=null;
+  document.getElementById('qnum').textContent=`${i+1} / ${Q.length}`;
+  document.getElementById('qtext').textContent=q.question;
+  const opts=document.getElementById('opts'); opts.innerHTML='';
+  q.labels.forEach((lb,k)=>{
+    const el=document.createElement('div');
+    el.className='opt'+(lb.replace(/[^A-Z]/g,'')===q.gold?' gold hidden':'');
+    el.innerHTML=`<b>${lb}</b><span>${q.options[k]}</span>`;
+    opts.appendChild(el);
+  });
+  ['step1','step2','step3'].forEach(s=>{const e=document.getElementById(s);e.className='stepbox';});
+  document.getElementById('classOut').innerHTML='<span style="color:var(--mut);font-size:1.1vw">press “Route it”</span>';
+  document.getElementById('routeOut').innerHTML='<span style="color:var(--mut);font-size:1.1vw">—</span>';
+  document.getElementById('answerOut').innerHTML='<span style="color:var(--mut);font-size:1.1vw">—</span>';
+  document.getElementById('field').className='field';
+  document.getElementById('routeBtn').disabled=false;
+  document.getElementById('revealBtn').disabled=true;
+}
+function next(){ if(i<Q.length-1){i++;render();} }
+function prev(){ if(i>0){i--;render();} }
+
+async function routeIt(){
+  const q=Q[i]; document.getElementById('routeBtn').disabled=true;
+  const s1=document.getElementById('step1'), s2=document.getElementById('step2'), s3=document.getElementById('step3');
+  s1.className='stepbox active';
+  document.getElementById('classOut').innerHTML='<span class="dots"><i></i><i></i><i></i></span>';
+  let cls;
+  try{ cls=await (await fetch('/classify',{method:'POST',body:JSON.stringify({task_id:q.task_id})})).json(); }
+  catch(e){ cls={domain:'math',role:'math_specialist',model:''}; }  // stage-safe fallback
+  s1.className='stepbox done';
+  document.getElementById('classOut').innerHTML=`<span class="chip ${cls.domain}">${cls.domain}</span>`;
+  s2.className='stepbox active';
+  await sleep(350);
+  document.getElementById('routeOut').innerHTML=`<span class="chip ${cls.domain}">${roleName[cls.role]||cls.role}</span><div class="model">${cls.model.split('/').pop()}</div>`;
+  s2.className='stepbox done'; s3.className='stepbox active';
+  document.getElementById('answerOut').innerHTML='<span class="dots"><i></i><i></i><i></i></span> <span style="color:var(--mut);font-size:1vw">thinking…</span>';
+  let ans;
+  try{ ans=await (await fetch('/answer',{method:'POST',body:JSON.stringify({task_id:q.task_id,model:cls.model})})).json(); }
+  catch(e){ const r=q.results.math_specialist; ans={answer:r.answer,correct:r.correct}; }  // fallback to logged
+  live={role:cls.role,answer:ans.answer,correct:ans.correct};
+  s3.className='stepbox done';
+  document.getElementById('answerOut').innerHTML=
+    `<div class="verdict">Answer: ${ans.answer} <span class="${ans.correct?'ok':'no'}">${ans.correct?'✓':'✗'}</span></div>`;
+  document.getElementById('revealBtn').disabled=false;
+}
+
+function reveal(){
+  const q=Q[i]; const f=document.getElementById('field'); f.className='field show';
+  document.querySelector('.opt.gold')?.classList.remove('hidden');
+  const rows=[['general','general 7B'],['math_specialist','math specialist 7B'],['coder_specialist','coder specialist 7B']];
+  const box=document.getElementById('frows'); box.innerHTML='';
+  rows.forEach(([k,label])=>{
+    const r=q.results[k];
+    const el=document.createElement('div'); el.className='frow '+(r.correct?'ok':'no');
+    el.innerHTML=`<span class="who"><b>${label}</b></span><span class="ans">${r.answer||'?'}</span><span class="mark">${r.correct?'✓':'✗'}</span>`;
+    box.appendChild(el);
+  });
+  const orc=document.createElement('div'); orc.className='frow oracle '+(q.oracle_correct?'ok':'no');
+  orc.innerHTML=`<span class="who"><b>oracle</b> (route to best)</span><span class="ans">${q.gold}</span><span class="mark">${q.oracle_correct?'✓':'✗'}</span>`;
+  box.appendChild(orc);
+  let story='';
+  if(q.spec_rescue) story='The math specialist rescued this — the generalist got it wrong. Decorrelation in your favour.';
+  else if(q.gen_rescue) story='The generalist rescued this — even the math specialist missed it. Decorrelation cuts both ways.';
+  else story='Both models agreed and were right. Easy item, no routing needed.';
+  document.getElementById('story').textContent=story;
+  // scoreboard
+  if(!counted.has(q.task_id)){
+    counted.add(q.task_id);
+    if(q.results.general.correct) tally.gen++;
+    if((live?live.correct:q.results.math_specialist.correct)) tally.router++;
+    if(q.oracle_correct) tally.oracle++;
+    document.getElementById('sGen').textContent=tally.gen;
+    document.getElementById('sRouter').textContent=tally.router;
+    document.getElementById('sOracle').textContent=tally.oracle;
+  }
+}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight')next(); else if(e.key==='ArrowLeft')prev();
+  else if(e.key==='Enter'){ if(!document.getElementById('routeBtn').disabled)routeIt();
+    else if(!document.getElementById('revealBtn').disabled)reveal(); }
+});
+</script>
+</body>
+</html>

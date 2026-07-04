@@ -1,0 +1,423 @@
+{
+  "questions": [
+    {
+      "task_id": "mmlu_pro/math/7693",
+      "question": "A subset H of a group (G,*) is a group if",
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J"
+      ],
+      "options": [
+        "a,b in H => a / b in H",
+        "a,b in H => a + b in H",
+        "a,b in H=> a - b^-1 in H",
+        "H contains the identity element",
+        "a in H => a^-1 in H",
+        "a,b in H=> a * b in H",
+        "a in H => a^2 in H",
+        "a in H => a * a^-1 in H",
+        "H contains the zero element",
+        "a,b in H=> a * b^-1 in H"
+      ],
+      "gold": "J",
+      "results": {
+        "general": {
+          "answer": "F",
+          "correct": false
+        },
+        "math_specialist": {
+          "answer": "J",
+          "correct": true
+        },
+        "coder_specialist": {
+          "answer": "F",
+          "correct": false
+        }
+      },
+      "oracle_correct": true,
+      "spec_rescue": true,
+      "gen_rescue": false,
+      "both_right": false
+    },
+    {
+      "task_id": "mmlu_pro/math/7755",
+      "question": "Compute covariance of x=(1,2,3,4), y=(2,3,4,5)",
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J"
+      ],
+      "options": [
+        "0.50",
+        "2.00",
+        "3.00",
+        "0.75",
+        "1.25",
+        "1.67",
+        "1.00",
+        "0.98",
+        "2.50",
+        "2.34"
+      ],
+      "gold": "F",
+      "results": {
+        "general": {
+          "answer": "E",
+          "correct": false
+        },
+        "math_specialist": {
+          "answer": "F",
+          "correct": true
+        },
+        "coder_specialist": {
+          "answer": "F",
+          "correct": true
+        }
+      },
+      "oracle_correct": true,
+      "spec_rescue": true,
+      "gen_rescue": false,
+      "both_right": false
+    },
+    {
+      "task_id": "mmlu_pro/math/7715",
+      "question": "Solve the equation \u221217.02 = \u22122.3y. Check your answer.",
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J"
+      ],
+      "options": [
+        "\u22127.4",
+        "14.72",
+        "10.2",
+        "12.5",
+        "7.4",
+        "-10.2",
+        "3.6",
+        "-3.6",
+        "-12.5",
+        "\u221219.32"
+      ],
+      "gold": "E",
+      "results": {
+        "general": {
+          "answer": "A",
+          "correct": false
+        },
+        "math_specialist": {
+          "answer": "E",
+          "correct": true
+        },
+        "coder_specialist": {
+          "answer": "E",
+          "correct": true
+        }
+      },
+      "oracle_correct": true,
+      "spec_rescue": true,
+      "gen_rescue": false,
+      "both_right": false
+    },
+    {
+      "task_id": "mmlu_pro/math/7722",
+      "question": "Which list of numbers is ordered from least to greatest?",
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "options": [
+        "167,213, 161,455, 17,400, 116,633",
+        "120,209, 120,902, 125,466, 125,464",
+        "160,233, 171,141, 116,645, 167,703",
+        "160,233, 171,141, 11,645, 16,703",
+        "167,213, 161,455, 17,400, 11,633",
+        "10,354, 10,600, 104,321, 106,213",
+        "12,209, 12,902, 125,466, 125,464",
+        "18,209, 18,902, 185,466, 185,464"
+      ],
+      "gold": "F",
+      "results": {
+        "general": {
+          "answer": "B",
+          "correct": false
+        },
+        "math_specialist": {
+          "answer": "F",
+          "correct": true
+        },
+        "coder_specialist": {
+          "answer": "F",
+          "correct": true
+        }
+      },
+      "oracle_correct": true,
+      "spec_rescue": true,
+      "gen_rescue": false,
+      "both_right": false
+    },
+    {
+      "task_id": "mmlu_pro/math/7780",
+      "question": " If $P(A)=0.8, P(B)=0.5$, and $P(A \\cup B)=0.9$. What is $P(A \\cap B)$?",
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J"
+      ],
+      "options": [
+        "0.9",
+        "0.1",
+        "1.3",
+        "0.2",
+        "0.3",
+        "0.7",
+        "0.4",
+        "0.8",
+        "0.6",
+        "0.5"
+      ],
+      "gold": "G",
+      "results": {
+        "general": {
+          "answer": "G",
+          "correct": true
+        },
+        "math_specialist": {
+          "answer": "C",
+          "correct": false
+        },
+        "coder_specialist": {
+          "answer": "G",
+          "correct": true
+        }
+      },
+      "oracle_correct": true,
+      "spec_rescue": false,
+      "gen_rescue": true,
+      "both_right": false
+    },
+    {
+      "task_id": "mmlu_pro/math/7690",
+      "question": "Statement 1 | Every permutation is a cycle. Statement 2 | Every cycle is a permutation.",
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J"
+      ],
+      "options": [
+        "Not enough information, False",
+        "False, False",
+        "Not enough information, True",
+        "True, True",
+        "True, False",
+        "True, Not enough information",
+        "Not enough information, Not enough information",
+        "False, True",
+        "False, Not enough information",
+        "Both statements are partially true"
+      ],
+      "gold": "H",
+      "results": {
+        "general": {
+          "answer": "H",
+          "correct": true
+        },
+        "math_specialist": {
+          "answer": "D",
+          "correct": false
+        },
+        "coder_specialist": {
+          "answer": "E",
+          "correct": false
+        }
+      },
+      "oracle_correct": true,
+      "spec_rescue": false,
+      "gen_rescue": true,
+      "both_right": false
+    },
+    {
+      "task_id": "mmlu_pro/math/7746",
+      "question": "If g (x) = f (\u2013x) for all real numbers x, and if (3, 2) is a point on the graph of g, which of the following points MUST be on the graph of f ?",
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J"
+      ],
+      "options": [
+        "(\u20132, 3)",
+        "(2, \u20133)",
+        "(3, 2)",
+        "(\u20133, \u20132)",
+        "(\u20132, 2)",
+        "(2, \u20132)",
+        "(2, 3)",
+        "(\u20133, 2)",
+        "(3, \u20132)",
+        "(\u20132, \u20133)"
+      ],
+      "gold": "H",
+      "results": {
+        "general": {
+          "answer": "H",
+          "correct": true
+        },
+        "math_specialist": {
+          "answer": "D",
+          "correct": false
+        },
+        "coder_specialist": {
+          "answer": "D",
+          "correct": false
+        }
+      },
+      "oracle_correct": true,
+      "spec_rescue": false,
+      "gen_rescue": true,
+      "both_right": false
+    },
+    {
+      "task_id": "mmlu_pro/math/7739",
+      "question": "Which statement is true?",
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J"
+      ],
+      "options": [
+        "If f\u2032(c) \u2260 0, then f has a local maximum or minimum at (c, f(c)).",
+        "If f\u2032(c) = 0, then f has a local maximum or minimum at (c, f (c)).",
+        "If f is differentiable at x = c, then f is continuous at x = c.",
+        "If f(x) is discontinuous at x = c, then f might be differentiable at x = c.",
+        "If f is differentiable at x = c, then f\u2032(c) might or might not exist.",
+        "If f(x) is continuous at x = c, then the graph of f has a minimum or maximum at (c, f(c)).",
+        "If f(x) is continuous at x = c, then f\u2032(c) exists.",
+        "If f\u2032\u2032(c) = 0, then the graph of f has an inflection point at (c, f (c)).",
+        "If f\u2032(c) = 0, then f(x) is constant for all x.",
+        "If f\u2032\u2032(c) \u2260 0, then the graph of f has an inflection point at (c, f(c))."
+      ],
+      "gold": "C",
+      "results": {
+        "general": {
+          "answer": "C",
+          "correct": true
+        },
+        "math_specialist": {
+          "answer": "C",
+          "correct": true
+        },
+        "coder_specialist": {
+          "answer": "C",
+          "correct": true
+        }
+      },
+      "oracle_correct": true,
+      "spec_rescue": false,
+      "gen_rescue": false,
+      "both_right": true
+    },
+    {
+      "task_id": "mmlu_pro/math/7723",
+      "question": "Find 1 over 6 + 1 over 8.",
+      "labels": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J"
+      ],
+      "options": [
+        "2 over 24",
+        "1 over 2",
+        "8 over 14",
+        "3 over 8",
+        "7 over 24",
+        "7 over 48",
+        "1 over 7",
+        "1 over 4",
+        "2 over 14",
+        "1 over 14"
+      ],
+      "gold": "E",
+      "results": {
+        "general": {
+          "answer": "E",
+          "correct": true
+        },
+        "math_specialist": {
+          "answer": "E",
+          "correct": true
+        },
+        "coder_specialist": {
+          "answer": "E",
+          "correct": true
+        }
+      },
+      "oracle_correct": true,
+      "spec_rescue": false,
+      "gen_rescue": false,
+      "both_right": true
+    }
+  ]
+}
