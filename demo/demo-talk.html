@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Echo — talk slides</title>
+<style>
+  :root{
+    --bg:#12100e; --panel:#1b1815; --ink:#f4efe8; --mut:#a89f92; --line:#332e28;
+    --accent:#e8a13a; --accent2:#4aa3c7; --good:#5ec27a;
+    --serif:"Iowan Old Style",Georgia,serif; --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans);overflow:hidden}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;padding:8vh 10vw;animation:f .4s ease}
+  .slide.on{display:flex}
+  @keyframes f{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  .kicker{font-size:1.1vw;letter-spacing:.3em;text-transform:uppercase;color:var(--accent);margin-bottom:2.4vh;font-weight:700}
+  h2{font-family:var(--serif);font-size:4.6vw;line-height:1.05;font-weight:600;letter-spacing:-.01em;margin-bottom:1vh}
+  .plain{font-size:2vw;line-height:1.4;color:var(--accent2);margin-top:3vh;max-width:40ch;font-style:italic}
+  .rows{margin-top:2vh}
+  .row{display:flex;align-items:baseline;gap:1.5vw;font-size:2.6vw;padding:1.4vh 0;border-bottom:1px solid var(--line)}
+  .row .lab{width:16vw;color:var(--mut);font-size:1.7vw}
+  .row .big{font-family:var(--serif);font-weight:600}
+  .row.free .big{color:var(--accent)} .muted{color:var(--mut);font-size:1.6vw}
+  .chart{display:flex;align-items:flex-end;gap:4vw;height:50vh;margin-top:1vh}
+  .bar{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;flex:1}
+  .bar .col{width:100%;border-radius:8px 8px 0 0;background:linear-gradient(180deg,#5a504420,#3a332c);border:1px solid var(--line);position:relative;transition:height 1s cubic-bezier(.2,.8,.2,1)}
+  .bar.hero .col{background:linear-gradient(180deg,var(--accent),#b9781f);border-color:var(--accent)}
+  .bar .val{position:absolute;top:-3.6vh;left:0;right:0;text-align:center;font-family:var(--serif);font-size:2.6vw;font-weight:600}
+  .bar.hero .val{color:var(--accent);font-size:3.6vw}
+  .bar .lbl{margin-top:1.6vh;font-size:1.3vw;color:var(--mut);text-align:center;line-height:1.25}
+  .bar.hero .lbl{color:var(--ink);font-weight:600}
+  .quote{font-family:var(--serif);font-size:3.4vw;line-height:1.3;font-style:italic;max-width:28ch}
+  #num{position:fixed;bottom:2vh;right:2.4vw;font-size:1.1vw;color:var(--mut)}
+  .hint{position:fixed;bottom:2vh;left:2.4vw;font-size:1vw;color:var(--line)}
+</style>
+</head>
+<body>
+
+  <!-- 1 COST -->
+  <section class="slide on">
+    <div class="kicker">What you just saw · the cost</div>
+    <h2>It ran for free.</h2>
+    <div class="rows">
+      <div class="row"><span class="lab">cheap cloud (Haiku)</span><span class="big">$6</span><span class="muted">/ million tokens</span></div>
+      <div class="row"><span class="lab">big cloud (Sonnet)</span><span class="big">$18</span><span class="muted">3&times; the cheap one</span></div>
+      <div class="row free"><span class="lab">local specialist</span><span class="big">~$0</span><span class="muted">on this laptop</span></div>
+    </div>
+    <p class="plain">Route it to the cheap model, pay a third. Route it to a specialist on your laptop, pay nothing.</p>
+  </section>
+
+  <!-- 2 SPEED -->
+  <section class="slide">
+    <div class="kicker">What you just saw · the speed</div>
+    <h2>And it wasn't slow.</h2>
+    <div class="rows">
+      <div class="row"><span class="lab">the router (0.5B)</span><span class="big">~1s</span><span class="muted">picks the subject</span></div>
+      <div class="row"><span class="lab">the specialist (7B)</span><span class="big">~10–15s</span><span class="muted">reasons, then answers</span></div>
+      <div class="row free"><span class="lab">vs a cloud call</span><span class="big">≈ same</span><span class="muted">no network trip, no bill</span></div>
+    </div>
+    <p class="plain">On a decent laptop it answers in about the time a cloud model would - the difference is it's your compute, not a metered API.</p>
+  </section>
+
+  <!-- 3 PAYOFF -->
+  <section class="slide">
+    <div class="kicker">Why it works · 100 maths questions</div>
+    <div class="chart">
+      <div class="bar"><div class="col" data-h="72%"><span class="val">.72</span></div><div class="lbl">general</div></div>
+      <div class="bar"><div class="col" data-h="74%"><span class="val">.74</span></div><div class="lbl">maths<br>specialist</div></div>
+      <div class="bar"><div class="col" data-h="70%"><span class="val">.70</span></div><div class="lbl">code<br>specialist</div></div>
+      <div class="bar hero"><div class="col" data-h="90%"><span class="val">.90</span></div><div class="lbl">route to<br>the best</div></div>
+    </div>
+    <p class="plain">Three free models, each right ~7 in 10 - but wrong on different questions. Route to the right one: 9 in 10.</p>
+  </section>
+
+  <!-- 4 CLOSE -->
+  <section class="slide">
+    <h2 class="quote">"The win was never a smarter model. It's cheap models that are wrong in different places - for free."
+    </h2>
+  </section>
+
+<div id="num"></div>
+<div class="hint">← → to move · F fullscreen</div>
+<script>
+  const s=[...document.querySelectorAll('.slide')]; let i=0;
+  function go(n){i=Math.max(0,Math.min(s.length-1,n));s.forEach((el,k)=>el.classList.toggle('on',k===i));
+    document.getElementById('num').textContent=(i+1)+' / '+s.length;
+    s[i].querySelectorAll('.bar .col').forEach(c=>{c.style.height='0';requestAnimationFrame(()=>requestAnimationFrame(()=>c.style.height=c.dataset.h))});}
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key===' ')go(i+1); else if(e.key==='ArrowLeft')go(i-1);
+    else if(e.key==='f'||e.key==='F'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}});
+  go(0);
+</script>
+</body>
+</html>
