@@ -1,0 +1,47 @@
+{
+  "mmlu_pro/math/7693": {
+    "answer": "J",
+    "correct": true,
+    "secs": 38.1
+  },
+  "mmlu_pro/math/7755": {
+    "answer": "F",
+    "correct": true,
+    "secs": 13.1
+  },
+  "mmlu_pro/math/7715": {
+    "answer": "E",
+    "correct": true,
+    "secs": 5.9
+  },
+  "mmlu_pro/math/7722": {
+    "answer": "F",
+    "correct": true,
+    "secs": 9.5
+  },
+  "mmlu_pro/math/7780": {
+    "answer": "G",
+    "correct": true,
+    "secs": 5.5
+  },
+  "mmlu_pro/math/7690": {
+    "answer": "H",
+    "correct": true,
+    "secs": 7.4
+  },
+  "mmlu_pro/math/7746": {
+    "answer": "H",
+    "correct": true,
+    "secs": 4.7
+  },
+  "mmlu_pro/math/7739": {
+    "answer": "C",
+    "correct": true,
+    "secs": 12.2
+  },
+  "mmlu_pro/math/7723": {
+    "answer": "E",
+    "correct": true,
+    "secs": 5.9
+  }
+}

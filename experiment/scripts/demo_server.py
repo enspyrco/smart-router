@@ -22,6 +22,7 @@ from benchmarks.hyperspecialist import (
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_ollama import ChatOllama
 from benchmarks.hyperspecialist import ANSWER_PERSONA, BASE_URL
+from chat_claude_code import ChatClaudeCode
 
 PORT = 8765
 DEMO_DIR = Path(__file__).resolve().parent.parent.parent / "demo"
@@ -52,9 +53,16 @@ class H(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if self.path in ("/", "/index.html"):
+            self._send(200, (DEMO_DIR / "unified.html").read_bytes(), "text/html")
+        elif self.path == "/theatre":
             self._send(200, (DEMO_DIR / "theatre.html").read_bytes(), "text/html")
         elif self.path == "/data":
-            self._send(200, json.dumps(DATA))
+            # Merge precomputed cloud-Haiku answers (written live by precompute_haiku.py)
+            hpath = DEMO_DIR / "haiku_answers.json"
+            haiku = json.loads(hpath.read_text()) if hpath.exists() else {}
+            payload = {"questions": [{**q, "haiku": haiku.get(q["task_id"])}
+                                     for q in DATA["questions"]]}
+            self._send(200, json.dumps(payload))
         else:
             self._send(404, json.dumps({"error": "not found"}))
 
@@ -79,6 +87,26 @@ class H(BaseHTTPRequestHandler):
             domain = classify_type(q["question"])  # live 0.5B call, ~1-2s
             role, tag = pick_model(domain)
             self._send(200, json.dumps({"domain": domain, "role": role, "model": tag}))
+            return
+        if self.path == "/haiku":
+            q = BY_ID.get(req.get("task_id"))
+            if not q:
+                self._send(404, json.dumps({"error": "unknown task_id"}))
+                return
+            prompt = format_prompt(q["question"], {"label": q["labels"], "text": q["options"]})
+            import time as _t
+            t0 = _t.perf_counter()
+            try:
+                raw = ChatClaudeCode(model="haiku").invoke(
+                    [SystemMessage(content=ANSWER_PERSONA), HumanMessage(content=prompt)]
+                ).content
+                letter = extract_choice(raw) or "?"
+            except Exception as e:
+                letter, raw = "?", f"err: {str(e)[:120]}"
+            self._send(200, json.dumps({
+                "answer": letter, "correct": letter == q["gold"],
+                "secs": round(_t.perf_counter() - t0, 1),
+            }))
             return
         if self.path == "/answer":
             q = BY_ID.get(req.get("task_id"))
