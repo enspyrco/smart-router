@@ -12,130 +12,153 @@
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans);overflow:hidden}
-  .page{height:100vh;display:flex;flex-direction:column;padding:2.4vh 3vw;gap:1.6vh}
-  .dtop{display:flex;justify-content:space-between;align-items:center}
-  .brand{font-family:var(--serif);font-size:2vw;font-weight:600}.brand span{color:var(--accent)}
-  .scoreboard{display:flex;gap:1vw}
-  .score{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:.6vh 1.1vw;text-align:center;min-width:7vw}
-  .score .n{font-family:var(--serif);font-size:2vw;font-weight:600;line-height:1}
-  .score .l{font-size:.75vw;color:var(--mut);text-transform:uppercase;letter-spacing:.08em;margin-top:.3vh}
+  .page{height:100vh;display:flex;flex-direction:column}
+  /* ---------- DEMO ZONE (pinned top) ---------- */
+  .demozone{padding:2vh 3vw 1.6vh;border-bottom:1px solid var(--line)}
+  .dtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2vh}
+  .brand{font-family:var(--serif);font-size:1.7vw;font-weight:600}.brand span{color:var(--accent)}
+  .scoreboard{display:flex;gap:.9vw}
+  .score{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:.5vh 1vw;text-align:center;min-width:6.5vw}
+  .score .n{font-family:var(--serif);font-size:1.7vw;font-weight:600;line-height:1}
+  .score .l{font-size:.7vw;color:var(--mut);text-transform:uppercase;letter-spacing:.07em;margin-top:.2vh}
   .score.router .n{color:var(--accent2)}.score.oracle .n{color:var(--accent)}
-  /* demo */
   .stage{display:grid;grid-template-columns:1.05fr .95fr;gap:1.6vw;align-items:start}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:1.8vh 1.5vw}
-  .qmeta{display:flex;justify-content:space-between;color:var(--mut);font-size:.95vw;margin-bottom:1vh}
-  .qtext{font-size:1.45vw;line-height:1.32;margin-bottom:1.2vh}
-  .opts{display:grid;grid-template-columns:1fr 1fr;gap:.6vh 1.2vw}
-  .opt{display:flex;gap:.6vw;font-size:1vw;color:var(--mut);padding:.3vh .5vw;border-radius:6px;border:1px solid transparent}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:1.4vh 1.3vw}
+  .qmeta{display:flex;justify-content:space-between;color:var(--mut);font-size:.9vw;margin-bottom:.8vh}
+  .qtext{font-size:1.3vw;line-height:1.3;margin-bottom:1vh}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:.4vh 1.1vw}
+  .opt{display:flex;gap:.5vw;font-size:.92vw;color:var(--mut);padding:.2vh .4vw;border-radius:5px;border:1px solid transparent}
   .opt b{color:var(--ink);font-family:var(--serif)}
   .opt.gold{border-color:var(--good);background:#1e35241a}.opt.gold b{color:var(--good)}
   .opt.gold.hidden{border-color:transparent;background:transparent}.opt.gold.hidden b{color:var(--ink)}
-  .stepbox{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:1.1vh 1.2vw;margin-bottom:.8vh;opacity:.4;transition:.4s}
+  .stepbox{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:.9vh 1.1vw;margin-bottom:.7vh;opacity:.4;transition:.4s}
   .stepbox.active{opacity:1;border-color:var(--accent)}.stepbox.done{opacity:1}
-  .steplabel{font-size:.8vw;text-transform:uppercase;letter-spacing:.1em;color:var(--mut);margin-bottom:.5vh}
-  .chip{display:inline-block;padding:.3vh 1vw;border-radius:16px;font-family:var(--serif);font-size:1.25vw;font-weight:600;background:#2a251f;border:1px solid var(--line)}
+  .steplabel{font-size:.75vw;text-transform:uppercase;letter-spacing:.09em;color:var(--mut);margin-bottom:.4vh}
+  .chip{display:inline-block;padding:.25vh .9vw;border-radius:14px;font-family:var(--serif);font-size:1.15vw;font-weight:600;background:#2a251f;border:1px solid var(--line)}
   .chip.math{color:var(--accent);border-color:var(--accent)}.chip.code{color:var(--accent2);border-color:var(--accent2)}.chip.other{color:var(--mut)}
-  .race{display:grid;grid-template-columns:1fr 1fr;gap:1vw;margin-top:.6vh}
-  .racebox{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:1.1vh 1vw;text-align:center}
-  .racebox .who{font-size:.95vw;color:var(--mut)}.racebox .tag{font-size:.72vw;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.15vh .7vw;border-radius:12px;margin-left:.4vw}
+  .race{display:grid;grid-template-columns:1fr 1fr;gap:.9vw;margin-top:.5vh}
+  .racebox{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:.9vh 1vw;text-align:center}
+  .racebox .who{font-size:.88vw;color:var(--mut)}.racebox .tag{font-size:.66vw;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:.1vh .6vw;border-radius:10px;margin-left:.3vw}
   .tag.free{background:#1e3524;color:var(--good)}.tag.paid{background:#3a2a12;color:var(--accent)}
-  .racebox .ans{font-family:var(--serif);font-size:2.6vw;font-weight:600;margin-top:.4vh;min-height:3vw}
+  .racebox .ans{font-family:var(--serif);font-size:2.3vw;font-weight:600;margin-top:.3vh;min-height:2.7vw}
   .racebox .ans .ok{color:var(--good)}.racebox .ans .no{color:var(--bad)}
-  .dots{display:inline-flex;gap:5px}.dots i{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:p 1s infinite}
+  .dots{display:inline-flex;gap:4px}.dots i{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:p 1s infinite}
   .dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
   @keyframes p{0%,100%{opacity:.25}50%{opacity:1}}
-  .field{margin-top:.8vh;display:none}.field.show{display:block}
-  .frow{display:flex;align-items:center;gap:1vw;padding:.5vh 0;border-bottom:1px solid var(--line);font-size:1.05vw}
-  .frow .who{width:11vw;color:var(--mut)}.frow .who b{color:var(--ink)}
-  .frow .a{font-family:var(--serif);font-size:1.35vw;width:2.2vw}.frow.ok .a{color:var(--good)}.frow.no .a{color:var(--bad)}
+  .field{margin-top:.6vh;display:none}.field.show{display:block}
+  .frow{display:flex;align-items:center;gap:.9vw;padding:.35vh 0;border-bottom:1px solid var(--line);font-size:.95vw}
+  .frow .who{width:10vw;color:var(--mut)}.frow .who b{color:var(--ink)}
+  .frow .a{font-family:var(--serif);font-size:1.2vw;width:2vw}.frow.ok .a{color:var(--good)}.frow.no .a{color:var(--bad)}
   .frow.oracle .who b{color:var(--accent)}
-  .story{margin-top:.6vh;font-size:.95vw;color:var(--mut);font-style:italic}
-  .controls{display:flex;gap:.8vw;margin-top:1vh}
-  button{font-family:var(--sans);font-size:1vw;font-weight:600;padding:.9vh 1.4vw;border-radius:9px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);cursor:pointer}
+  .story{margin-top:.5vh;font-size:.9vw;color:var(--mut);font-style:italic}
+  .controls{display:flex;gap:.7vw;margin-top:.8vh}
+  button{font-family:var(--sans);font-size:.95vw;font-weight:600;padding:.8vh 1.3vw;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);cursor:pointer}
   button:hover{border-color:var(--accent)}button.primary{background:var(--accent);color:#1a1508;border-color:var(--accent)}
   button:disabled{opacity:.4;cursor:default}
-  select{font-family:var(--sans);font-size:.9vw;padding:.4vh .7vw;border-radius:7px;background:var(--panel2);color:var(--ink);border:1px solid var(--line)}
-  /* facts strip underneath */
-  .facts{display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:1.4vw;margin-top:auto}
-  .fact{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:1.4vh 1.4vw}
-  .fact .k{font-size:.78vw;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700}
-  .fact .line{font-size:1.35vw;margin-top:.7vh;line-height:1.5}
-  .fact .line b{font-family:var(--serif)}.fact .free{color:var(--accent)}
-  .minichart{display:flex;align-items:flex-end;gap:.9vw;height:10vh;margin-top:.9vh}
-  .mb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
-  .mb .c{width:100%;border-radius:5px 5px 0 0;background:#3a332c;border:1px solid var(--line);position:relative}
-  .mb.hero .c{background:var(--accent);border-color:var(--accent)}
-  .mb .v{font-family:var(--serif);font-size:.95vw;position:absolute;top:-2.2vh;left:0;right:0;text-align:center}
-  .mb.hero .v{color:var(--accent);font-weight:600}
-  .mb .l{font-size:.7vw;color:var(--mut);margin-top:.4vh}.mb.hero .l{color:var(--ink)}
-  .oneliner{text-align:center;font-family:var(--serif);font-style:italic;font-size:1.5vw;color:var(--mut)}
-  .oneliner b{color:var(--ink);font-style:normal;font-weight:600}
+  select{font-family:var(--sans);font-size:.85vw;padding:.35vh .6vw;border-radius:6px;background:var(--panel2);color:var(--ink);border:1px solid var(--line)}
+  /* ---------- LOWER SLIDES (one at a time, click to advance) ---------- */
+  .lower{flex:1;position:relative;cursor:pointer}
+  .lslide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:3vh 8vw;animation:fade .45s ease}
+  .lslide.on{display:flex}
+  @keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .lkick{font-size:1vw;letter-spacing:.3em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:2vh}
+  .lbig{font-family:var(--serif);font-size:5.5vw;line-height:1.03;font-weight:600;letter-spacing:-.01em}
+  .lbig .free{color:var(--accent)}
+  .lsub{font-size:2vw;color:var(--mut);margin-top:2.4vh;max-width:38ch}
+  .chart{display:flex;align-items:flex-end;gap:3.5vw;height:34vh;margin-top:1vh}
+  .bar{display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
+  .bar .c{width:8vw;border-radius:7px 7px 0 0;background:linear-gradient(180deg,#5a504420,#3a332c);border:1px solid var(--line);position:relative}
+  .bar.hero .c{background:linear-gradient(180deg,var(--accent),#b9781f);border-color:var(--accent)}
+  .bar .v{position:absolute;top:-3.2vh;left:0;right:0;text-align:center;font-family:var(--serif);font-size:2.2vw;font-weight:600}
+  .bar.hero .v{color:var(--accent);font-size:3vw}
+  .bar .l{margin-top:1.2vh;font-size:1.1vw;color:var(--mut)}.bar.hero .l{color:var(--ink);font-weight:600}
+  .quote{font-family:var(--serif);font-size:3.6vw;line-height:1.28;font-style:italic;max-width:24ch}
+  .quote b{font-style:normal}
+  #ldots{position:absolute;bottom:2vh;left:0;right:0;display:flex;gap:9px;justify-content:center}
+  #ldots i{width:9px;height:9px;border-radius:50%;background:var(--line)}#ldots i.on{background:var(--accent)}
+  .tap{position:absolute;bottom:1.8vh;right:2.4vw;font-size:.85vw;color:var(--mut)}
 </style>
 </head>
 <body>
   <div class="page">
-    <div class="dtop">
-      <div class="brand">Echo · <span>route to the cheapest model that can answer</span></div>
-      <div class="scoreboard">
-        <div class="score"><div class="n" id="sGen">0</div><div class="l">general</div></div>
-        <div class="score router"><div class="n" id="sRouter">0</div><div class="l">router→spec</div></div>
-        <div class="score oracle"><div class="n" id="sOracle">0</div><div class="l">oracle</div></div>
-      </div>
-    </div>
 
-    <div class="stage">
-      <div class="card">
-        <div class="qmeta"><span>MMLU-Pro · maths</span><select id="pick" onchange="load(+this.value)"></select></div>
-        <div class="qtext" id="qtext">Loading…</div>
-        <div class="opts" id="opts"></div>
-      </div>
-      <div>
-        <div class="stepbox" id="step1"><div class="steplabel">1 · router · 0.5B (~400 MB)</div><div id="classOut"><span style="color:var(--mut);font-size:1vw">press “Route it”</span></div></div>
-        <div class="stepbox" id="step2"><div class="steplabel">2 · route → specialist</div><div id="routeOut"><span style="color:var(--mut);font-size:1vw">—</span></div></div>
-        <div class="race">
-          <div class="racebox"><div class="who">local specialist<span class="tag free">free</span></div><div class="ans" id="ansLocal">—</div></div>
-          <div class="racebox"><div class="who">cloud Haiku<span class="tag paid">paid</span></div><div class="ans" id="ansHaiku">—</div></div>
-        </div>
-        <div class="field" id="field">
-          <div class="steplabel" style="margin:.8vh 0 .5vh">the field — who was right?</div>
-          <div id="frows"></div><div class="story" id="story"></div>
-        </div>
-        <div class="controls">
-          <button class="primary" id="routeBtn" onclick="routeIt()">Route it ▶</button>
-          <button id="revealBtn" onclick="reveal()" disabled>Reveal the field</button>
+    <!-- DEMO (pinned) -->
+    <div class="demozone">
+      <div class="dtop">
+        <div class="brand">Echo · <span>route to the cheapest model that can answer</span></div>
+        <div class="scoreboard">
+          <div class="score"><div class="n" id="sGen">0</div><div class="l">general</div></div>
+          <div class="score router"><div class="n" id="sRouter">0</div><div class="l">router→spec</div></div>
+          <div class="score oracle"><div class="n" id="sOracle">0</div><div class="l">oracle</div></div>
         </div>
       </div>
-    </div>
-
-    <div class="facts">
-      <div class="fact">
-        <div class="k">💰 cost · per 1M tokens in+out (≈ a few novels)</div>
-        <div class="line">Haiku <b>$6</b><br>Sonnet <b>$18</b> <span style="color:var(--mut)">— 3&times; Haiku</span><br><span class="free">local ~$0</span></div>
-      </div>
-      <div class="fact">
-        <div class="k">⚡ speed / answer</div>
-        <div class="line">router <b>~1s</b><br>local <b>~10–15s</b><br><span style="color:var(--mut)">cloud a touch quicker, but paid</span></div>
-      </div>
-      <div class="fact">
-        <div class="k">🎯 why it works · 100 maths Qs</div>
-        <div class="minichart">
-          <div class="mb"><div class="c" style="height:72%"><span class="v">.72</span></div><div class="l">gen</div></div>
-          <div class="mb"><div class="c" style="height:74%"><span class="v">.74</span></div><div class="l">maths</div></div>
-          <div class="mb"><div class="c" style="height:70%"><span class="v">.70</span></div><div class="l">code</div></div>
-          <div class="mb hero"><div class="c" style="height:90%"><span class="v">.90</span></div><div class="l">route→best</div></div>
+      <div class="stage">
+        <div class="card">
+          <div class="qmeta"><span>MMLU-Pro · maths</span><select id="pick" onchange="load(+this.value)"></select></div>
+          <div class="qtext" id="qtext">Loading…</div>
+          <div class="opts" id="opts"></div>
+        </div>
+        <div>
+          <div class="stepbox" id="step1"><div class="steplabel">1 · router · 0.5B (~400 MB)</div><div id="classOut"><span style="color:var(--mut);font-size:.95vw">press “Route it”</span></div></div>
+          <div class="stepbox" id="step2"><div class="steplabel">2 · route → specialist</div><div id="routeOut"><span style="color:var(--mut);font-size:.95vw">—</span></div></div>
+          <div class="race">
+            <div class="racebox"><div class="who">local specialist<span class="tag free">free</span></div><div class="ans" id="ansLocal">—</div></div>
+            <div class="racebox"><div class="who">cloud Haiku<span class="tag paid">paid</span></div><div class="ans" id="ansHaiku">—</div></div>
+          </div>
+          <div class="field" id="field"><div class="steplabel" style="margin:.6vh 0 .4vh">the field — who was right?</div><div id="frows"></div><div class="story" id="story"></div></div>
+          <div class="controls">
+            <button class="primary" id="routeBtn" onclick="event.stopPropagation();routeIt()">Route it ▶</button>
+            <button id="revealBtn" onclick="event.stopPropagation();reveal()" disabled>Reveal the field</button>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="oneliner">Each model ~7 in 10, wrong on <b>different</b> questions &rarr; route to the best: <b>9 in 10</b> &mdash; for free.</div>
+    <!-- LOWER SLIDES: click anywhere here (or → ) to advance -->
+    <div class="lower" id="lower" onclick="lgo(li+1)">
+      <section class="lslide on">
+        <div class="lkick">what you just saw · cost</div>
+        <div class="lbig">$18 on the big cloud model.<br><span class="free">$0 on my laptop.</span></div>
+        <div class="lsub">Per a million tokens in and out — a few novels' worth. The cheap cloud model is a third the price; local is free.</div>
+      </section>
+      <section class="lslide">
+        <div class="lkick">what you just saw · speed</div>
+        <div class="lbig">About the same speed<br>as a cloud call.</div>
+        <div class="lsub">~10–15 seconds on this laptop. You trade a metered API for your own compute — free and private.</div>
+      </section>
+      <section class="lslide">
+        <div class="lkick">why it works · 100 maths questions</div>
+        <div class="chart">
+          <div class="bar"><div class="c" style="height:72%"><span class="v">.72</span></div><div class="l">general</div></div>
+          <div class="bar"><div class="c" style="height:74%"><span class="v">.74</span></div><div class="l">maths</div></div>
+          <div class="bar"><div class="c" style="height:70%"><span class="v">.70</span></div><div class="l">code</div></div>
+          <div class="bar hero"><div class="c" style="height:90%"><span class="v">.90</span></div><div class="l">route to best</div></div>
+        </div>
+      </section>
+      <section class="lslide">
+        <div class="quote">"Cheap models, wrong in <b>different</b> places. Route to the best: <b>9 in 10</b> — for free."</div>
+      </section>
+      <div id="ldots"></div>
+      <div class="tap">click / → to advance</div>
+    </div>
   </div>
 
 <script>
+// ---------- lower-slide nav ----------
+const ls=[...document.querySelectorAll('.lslide')];let li=0;const ldots=document.getElementById('ldots');
+ls.forEach((_,k)=>{const d=document.createElement('i');d.onclick=e=>{e.stopPropagation();lgo(k)};ldots.appendChild(d)});
+const ldEls=[...ldots.children];
+function lgo(n){li=(n+ls.length)%ls.length;ls.forEach((s,k)=>s.classList.toggle('on',k===li));ldEls.forEach((d,k)=>d.classList.toggle('on',k===li));}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')lgo(li+1);else if(e.key==='ArrowLeft')lgo(li-1);
+  else if(e.key==='f'||e.key==='F'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}});
+lgo(0);
+
+// ---------- demo ----------
 let Q=[],cur=0,live=null;const routeBtn=document.getElementById('routeBtn'),revealBtn=document.getElementById('revealBtn');
 const roleName={general:"general 7B",math_specialist:"maths specialist 7B",coder_specialist:"code specialist 7B"};
 const tally={gen:0,router:0,oracle:0},counted=new Set();const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 fetch('/data').then(r=>r.json()).then(d=>{Q=d.questions;const p=document.getElementById('pick');
-  Q.forEach((q,k)=>{const o=document.createElement('option');o.value=k;o.textContent=(k+1)+'. '+q.question.slice(0,40)+'…';p.appendChild(o);});
+  Q.forEach((q,k)=>{const o=document.createElement('option');o.value=k;o.textContent=(k+1)+'. '+q.question.slice(0,38)+'…';p.appendChild(o);});
   load(0);fetch('/warmup',{method:'POST',body:'{}'}).catch(()=>{});});
 function load(k){cur=k;const q=Q[k];if(!q)return;live=null;document.getElementById('pick').value=k;
   document.getElementById('qtext').textContent=q.question;
@@ -143,8 +166,8 @@ function load(k){cur=k;const q=Q[k];if(!q)return;live=null;document.getElementBy
   q.labels.forEach((lb,j)=>{const el=document.createElement('div');el.className='opt'+(lb.replace(/[^A-Z]/g,'')===q.gold?' gold hidden':'');
     el.innerHTML=`<b>${lb}</b><span>${q.options[j]}</span>`;opts.appendChild(el);});
   ['step1','step2'].forEach(s=>document.getElementById(s).className='stepbox');
-  document.getElementById('classOut').innerHTML='<span style="color:var(--mut);font-size:1vw">press “Route it”</span>';
-  document.getElementById('routeOut').innerHTML='<span style="color:var(--mut);font-size:1vw">—</span>';
+  document.getElementById('classOut').innerHTML='<span style="color:var(--mut);font-size:.95vw">press “Route it”</span>';
+  document.getElementById('routeOut').innerHTML='<span style="color:var(--mut);font-size:.95vw">—</span>';
   document.getElementById('ansLocal').textContent='—';document.getElementById('ansHaiku').textContent='—';
   document.getElementById('field').className='field';routeBtn.disabled=false;revealBtn.disabled=true;}
 async function routeIt(){const q=Q[cur];routeBtn.disabled=true;
