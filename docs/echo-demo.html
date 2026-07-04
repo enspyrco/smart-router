@@ -106,6 +106,19 @@
     <p class="lead accent">The usual fix needs training data. What if we needed none?</p>
   </section>
 
+  <!-- 3b THE COST PICTURE -->
+  <section class="slide">
+    <div class="kicker">Why this is worth doing — per million tokens</div>
+    <h2>The expensive model<br>costs 3&times; the cheap one.</h2>
+    <table>
+      <tr><th>model</th><th>cost</th></tr>
+      <tr><td>Haiku (cheap)</td><td>$6</td></tr>
+      <tr><td>Sonnet (expensive)</td><td>$18 &nbsp;<span class="muted">= 3&times;</span></td></tr>
+      <tr><td class="accent">local 7B specialist</td><td class="accent">~$0 &nbsp;<span class="muted">(runs on a laptop)</span></td></tr>
+    </table>
+    <p class="plain">Route an easy question to the cheap model and you pay a third. Route it to a specialist on your own laptop and you pay <b>nothing</b> per call - just electricity. That's the prize.</p>
+  </section>
+
   <!-- 4 THE IDEA -->
   <section class="slide">
     <div class="kicker">The idea</div>
