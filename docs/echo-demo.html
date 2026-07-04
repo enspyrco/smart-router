@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Echo — Decorrelated Routing (demo)</title>
+<style>
+  :root{
+    --bg:#12100e; --panel:#1b1815; --ink:#f4efe8; --mut:#a89f92; --line:#332e28;
+    --accent:#e8a13a; --accent2:#4aa3c7; --good:#5ec27a; --bad:#e06a5a;
+    --serif:"Iowan Old Style",Georgia,"Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans);overflow:hidden}
+  #deck{height:100vh;width:100vw;position:relative}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;
+    padding:6vh 9vw;animation:fade .45s ease}
+  .slide.on{display:flex}
+  @keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .kicker{font-size:1.05vw;letter-spacing:.32em;text-transform:uppercase;color:var(--accent);margin-bottom:2.4vh;font-weight:700}
+  h1{font-family:var(--serif);font-size:6.4vw;line-height:1.02;font-weight:600;letter-spacing:-.01em}
+  h2{font-family:var(--serif);font-size:4.2vw;line-height:1.06;font-weight:600;margin-bottom:2.6vh;letter-spacing:-.01em}
+  h3{font-size:1.7vw;color:var(--accent2);margin-bottom:1.4vh;font-weight:600}
+  p,li{font-size:1.9vw;line-height:1.5;color:var(--ink);max-width:46ch}
+  .lead{font-size:2.5vw;color:var(--mut);margin-top:2.6vh;max-width:40ch}
+  ul{list-style:none;margin-top:1vh}
+  li{margin:1.5vh 0;padding-left:1.6em;position:relative;color:var(--mut)}
+  li b{color:var(--ink);font-weight:600}
+  li::before{content:"→";position:absolute;left:0;color:var(--accent)}
+  .big{font-family:var(--serif);font-size:9vw;line-height:1;font-weight:600;letter-spacing:-.02em}
+  .big .u{color:var(--accent)}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:5vw;align-items:center}
+  .muted{color:var(--mut)} .accent{color:var(--accent)} .good{color:var(--good)} .bad{color:var(--bad)}
+  .note{font-size:1.25vw;color:var(--mut);margin-top:3vh;font-style:italic;max-width:52ch}
+  /* bar chart */
+  .chart{display:flex;align-items:flex-end;gap:3.4vw;height:52vh;margin-top:2vh}
+  .bar{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;flex:1}
+  .bar .col{width:100%;border-radius:8px 8px 0 0;background:linear-gradient(180deg,#5a504420,#3a332c);
+    border:1px solid var(--line);position:relative;transition:height 1.1s cubic-bezier(.2,.8,.2,1)}
+  .bar.hero .col{background:linear-gradient(180deg,var(--accent),#b9781f);border-color:var(--accent)}
+  .bar .val{position:absolute;top:-3.4vh;left:0;right:0;text-align:center;font-family:var(--serif);
+    font-size:2.4vw;font-weight:600}
+  .bar.hero .val{color:var(--accent);font-size:3.2vw}
+  .bar .lbl{margin-top:1.6vh;font-size:1.25vw;color:var(--mut);text-align:center;line-height:1.25}
+  .bar.hero .lbl{color:var(--ink);font-weight:600}
+  table{border-collapse:collapse;font-size:1.6vw;margin-top:1vh}
+  td,th{padding:1.2vh 1.8vw;border-bottom:1px solid var(--line);text-align:left}
+  th{color:var(--accent);font-size:1.2vw;text-transform:uppercase;letter-spacing:.1em}
+  .rescue{display:flex;gap:6vw;margin-top:3vh;font-size:1.7vw}
+  .rescue div b{display:block;font-family:var(--serif);font-size:4vw;color:var(--accent);line-height:1}
+  .quote{font-family:var(--serif);font-size:3.2vw;line-height:1.28;font-style:italic;max-width:30ch}
+  .quote .src{display:block;font-family:var(--sans);font-style:normal;font-size:1.4vw;color:var(--mut);margin-top:2.5vh}
+  /* chrome */
+  #bar{position:fixed;top:0;left:0;height:4px;background:var(--accent);z-index:10;transition:width .3s}
+  #dots{position:fixed;bottom:2.4vh;left:0;right:0;display:flex;gap:8px;justify-content:center;z-index:10}
+  #dots i{width:7px;height:7px;border-radius:50%;background:var(--line);transition:.3s;cursor:pointer}
+  #dots i.on{background:var(--accent);transform:scale(1.3)}
+  #num{position:fixed;bottom:2vh;right:2.4vw;font-size:1.1vw;color:var(--mut);z-index:10}
+  .hint{position:fixed;bottom:2vh;left:2.4vw;font-size:1vw;color:var(--line);z-index:10}
+  .tag{display:inline-block;font-size:1vw;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    padding:.4vh 1vw;border-radius:20px;vertical-align:middle;margin-left:.6vw}
+  .tag.y{background:#1e3524;color:var(--good)} .tag.n{background:#3a221f;color:var(--bad)}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<div id="deck">
+
+  <!-- 1 -->
+  <section class="slide on">
+    <div class="kicker">Enspyr · open research</div>
+    <h1>Echo</h1>
+    <p class="lead">Cutting LLM cost without training a router — and what the data actually said when we stopped fooling ourselves.</p>
+    <p class="note">Nick Meinhold · Robin Langer · Meghana Ganapa · Adarsha Aryal · idea credit: Connor Hood</p>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide">
+    <div class="kicker">The problem</div>
+    <h2>Most LLM apps overpay.</h2>
+    <div class="two">
+      <p>A trivial "reverse this string" and a gnarly refactor hit the <b>same expensive endpoint</b>.</p>
+      <p class="muted">The standard fix is a <b>trained router</b> — but that needs labelled data for <i>your</i> domain. That label step is the adoption wall.</p>
+    </div>
+    <p class="lead accent">What if the cheap model could route itself, with zero training?</p>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide">
+    <div class="kicker">The idea</div>
+    <h2>Let the cheap model check itself.</h2>
+    <ul>
+      <li>Call the cheap model <b>twice</b>, with two different personas.</li>
+      <li>They <b>agree</b> → task was easy. Keep the cheap answer.</li>
+      <li>They <b>disagree</b> → you're on a decision boundary. Escalate.</li>
+    </ul>
+    <p class="lead">A difficulty signal, manufactured for free out of the model's own (in)consistency.</p>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide">
+    <div class="kicker">Plot twist #1</div>
+    <h2>Our first reasoning numbers<br>were a lie.</h2>
+    <div class="two">
+      <div>
+        <p>Ported to BBH. Pilot came back flat: Haiku, Sonnet, Echo all ≈ <b>0.14</b>. Suspiciously equal.</p>
+      </div>
+      <div>
+        <p class="muted">The harness shelled <code style="color:var(--accent2)">claude -p</code> <b>inside the project dir</b> — loading CLAUDE.md, hooks, task-restore. We were measuring our own <b>agent</b>, not the model.</p>
+      </div>
+    </div>
+    <p class="note">Raw output literally began: "All 8 tasks restored. Now to your question:" — a 30-second byte dump killed a plausible parser theory. Fix: one flag.</p>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide">
+    <div class="kicker">The clean result</div>
+    <h2>The difficulty ladder<br>has collapsed.</h2>
+    <div class="two">
+      <table>
+        <tr><th>BBH n=99</th><th>acc</th></tr>
+        <tr><td>Haiku</td><td>0.848</td></tr>
+        <tr><td>Sonnet</td><td>0.848</td></tr>
+        <tr><td class="muted">hardest subtasks</td><td class="muted">33/33 both</td></tr>
+      </table>
+      <p>Haiku <b>ties</b> Sonnet, subtask for subtask. <b>MCQ BBH is saturated</b> for 2026 Claude. There is no difficulty gap left to route on.</p>
+    </div>
+    <p class="note">Difficulty routing's payoff shrinks as the model gap shrinks (Hybrid-LLM, ICLR 2024). Saturation is the zero-gap regime. The original thesis just hit a wall.</p>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide">
+    <div class="kicker">Plot twist #2</div>
+    <h2>But the oracle<br>still won.</h2>
+    <div class="two">
+      <p>Haiku = Sonnet in aggregate — yet <b class="accent">echo-oracle beat both</b> (0.899 vs 0.848).</p>
+      <p class="muted">Entirely on one subtask, because Haiku and Sonnet fail on <b>different items</b>. The win isn't a smarter model. It's <b class="accent">decorrelated errors</b>.</p>
+    </div>
+    <p class="lead">You don't need the expensive model to be <i>better</i>. You need the two looks to be <i>different</i>.</p>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide">
+    <div class="kicker">The pivot · Connor Hood</div>
+    <h2>Route by task TYPE,<br>not difficulty.</h2>
+    <ul>
+      <li>Difficulty axis is dead (Haiku = Sonnet). Stop routing on it.</li>
+      <li>Send each task to a <b>hyperspecialist</b> — a small model that owns one domain.</li>
+      <li>Needs Specialist-X &gt; generalist <b>on type X</b>, not smarter overall.</li>
+    </ul>
+    <p class="lead accent">Does it hold up? We checked the literature, then ran it.</p>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide">
+    <div class="kicker">Deep research · 27 sources · adversarially verified</div>
+    <h2>Real, but conditional.</h2>
+    <ul>
+      <li><b>Math:</b> a 7B specialist beats GPT-4o on MATH <span class="tag y">specialist wins</span></li>
+      <li><b>Code:</b> a 7B specialist loses hard to frontier <span class="tag n">frontier wins</span></li>
+      <li>Cheap type-classifiers exist: <b>1.5B @ 93% / 51ms</b>.</li>
+    </ul>
+    <p class="note">And a warning that cuts to our core: self-consistency <i>fails</i> to capture decorrelated errors — the "popularity trap," models agreeing on identical wrong answers. Only a <b>diversity</b> signal recovers the ceiling.</p>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide">
+    <div class="kicker">The experiment · run overnight · local M1 Max</div>
+    <h2>3 mediocre 7B models,<br>MMLU-Pro math, n=100.</h2>
+    <div class="two">
+      <p>Qwen2.5 <b>general</b>, <b>math</b> specialist, <b>coder</b> specialist. Each answers every question. No frontier model. No cloud. Zero API cost.</p>
+      <p class="muted">The one table that could kill the thesis: do they fail on the <b>same</b> items, or <b>different</b> ones?</p>
+    </div>
+    <p class="lead accent">Then route each question to whichever model gets it right.</p>
+  </section>
+
+  <!-- 10 — THE MONEY SLIDE -->
+  <section class="slide">
+    <div class="kicker">The result</div>
+    <div class="chart">
+      <div class="bar"><div class="col" data-h="72%"><span class="val">.72</span></div><div class="lbl">general<br>7B</div></div>
+      <div class="bar"><div class="col" data-h="74%"><span class="val">.74</span></div><div class="lbl">math<br>specialist</div></div>
+      <div class="bar"><div class="col" data-h="70%"><span class="val">.70</span></div><div class="lbl">coder<br>specialist</div></div>
+      <div class="bar hero"><div class="col" data-h="90%"><span class="val">.90</span></div><div class="lbl">ORACLE<br>(route to best)</div></div>
+    </div>
+    <p class="note">Three ~72% models, each wrong in different places, routed perfectly → <b class="accent">0.90</b>. A <b>+16 point</b> lift from decorrelation alone. Decorrelated-errors thesis, confirmed on a new benchmark.</p>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide">
+    <div class="kicker">Why it works</div>
+    <h2>They're wrong in<br>different places.</h2>
+    <div class="rescue">
+      <div><b>14</b>the math specialist rescues<br><span class="muted">items the generalist missed</span></div>
+      <div><b>12</b>the generalist rescues<br><span class="muted">items the specialist missed</span></div>
+    </div>
+    <p class="lead">Bidirectional. Neither model dominates — each covers the other's blind spots. That gap <i>is</i> the routing headroom.</p>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide">
+    <div class="kicker">The honest catch</div>
+    <h2>The oracle isn't<br>deployable.</h2>
+    <div class="two">
+      <p>0.90 needs ground truth — it peeks at the answer. The real question: can a <b>cheap router</b> capture that 16-point gap?</p>
+      <p class="muted">And the popularity trap warns us: <b>self-consistency won't</b>. Agreement and correctness decouple exactly where the errors are decorrelated. The lever is a <b class="accent">diversity signal</b>, not a better judge.</p>
+    </div>
+    <p class="note">We already measured this tax in BBH: judge 0.869 vs oracle 0.899. Closing that gap is the next experiment.</p>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide">
+    <h2 class="quote">"The value was never that the big model is smarter. It's that independent models are wrong in different places."
+      <span class="src">Echo · github.com/enspyrco/echo · self-consistency as a cost-control mechanism for LLM routing</span>
+    </h2>
+    <p class="note">Verified: deep-research harness — 6 angles, 27 sources, 25 claims verified (23 confirmed). Experiment: MMLU-Pro math n=100, local, zero API cost. Idea credit: Connor Hood.</p>
+  </section>
+
+</div>
+
+<div id="dots"></div>
+<div id="num"></div>
+<div class="hint">← → or space · F fullscreen</div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  const dots=document.getElementById('dots');
+  const bar=document.getElementById('bar'), num=document.getElementById('num');
+  let i=0;
+  slides.forEach((_,k)=>{const d=document.createElement('i');d.onclick=()=>go(k);dots.appendChild(d)});
+  const dotEls=[...dots.children];
+  function go(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('on',k===i));
+    dotEls.forEach((d,k)=>d.classList.toggle('on',k===i));
+    bar.style.width=((i+1)/slides.length*100)+'%';
+    num.textContent=(i+1)+' / '+slides.length;
+    // animate bars when the result slide shows
+    slides[i].querySelectorAll('.bar .col').forEach(c=>{c.style.height='0';
+      requestAnimationFrame(()=>requestAnimationFrame(()=>c.style.height=c.dataset.h))});
+  }
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){go(i+1);e.preventDefault()}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){go(i-1)}
+    else if(e.key==='Home'){go(0)} else if(e.key==='End'){go(slides.length-1)}
+    else if(e.key==='f'||e.key==='F'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}
+  });
+  let sx=0;
+  document.addEventListener('touchstart',e=>sx=e.touches[0].clientX);
+  document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>50)go(i+(dx<0?1:-1))});
+  go(0);
+</script>
+</body>
+</html>
