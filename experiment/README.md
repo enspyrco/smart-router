@@ -228,6 +228,10 @@ python scripts/run_mmlu_pro_pilot.py \
   --n-per-category 25 \
   --arms haiku-only,sonnet-only,echo-judge,echo-oracle
 
+# Research diagnostics: category pass rates, Sonnet gaps, oracle routing errors,
+# plus category-specialist routing probes
+python scripts/analyze_mmlu_pro.py results/<timestamp>_mmlu_pro_n125.jsonl --report
+
 # Long sweeps (auto-resume on usage window)
 ./scripts/run_mmlu_pro_resumable.sh \
   --categories physics,math,law,chemistry,philosophy \
@@ -238,6 +242,8 @@ python scripts/run_mmlu_pro_pilot.py \
 Pilot categories: `physics`, `math`, `law`, `chemistry`, `philosophy`. Data: [`TIGER-Lab/MMLU-Pro`](https://huggingface.co/datasets/TIGER-Lab/MMLU-Pro) (`test` split).
 
 Files: `benchmarks/mmlu_pro.py`, `scripts/inspect_mmlu_pro.py`, `scripts/run_mmlu_pro_pilot.py`, `scripts/run_mmlu_pro_resumable.sh`.
+
+Advanced analysis: `scripts/analyze_mmlu_pro.py` reports per-category pass rate, escalation rate, cost per task, pass-rate gap vs `sonnet-only`, oracle diagnostics (`false_accept_rate`, `false_escalation_rate`, `oracle_alignment`) when `echo-oracle` is included, and category-specialist probes. `--report` writes a Markdown report next to the JSONL file.
 
 ## Layout
 
