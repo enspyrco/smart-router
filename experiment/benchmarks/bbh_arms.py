@@ -11,6 +11,7 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.runnables import RunnableLambda, RunnableParallel
 
 from benchmarks.bbh import extract_choice, extract_choice_text, score_bbh
+from benchmarks.specialists import load_specialist
 from chat_claude_code import ChatClaudeCode
 from run_pilot import (
     GEMINI_JUDGE_MODELS,
@@ -200,6 +201,55 @@ def arm_echo_judge_gemini_flash_lite(task: dict) -> tuple[str, int]:
     return arm_echo_judge_gemini_model(task, GEMINI_JUDGE_MODELS["gemini-2.5-flash-lite"])
 
 
+def arm_specialist_only(task: dict) -> tuple[str, int]:
+    """Domain specialist answers directly; Haiku when no specialist is registered.
+
+    Diagnostic baseline for §10 — without it you cannot tell whether a specialist
+    is competent at all, only whether it helps inside a router.
+
+    sub_calls encodes cost (house convention, cf. echo-judge 3-vs-4):
+      1 = specialist answered (local, 0 units)
+      2 = no specialist for this category, Haiku answered (1 unit)
+    """
+    specialist = load_specialist(task.get("category"))
+    if specialist is None:
+        haiku = ChatClaudeCode(model="haiku")
+        return call_with_persona(haiku, PERSONA_A, task["prompt"]), 2
+    return call_with_persona(specialist, PERSONA_A, task["prompt"]), 1
+
+
+def arm_echo_specialist(task: dict) -> tuple[str, int]:
+    """Echo with a free local specialist as tiebreaker before paying for Sonnet.
+
+    Both Haiku personas agreeing is unchanged, so a weak specialist cannot damage
+    the accept path — it is only consulted where the current router would already
+    be spending 3.0 units on Sonnet.
+
+    sub_calls encodes cost:
+      2 = personas agreed, accepted                       (2.0 units)
+      3 = personas disagreed, specialist broke the tie    (2.0 units, specialist free)
+      4 = personas disagreed, escalated to Sonnet         (5.0 units)
+    """
+    pair = _haiku_pair(task["prompt"])
+    if lexical_agree(pair["a"], pair["b"], task):
+        return pair["a"], 2
+
+    specialist = load_specialist(task.get("category"))
+    if specialist is not None:
+        verdict = call_with_persona(specialist, PERSONA_A, task["prompt"])
+        choice = _answer_label(verdict, task)
+        # Only a parseable vote matching one candidate counts as a tiebreak;
+        # anything else (unparseable, or a third answer) escalates.
+        if choice is not None:
+            if choice == _answer_label(pair["a"], task):
+                return pair["a"], 3
+            if choice == _answer_label(pair["b"], task):
+                return pair["b"], 3
+
+    sonnet = ChatClaudeCode(model="sonnet")
+    return call_with_persona(sonnet, PERSONA_A, task["prompt"]), 4
+
+
 def arm_echo_oracle(task: dict) -> tuple[str, int]:
     """Escalate only when both cheap answers are wrong vs gold label."""
     pair = _haiku_pair(task["prompt"])
@@ -228,5 +278,7 @@ BBH_ARMS: dict[str, Callable[[dict], tuple[str, int]]] = {
     "echo-judge-gemini-pro": arm_echo_judge_gemini_pro,
     "echo-judge-gemini-flash": arm_echo_judge_gemini_flash,
     "echo-judge-gemini-flash-lite": arm_echo_judge_gemini_flash_lite,
+    "specialist-only": arm_specialist_only,
+    "echo-specialist": arm_echo_specialist,
     "echo-oracle": arm_echo_oracle,
 }
