@@ -1,0 +1,5 @@
+{"task_id": "HumanEval/0", "arm": "echo-judge-openai", "passed": false, "detail": "NameError: name 'List' is not defined. Did you mean: 'list'?", "wall_seconds": 10.13526510889642, "sub_calls": 3}
+{"task_id": "HumanEval/1", "arm": "echo-judge-openai", "passed": false, "detail": "NameError: name 'List' is not defined. Did you mean: 'list'?", "wall_seconds": 16.68356312881224, "sub_calls": 3}
+{"task_id": "HumanEval/2", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 8.7902462920174, "sub_calls": 3}
+{"task_id": "HumanEval/3", "arm": "echo-judge-openai", "passed": false, "detail": "NameError: name 'List' is not defined. Did you mean: 'list'?", "wall_seconds": 5.883797504939139, "sub_calls": 3}
+{"task_id": "HumanEval/4", "arm": "echo-judge-openai", "passed": false, "detail": "NameError: name 'List' is not defined. Did you mean: 'list'?", "wall_seconds": 19.68952763802372, "sub_calls": 3}

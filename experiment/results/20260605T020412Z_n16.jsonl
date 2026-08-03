@@ -1,0 +1,16 @@
+{"task_id": "HumanEval/100", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 9.558432054007426, "sub_calls": 3}
+{"task_id": "HumanEval/101", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 8.839174709049985, "sub_calls": 3}
+{"task_id": "HumanEval/102", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 17.505238640820608, "sub_calls": 3}
+{"task_id": "HumanEval/103", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 12.96267924294807, "sub_calls": 3}
+{"task_id": "HumanEval/104", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 13.715649232966825, "sub_calls": 3}
+{"task_id": "HumanEval/105", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 9.434355630073696, "sub_calls": 3}
+{"task_id": "HumanEval/106", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 12.279169636080042, "sub_calls": 3}
+{"task_id": "HumanEval/107", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 9.607290006009862, "sub_calls": 3}
+{"task_id": "HumanEval/108", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 12.09882013197057, "sub_calls": 3}
+{"task_id": "HumanEval/109", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 31.887391071999446, "sub_calls": 3}
+{"task_id": "HumanEval/110", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 15.190620301058516, "sub_calls": 3}
+{"task_id": "HumanEval/111", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 27.886576945893466, "sub_calls": 4}
+{"task_id": "HumanEval/112", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 8.283871789928526, "sub_calls": 3}
+{"task_id": "HumanEval/113", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 11.298720573075116, "sub_calls": 3}
+{"task_id": "HumanEval/114", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 9.549876905046403, "sub_calls": 3}
+{"task_id": "HumanEval/115", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 17.496354087023064, "sub_calls": 4}

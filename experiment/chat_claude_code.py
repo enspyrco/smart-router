@@ -90,9 +90,17 @@ class ChatClaudeCode(BaseChatModel):
             ) from exc
 
         if result.returncode != 0:
+            # The CLI reports quota exhaustion ("You've hit your weekly limit")
+            # on stdout, not stderr. Reporting stderr alone yielded "<no stderr>",
+            # so _is_usage_exhaustion() never matched, the sweep never exited 2,
+            # and the resumable wrapper skipped its backoff — recording ~2s
+            # failure rows for every remaining pair instead of pausing (#1418).
+            detail = " | ".join(
+                part for part in (result.stderr.strip(), result.stdout.strip()) if part
+            )
             raise RuntimeError(
                 f"claude --print failed (rc={result.returncode}, model={self.model}): "
-                f"{result.stderr.strip() or '<no stderr>'}"
+                f"{detail or '<no output>'}"
             )
 
         text = result.stdout.rstrip()

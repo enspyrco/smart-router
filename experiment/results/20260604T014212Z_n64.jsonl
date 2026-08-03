@@ -1,0 +1,192 @@
+{"task_id": "HumanEval/100", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 6.245429062051699, "sub_calls": 1}
+{"task_id": "HumanEval/100", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.3761155719403177, "sub_calls": 1}
+{"task_id": "HumanEval/100", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 7.2728861940559, "sub_calls": 3}
+{"task_id": "HumanEval/101", "arm": "haiku-only", "passed": false, "detail": "AssertionError", "wall_seconds": 8.862998493947089, "sub_calls": 1}
+{"task_id": "HumanEval/101", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.0096000081393868, "sub_calls": 1}
+{"task_id": "HumanEval/101", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 9.743692071875557, "sub_calls": 3}
+{"task_id": "HumanEval/102", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 8.158492218935862, "sub_calls": 1}
+{"task_id": "HumanEval/102", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.5083163478411734, "sub_calls": 1}
+{"task_id": "HumanEval/102", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 8.770024033030495, "sub_calls": 3}
+{"task_id": "HumanEval/103", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 6.856215127976611, "sub_calls": 1}
+{"task_id": "HumanEval/103", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.255008912878111, "sub_calls": 1}
+{"task_id": "HumanEval/103", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 12.37236936413683, "sub_calls": 4}
+{"task_id": "HumanEval/104", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 10.015876543009654, "sub_calls": 1}
+{"task_id": "HumanEval/104", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 7.243846639990807, "sub_calls": 1}
+{"task_id": "HumanEval/104", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 8.737704538973048, "sub_calls": 3}
+{"task_id": "HumanEval/105", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 6.711760136997327, "sub_calls": 1}
+{"task_id": "HumanEval/105", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.075711725046858, "sub_calls": 1}
+{"task_id": "HumanEval/105", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 8.721167559968308, "sub_calls": 3}
+{"task_id": "HumanEval/106", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 7.8643297529779375, "sub_calls": 1}
+{"task_id": "HumanEval/106", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.92151284404099, "sub_calls": 1}
+{"task_id": "HumanEval/106", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 11.958499274216592, "sub_calls": 3}
+{"task_id": "HumanEval/107", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 9.532307205023244, "sub_calls": 1}
+{"task_id": "HumanEval/107", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.6780321928672493, "sub_calls": 1}
+{"task_id": "HumanEval/107", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 8.280481196008623, "sub_calls": 3}
+{"task_id": "HumanEval/108", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 8.178265293128788, "sub_calls": 1}
+{"task_id": "HumanEval/108", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 8.081692104926333, "sub_calls": 1}
+{"task_id": "HumanEval/108", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 17.88991070399061, "sub_calls": 4}
+{"task_id": "HumanEval/109", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 10.767906310036778, "sub_calls": 1}
+{"task_id": "HumanEval/109", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.955974941141903, "sub_calls": 1}
+{"task_id": "HumanEval/109", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 13.545502736931667, "sub_calls": 3}
+{"task_id": "HumanEval/110", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 6.227650586050004, "sub_calls": 1}
+{"task_id": "HumanEval/110", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.141384615097195, "sub_calls": 1}
+{"task_id": "HumanEval/110", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 12.286658593919128, "sub_calls": 4}
+{"task_id": "HumanEval/111", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 7.9175007219891995, "sub_calls": 1}
+{"task_id": "HumanEval/111", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.7029850501567125, "sub_calls": 1}
+{"task_id": "HumanEval/111", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 7.381810900056735, "sub_calls": 3}
+{"task_id": "HumanEval/112", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 5.78954768110998, "sub_calls": 1}
+{"task_id": "HumanEval/112", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 5.958004428073764, "sub_calls": 1}
+{"task_id": "HumanEval/112", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 9.18095980398357, "sub_calls": 3}
+{"task_id": "HumanEval/113", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 9.519927869085222, "sub_calls": 1}
+{"task_id": "HumanEval/113", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 5.063936243066564, "sub_calls": 1}
+{"task_id": "HumanEval/113", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 10.415684744948521, "sub_calls": 3}
+{"task_id": "HumanEval/114", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 7.185147596988827, "sub_calls": 1}
+{"task_id": "HumanEval/114", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 5.259782192995772, "sub_calls": 1}
+{"task_id": "HumanEval/114", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 7.807521620998159, "sub_calls": 3}
+{"task_id": "HumanEval/115", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 7.701170577900484, "sub_calls": 1}
+{"task_id": "HumanEval/115", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.017673008143902, "sub_calls": 1}
+{"task_id": "HumanEval/115", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 9.577746768016368, "sub_calls": 3}
+{"task_id": "HumanEval/116", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 28.32554237009026, "sub_calls": 1}
+{"task_id": "HumanEval/116", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.175836911890656, "sub_calls": 1}
+{"task_id": "HumanEval/116", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 30.720894229132682, "sub_calls": 3}
+{"task_id": "HumanEval/117", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 10.70868726586923, "sub_calls": 1}
+{"task_id": "HumanEval/117", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.006991141010076, "sub_calls": 1}
+{"task_id": "HumanEval/117", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 13.53116099187173, "sub_calls": 4}
+{"task_id": "HumanEval/118", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 9.817852705949917, "sub_calls": 1}
+{"task_id": "HumanEval/118", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.6860252139158547, "sub_calls": 1}
+{"task_id": "HumanEval/118", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 11.052012237953022, "sub_calls": 3}
+{"task_id": "HumanEval/119", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 7.2905686208978295, "sub_calls": 1}
+{"task_id": "HumanEval/119", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 6.249515017960221, "sub_calls": 1}
+{"task_id": "HumanEval/119", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 13.79355714796111, "sub_calls": 4}
+{"task_id": "HumanEval/120", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 8.376553245121613, "sub_calls": 1}
+{"task_id": "HumanEval/120", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.469666427001357, "sub_calls": 1}
+{"task_id": "HumanEval/120", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 11.418706071097404, "sub_calls": 3}
+{"task_id": "HumanEval/121", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 7.2183439310174435, "sub_calls": 1}
+{"task_id": "HumanEval/121", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 5.335650120163336, "sub_calls": 1}
+{"task_id": "HumanEval/121", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 7.88309641298838, "sub_calls": 3}
+{"task_id": "HumanEval/122", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 5.327448262833059, "sub_calls": 1}
+{"task_id": "HumanEval/122", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.0676489491015673, "sub_calls": 1}
+{"task_id": "HumanEval/122", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 12.027467567939311, "sub_calls": 4}
+{"task_id": "HumanEval/123", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 6.95150905684568, "sub_calls": 1}
+{"task_id": "HumanEval/123", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.7446872701402754, "sub_calls": 1}
+{"task_id": "HumanEval/123", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 10.776504946872592, "sub_calls": 3}
+{"task_id": "HumanEval/124", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 16.43574916012585, "sub_calls": 1}
+{"task_id": "HumanEval/124", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 5.278399088885635, "sub_calls": 1}
+{"task_id": "HumanEval/124", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 24.454388272948563, "sub_calls": 4}
+{"task_id": "HumanEval/125", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 10.077298439107835, "sub_calls": 1}
+{"task_id": "HumanEval/125", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 5.8817275709006935, "sub_calls": 1}
+{"task_id": "HumanEval/125", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 13.530393831199035, "sub_calls": 4}
+{"task_id": "HumanEval/126", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 13.590311598032713, "sub_calls": 1}
+{"task_id": "HumanEval/126", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.4588424749672413, "sub_calls": 1}
+{"task_id": "HumanEval/126", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 12.737425829982385, "sub_calls": 4}
+{"task_id": "HumanEval/127", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 12.366139512043446, "sub_calls": 1}
+{"task_id": "HumanEval/127", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 8.440100881969556, "sub_calls": 1}
+{"task_id": "HumanEval/127", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 11.392641382990405, "sub_calls": 3}
+{"task_id": "HumanEval/128", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 8.393188735935837, "sub_calls": 1}
+{"task_id": "HumanEval/128", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.7523367980029434, "sub_calls": 1}
+{"task_id": "HumanEval/128", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 15.173427104018629, "sub_calls": 4}
+{"task_id": "HumanEval/129", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 19.58695733989589, "sub_calls": 1}
+{"task_id": "HumanEval/129", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 22.7962069560308, "sub_calls": 1}
+{"task_id": "HumanEval/129", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 77.82804631907493, "sub_calls": 4}
+{"task_id": "HumanEval/130", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 16.340569611871615, "sub_calls": 1}
+{"task_id": "HumanEval/130", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 11.57064228807576, "sub_calls": 1}
+{"task_id": "HumanEval/130", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 33.71245284494944, "sub_calls": 4}
+{"task_id": "HumanEval/131", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 7.42855488602072, "sub_calls": 1}
+{"task_id": "HumanEval/131", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 8.73648389801383, "sub_calls": 1}
+{"task_id": "HumanEval/131", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 8.795618708943948, "sub_calls": 3}
+{"task_id": "HumanEval/132", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 74.12990832002833, "sub_calls": 1}
+{"task_id": "HumanEval/132", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 31.4009577492252, "sub_calls": 1}
+{"task_id": "HumanEval/132", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 102.41803947393782, "sub_calls": 4}
+{"task_id": "HumanEval/133", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 5.461353270802647, "sub_calls": 1}
+{"task_id": "HumanEval/133", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.0125468170735985, "sub_calls": 1}
+{"task_id": "HumanEval/133", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 7.399974771076813, "sub_calls": 3}
+{"task_id": "HumanEval/134", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 13.454595017945394, "sub_calls": 1}
+{"task_id": "HumanEval/134", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.552499793935567, "sub_calls": 1}
+{"task_id": "HumanEval/134", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 16.763484670082107, "sub_calls": 4}
+{"task_id": "HumanEval/135", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 7.93314592493698, "sub_calls": 1}
+{"task_id": "HumanEval/135", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.087761726230383, "sub_calls": 1}
+{"task_id": "HumanEval/135", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 10.775507557904348, "sub_calls": 3}
+{"task_id": "HumanEval/136", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 7.422231181059033, "sub_calls": 1}
+{"task_id": "HumanEval/136", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.044519410934299, "sub_calls": 1}
+{"task_id": "HumanEval/136", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 9.166925773955882, "sub_calls": 3}
+{"task_id": "HumanEval/137", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 6.87496948777698, "sub_calls": 1}
+{"task_id": "HumanEval/137", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.307671748101711, "sub_calls": 1}
+{"task_id": "HumanEval/137", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 6.6338214471470565, "sub_calls": 3}
+{"task_id": "HumanEval/138", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 7.4591191271319985, "sub_calls": 1}
+{"task_id": "HumanEval/138", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 5.231618128949776, "sub_calls": 1}
+{"task_id": "HumanEval/138", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 8.650797554990277, "sub_calls": 3}
+{"task_id": "HumanEval/139", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 6.911182512063533, "sub_calls": 1}
+{"task_id": "HumanEval/139", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.620150340022519, "sub_calls": 1}
+{"task_id": "HumanEval/139", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 10.246874255826697, "sub_calls": 3}
+{"task_id": "HumanEval/140", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 7.814562400104478, "sub_calls": 1}
+{"task_id": "HumanEval/140", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.925792046124116, "sub_calls": 1}
+{"task_id": "HumanEval/140", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 9.15262143802829, "sub_calls": 3}
+{"task_id": "HumanEval/141", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 6.897300238953903, "sub_calls": 1}
+{"task_id": "HumanEval/141", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.9200509008951485, "sub_calls": 1}
+{"task_id": "HumanEval/141", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 7.984898837050423, "sub_calls": 3}
+{"task_id": "HumanEval/142", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 7.220681858016178, "sub_calls": 1}
+{"task_id": "HumanEval/142", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 8.325043932069093, "sub_calls": 1}
+{"task_id": "HumanEval/142", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 8.289236729033291, "sub_calls": 3}
+{"task_id": "HumanEval/143", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 6.860340859042481, "sub_calls": 1}
+{"task_id": "HumanEval/143", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.708308750065044, "sub_calls": 1}
+{"task_id": "HumanEval/143", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": true, "detail": "passed", "wall_seconds": 8.525974292075261, "sub_calls": 3}
+{"task_id": "HumanEval/144", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 6.890649541048333, "sub_calls": 1}
+{"task_id": "HumanEval/144", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.956349426880479, "sub_calls": 1}
+{"task_id": "HumanEval/144", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 6.418860741890967, "sub_calls": 0}
+{"task_id": "HumanEval/145", "arm": "haiku-only", "passed": false, "detail": "AssertionError", "wall_seconds": 18.167976597789675, "sub_calls": 1}
+{"task_id": "HumanEval/145", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7839482431299984, "sub_calls": 0}
+{"task_id": "HumanEval/145", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.885435103904456, "sub_calls": 0}
+{"task_id": "HumanEval/146", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7766927280463278, "sub_calls": 0}
+{"task_id": "HumanEval/146", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.766052071005106, "sub_calls": 0}
+{"task_id": "HumanEval/146", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.030495823128149, "sub_calls": 0}
+{"task_id": "HumanEval/147", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.987703582039103, "sub_calls": 0}
+{"task_id": "HumanEval/147", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.746762691065669, "sub_calls": 0}
+{"task_id": "HumanEval/147", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.829025604063645, "sub_calls": 0}
+{"task_id": "HumanEval/148", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8403001111000776, "sub_calls": 0}
+{"task_id": "HumanEval/148", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 4.507484479108825, "sub_calls": 0}
+{"task_id": "HumanEval/148", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8172407108359039, "sub_calls": 0}
+{"task_id": "HumanEval/149", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.86167304799892, "sub_calls": 0}
+{"task_id": "HumanEval/149", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 2.0742685480508953, "sub_calls": 0}
+{"task_id": "HumanEval/149", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.920768273063004, "sub_calls": 0}
+{"task_id": "HumanEval/150", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.3583122610580176, "sub_calls": 0}
+{"task_id": "HumanEval/150", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.84518708800897, "sub_calls": 0}
+{"task_id": "HumanEval/150", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.2599042269866914, "sub_calls": 0}
+{"task_id": "HumanEval/151", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7757065759506077, "sub_calls": 0}
+{"task_id": "HumanEval/151", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7675200121011585, "sub_calls": 0}
+{"task_id": "HumanEval/151", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8114125069696456, "sub_calls": 0}
+{"task_id": "HumanEval/152", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.29365147696808, "sub_calls": 0}
+{"task_id": "HumanEval/152", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.828760053962469, "sub_calls": 0}
+{"task_id": "HumanEval/152", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8334568438585848, "sub_calls": 0}
+{"task_id": "HumanEval/153", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7557635211851448, "sub_calls": 0}
+{"task_id": "HumanEval/153", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.782991399988532, "sub_calls": 0}
+{"task_id": "HumanEval/153", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8227617519441992, "sub_calls": 0}
+{"task_id": "HumanEval/154", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7503407779149711, "sub_calls": 0}
+{"task_id": "HumanEval/154", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.93870278284885, "sub_calls": 0}
+{"task_id": "HumanEval/154", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.131260613910854, "sub_calls": 0}
+{"task_id": "HumanEval/155", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7696159379556775, "sub_calls": 0}
+{"task_id": "HumanEval/155", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7536581689491868, "sub_calls": 0}
+{"task_id": "HumanEval/155", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.0954152189660817, "sub_calls": 0}
+{"task_id": "HumanEval/156", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.9385741190053523, "sub_calls": 0}
+{"task_id": "HumanEval/156", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 2.0573834870010614, "sub_calls": 0}
+{"task_id": "HumanEval/156", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.7600799798965454, "sub_calls": 0}
+{"task_id": "HumanEval/157", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8530801190063357, "sub_calls": 0}
+{"task_id": "HumanEval/157", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 2.073146431008354, "sub_calls": 0}
+{"task_id": "HumanEval/157", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8693644988816231, "sub_calls": 0}
+{"task_id": "HumanEval/158", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.769391604932025, "sub_calls": 0}
+{"task_id": "HumanEval/158", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7720904229208827, "sub_calls": 0}
+{"task_id": "HumanEval/158", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.581596499076113, "sub_calls": 0}
+{"task_id": "HumanEval/159", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.1265351560432464, "sub_calls": 0}
+{"task_id": "HumanEval/159", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 2.235760590992868, "sub_calls": 0}
+{"task_id": "HumanEval/159", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.1215531360358, "sub_calls": 0}
+{"task_id": "HumanEval/160", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7467654931824654, "sub_calls": 0}
+{"task_id": "HumanEval/160", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7984049138613045, "sub_calls": 0}
+{"task_id": "HumanEval/160", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8294866159558296, "sub_calls": 0}
+{"task_id": "HumanEval/161", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8363022590056062, "sub_calls": 0}
+{"task_id": "HumanEval/161", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.8350031338632107, "sub_calls": 0}
+{"task_id": "HumanEval/161", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.085863269167021, "sub_calls": 0}
+{"task_id": "HumanEval/162", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.276208613999188, "sub_calls": 0}
+{"task_id": "HumanEval/162", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7683938380796462, "sub_calls": 0}
+{"task_id": "HumanEval/162", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.3059718338772655, "sub_calls": 0}
+{"task_id": "HumanEval/163", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.826664302032441, "sub_calls": 0}
+{"task_id": "HumanEval/163", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7851555838715285, "sub_calls": 0}
+{"task_id": "HumanEval/163", "arm": "echo-judge-openai-gpt-5.4-mini", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7897220919840038, "sub_calls": 0}

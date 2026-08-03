@@ -31,6 +31,15 @@ _USAGE_EXHAUSTION_SIGNATURES = (
     "limit will reset",
     "rate limit",
     "rate_limit",
+    # Claude Code CLI phrasings. None of the older signatures matched
+    # "You've hit your weekly limit · resets Aug 4, 12pm (UTC)", which is
+    # how the CLI reports subscription caps — that gap is what let the
+    # 2026-08-03 sweep record 215 failure rows instead of backing off.
+    "weekly limit",
+    "hit your limit",
+    "hit your weekly",
+    "session limit",
+    "limit · reset",
     "quota",
     "credit balance",
     "out of credits",

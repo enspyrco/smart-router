@@ -1,0 +1,2 @@
+{"task_id": "HumanEval/0", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 8.60465354914777, "sub_calls": 1}
+{"task_id": "HumanEval/0", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 9.65617058891803, "sub_calls": 3}

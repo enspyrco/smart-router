@@ -1,0 +1,2 @@
+{"task_id": "HumanEval/0", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.527725851163268, "sub_calls": 0}
+{"task_id": "HumanEval/0", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.0960494759492576, "sub_calls": 0}

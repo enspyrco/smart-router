@@ -1,0 +1,200 @@
+{"task_id": "HumanEval/0", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 8.237131295027211, "sub_calls": 1}
+{"task_id": "HumanEval/0", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 5.474000988062471, "sub_calls": 1}
+{"task_id": "HumanEval/0", "arm": "echo-judge", "passed": true, "detail": "passed", "wall_seconds": 25.7723514160607, "sub_calls": 3}
+{"task_id": "HumanEval/0", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 18.037371320882812, "sub_calls": 4}
+{"task_id": "HumanEval/1", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 10.30372033198364, "sub_calls": 1}
+{"task_id": "HumanEval/1", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 6.569378304062411, "sub_calls": 1}
+{"task_id": "HumanEval/1", "arm": "echo-judge", "passed": true, "detail": "passed", "wall_seconds": 35.87889493396506, "sub_calls": 3}
+{"task_id": "HumanEval/1", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 17.076454248046502, "sub_calls": 4}
+{"task_id": "HumanEval/2", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 5.137533803936094, "sub_calls": 1}
+{"task_id": "HumanEval/2", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.152399129932746, "sub_calls": 1}
+{"task_id": "HumanEval/2", "arm": "echo-judge", "passed": true, "detail": "passed", "wall_seconds": 10.482191939139739, "sub_calls": 3}
+{"task_id": "HumanEval/2", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 5.632129346951842, "sub_calls": 3}
+{"task_id": "HumanEval/3", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 4.671298302011564, "sub_calls": 1}
+{"task_id": "HumanEval/3", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.5012927651405334, "sub_calls": 1}
+{"task_id": "HumanEval/3", "arm": "echo-judge", "passed": true, "detail": "passed", "wall_seconds": 11.525661729974672, "sub_calls": 3}
+{"task_id": "HumanEval/3", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 5.177779398858547, "sub_calls": 3}
+{"task_id": "HumanEval/4", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 11.247873396147043, "sub_calls": 1}
+{"task_id": "HumanEval/4", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.54744622297585, "sub_calls": 1}
+{"task_id": "HumanEval/4", "arm": "echo-judge", "passed": true, "detail": "passed", "wall_seconds": 14.128001720877364, "sub_calls": 3}
+{"task_id": "HumanEval/4", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 5.9362385829444975, "sub_calls": 3}
+{"task_id": "HumanEval/5", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 6.612117520999163, "sub_calls": 1}
+{"task_id": "HumanEval/5", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.694765121908858, "sub_calls": 1}
+{"task_id": "HumanEval/5", "arm": "echo-judge", "passed": true, "detail": "passed", "wall_seconds": 29.97869588015601, "sub_calls": 3}
+{"task_id": "HumanEval/5", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 5.973760162014514, "sub_calls": 0}
+{"task_id": "HumanEval/6", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 8.548989206086844, "sub_calls": 1}
+{"task_id": "HumanEval/6", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 9.088352827122435, "sub_calls": 1}
+{"task_id": "HumanEval/6", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.3302517679985613, "sub_calls": 0}
+{"task_id": "HumanEval/6", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.831709205871448, "sub_calls": 0}
+{"task_id": "HumanEval/7", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7585279140621424, "sub_calls": 0}
+{"task_id": "HumanEval/7", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.8087123439181596, "sub_calls": 0}
+{"task_id": "HumanEval/7", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.806242607999593, "sub_calls": 0}
+{"task_id": "HumanEval/7", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.1557104899547994, "sub_calls": 0}
+{"task_id": "HumanEval/8", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.9602863229811192, "sub_calls": 0}
+{"task_id": "HumanEval/8", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 2.2873984260950238, "sub_calls": 0}
+{"task_id": "HumanEval/8", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8297765960451216, "sub_calls": 0}
+{"task_id": "HumanEval/8", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.9130233509931713, "sub_calls": 0}
+{"task_id": "HumanEval/9", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7214247668161988, "sub_calls": 0}
+{"task_id": "HumanEval/9", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7800177289173007, "sub_calls": 0}
+{"task_id": "HumanEval/9", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.3684380480553955, "sub_calls": 0}
+{"task_id": "HumanEval/9", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8805409108754247, "sub_calls": 0}
+{"task_id": "HumanEval/10", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7526554008945823, "sub_calls": 0}
+{"task_id": "HumanEval/10", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.830328281968832, "sub_calls": 0}
+{"task_id": "HumanEval/10", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.1071898750960827, "sub_calls": 0}
+{"task_id": "HumanEval/10", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.9976521169301122, "sub_calls": 0}
+{"task_id": "HumanEval/11", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8377790090162307, "sub_calls": 0}
+{"task_id": "HumanEval/11", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.8570170081220567, "sub_calls": 0}
+{"task_id": "HumanEval/11", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.874244554899633, "sub_calls": 0}
+{"task_id": "HumanEval/11", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.2485456708818674, "sub_calls": 0}
+{"task_id": "HumanEval/12", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7654984830878675, "sub_calls": 0}
+{"task_id": "HumanEval/12", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.9486338561400771, "sub_calls": 0}
+{"task_id": "HumanEval/12", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 3.359586705919355, "sub_calls": 0}
+{"task_id": "HumanEval/12", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7998614159878343, "sub_calls": 0}
+{"task_id": "HumanEval/13", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8670697519555688, "sub_calls": 0}
+{"task_id": "HumanEval/13", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.8399364249780774, "sub_calls": 0}
+{"task_id": "HumanEval/13", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8461511030327529, "sub_calls": 0}
+{"task_id": "HumanEval/13", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8080159479286522, "sub_calls": 0}
+{"task_id": "HumanEval/14", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8282253528013825, "sub_calls": 0}
+{"task_id": "HumanEval/14", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7578030368313193, "sub_calls": 0}
+{"task_id": "HumanEval/14", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.006231894949451, "sub_calls": 0}
+{"task_id": "HumanEval/14", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8796898319851607, "sub_calls": 0}
+{"task_id": "HumanEval/15", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7320939188357443, "sub_calls": 0}
+{"task_id": "HumanEval/15", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 2.230141321895644, "sub_calls": 0}
+{"task_id": "HumanEval/15", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.9468282889574766, "sub_calls": 0}
+{"task_id": "HumanEval/15", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.0730958310887218, "sub_calls": 0}
+{"task_id": "HumanEval/16", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.797565045999363, "sub_calls": 0}
+{"task_id": "HumanEval/16", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7300496681127697, "sub_calls": 0}
+{"task_id": "HumanEval/16", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.817270808154717, "sub_calls": 0}
+{"task_id": "HumanEval/16", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.0203910649288446, "sub_calls": 0}
+{"task_id": "HumanEval/17", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.964375038864091, "sub_calls": 0}
+{"task_id": "HumanEval/17", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7011578499805182, "sub_calls": 0}
+{"task_id": "HumanEval/17", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.812263177940622, "sub_calls": 0}
+{"task_id": "HumanEval/17", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.0357675219420344, "sub_calls": 0}
+{"task_id": "HumanEval/18", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7663974550087005, "sub_calls": 0}
+{"task_id": "HumanEval/18", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.8681126041337848, "sub_calls": 0}
+{"task_id": "HumanEval/18", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8087849169969559, "sub_calls": 0}
+{"task_id": "HumanEval/18", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.1522618448361754, "sub_calls": 0}
+{"task_id": "HumanEval/19", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.788175191031769, "sub_calls": 0}
+{"task_id": "HumanEval/19", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.746490292949602, "sub_calls": 0}
+{"task_id": "HumanEval/19", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.811432174872607, "sub_calls": 0}
+{"task_id": "HumanEval/19", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.230226008919999, "sub_calls": 0}
+{"task_id": "HumanEval/20", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.830949375871569, "sub_calls": 0}
+{"task_id": "HumanEval/20", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7185047999955714, "sub_calls": 0}
+{"task_id": "HumanEval/20", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.112711600959301, "sub_calls": 0}
+{"task_id": "HumanEval/20", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.112278199987486, "sub_calls": 0}
+{"task_id": "HumanEval/21", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.766408737981692, "sub_calls": 0}
+{"task_id": "HumanEval/21", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.8182420190423727, "sub_calls": 0}
+{"task_id": "HumanEval/21", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8081024361308664, "sub_calls": 0}
+{"task_id": "HumanEval/21", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.1529395719990134, "sub_calls": 0}
+{"task_id": "HumanEval/22", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.1834099208936095, "sub_calls": 0}
+{"task_id": "HumanEval/22", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7601574209984392, "sub_calls": 0}
+{"task_id": "HumanEval/22", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8857147579547018, "sub_calls": 0}
+{"task_id": "HumanEval/22", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.82070487504825, "sub_calls": 0}
+{"task_id": "HumanEval/23", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.974664949113503, "sub_calls": 0}
+{"task_id": "HumanEval/23", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7553110709413886, "sub_calls": 0}
+{"task_id": "HumanEval/23", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.9409996611066163, "sub_calls": 0}
+{"task_id": "HumanEval/23", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8745794110000134, "sub_calls": 0}
+{"task_id": "HumanEval/24", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7569189621135592, "sub_calls": 0}
+{"task_id": "HumanEval/24", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.739077331032604, "sub_calls": 0}
+{"task_id": "HumanEval/24", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8711453101132065, "sub_calls": 0}
+{"task_id": "HumanEval/24", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8888748600147665, "sub_calls": 0}
+{"task_id": "HumanEval/25", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8007021939847618, "sub_calls": 0}
+{"task_id": "HumanEval/25", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.8370757799129933, "sub_calls": 0}
+{"task_id": "HumanEval/25", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.873047802830115, "sub_calls": 0}
+{"task_id": "HumanEval/25", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8757264600135386, "sub_calls": 0}
+{"task_id": "HumanEval/26", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7564637209288776, "sub_calls": 0}
+{"task_id": "HumanEval/26", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7177856818307191, "sub_calls": 0}
+{"task_id": "HumanEval/26", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7955482038669288, "sub_calls": 0}
+{"task_id": "HumanEval/26", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.9566614818759263, "sub_calls": 0}
+{"task_id": "HumanEval/27", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7339036620687693, "sub_calls": 0}
+{"task_id": "HumanEval/27", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7728183828294277, "sub_calls": 0}
+{"task_id": "HumanEval/27", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8081082820426673, "sub_calls": 0}
+{"task_id": "HumanEval/27", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8329267159570009, "sub_calls": 0}
+{"task_id": "HumanEval/28", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7737759500741959, "sub_calls": 0}
+{"task_id": "HumanEval/28", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7537972659338266, "sub_calls": 0}
+{"task_id": "HumanEval/28", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.187406233046204, "sub_calls": 0}
+{"task_id": "HumanEval/28", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.9733551070094109, "sub_calls": 0}
+{"task_id": "HumanEval/29", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7616283560637385, "sub_calls": 0}
+{"task_id": "HumanEval/29", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 2.3340826630592346, "sub_calls": 0}
+{"task_id": "HumanEval/29", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.2162759739439934, "sub_calls": 0}
+{"task_id": "HumanEval/29", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.1370504030492157, "sub_calls": 0}
+{"task_id": "HumanEval/30", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8089543299283832, "sub_calls": 0}
+{"task_id": "HumanEval/30", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7236597610171884, "sub_calls": 0}
+{"task_id": "HumanEval/30", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.830793984932825, "sub_calls": 0}
+{"task_id": "HumanEval/30", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.813391116913408, "sub_calls": 0}
+{"task_id": "HumanEval/31", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7030630339868367, "sub_calls": 0}
+{"task_id": "HumanEval/31", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.8054379099048674, "sub_calls": 0}
+{"task_id": "HumanEval/31", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.3455846570432186, "sub_calls": 0}
+{"task_id": "HumanEval/31", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 3.009591412032023, "sub_calls": 0}
+{"task_id": "HumanEval/32", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7702506519854069, "sub_calls": 0}
+{"task_id": "HumanEval/32", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.744461091933772, "sub_calls": 0}
+{"task_id": "HumanEval/32", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8414560940582305, "sub_calls": 0}
+{"task_id": "HumanEval/32", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8116999890189618, "sub_calls": 0}
+{"task_id": "HumanEval/33", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7316504130139947, "sub_calls": 0}
+{"task_id": "HumanEval/33", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7322098570875823, "sub_calls": 0}
+{"task_id": "HumanEval/33", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.9406290689948946, "sub_calls": 0}
+{"task_id": "HumanEval/33", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.140223066089675, "sub_calls": 0}
+{"task_id": "HumanEval/34", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.972898508887738, "sub_calls": 0}
+{"task_id": "HumanEval/34", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.992648152867332, "sub_calls": 0}
+{"task_id": "HumanEval/34", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.034458092181012, "sub_calls": 0}
+{"task_id": "HumanEval/34", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.8088026121258736, "sub_calls": 0}
+{"task_id": "HumanEval/35", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7825749709736556, "sub_calls": 0}
+{"task_id": "HumanEval/35", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7633840518537909, "sub_calls": 0}
+{"task_id": "HumanEval/35", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.873949377099052, "sub_calls": 0}
+{"task_id": "HumanEval/35", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8487875021528453, "sub_calls": 0}
+{"task_id": "HumanEval/36", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8368557880166918, "sub_calls": 0}
+{"task_id": "HumanEval/36", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 2.2874957020394504, "sub_calls": 0}
+{"task_id": "HumanEval/36", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8123878370970488, "sub_calls": 0}
+{"task_id": "HumanEval/36", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8219745769165456, "sub_calls": 0}
+{"task_id": "HumanEval/37", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.759290548041463, "sub_calls": 0}
+{"task_id": "HumanEval/37", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7236089669167995, "sub_calls": 0}
+{"task_id": "HumanEval/37", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8125183589290828, "sub_calls": 0}
+{"task_id": "HumanEval/37", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.1083692729007453, "sub_calls": 0}
+{"task_id": "HumanEval/38", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.125997423194349, "sub_calls": 0}
+{"task_id": "HumanEval/38", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.8033571420237422, "sub_calls": 0}
+{"task_id": "HumanEval/38", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8763857558369637, "sub_calls": 0}
+{"task_id": "HumanEval/38", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8693259109277278, "sub_calls": 0}
+{"task_id": "HumanEval/39", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7478041180875152, "sub_calls": 0}
+{"task_id": "HumanEval/39", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.814367210958153, "sub_calls": 0}
+{"task_id": "HumanEval/39", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.022789784008637, "sub_calls": 0}
+{"task_id": "HumanEval/39", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.3941854471340775, "sub_calls": 0}
+{"task_id": "HumanEval/40", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.3077672719955444, "sub_calls": 0}
+{"task_id": "HumanEval/40", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7078973120078444, "sub_calls": 0}
+{"task_id": "HumanEval/40", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.944656979991123, "sub_calls": 0}
+{"task_id": "HumanEval/40", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7961305789649487, "sub_calls": 0}
+{"task_id": "HumanEval/41", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7824754540342838, "sub_calls": 0}
+{"task_id": "HumanEval/41", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7332332290243357, "sub_calls": 0}
+{"task_id": "HumanEval/41", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8652696490753442, "sub_calls": 0}
+{"task_id": "HumanEval/41", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8806966650299728, "sub_calls": 0}
+{"task_id": "HumanEval/42", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7777999069076031, "sub_calls": 0}
+{"task_id": "HumanEval/42", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.8322586440481246, "sub_calls": 0}
+{"task_id": "HumanEval/42", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7814248090144247, "sub_calls": 0}
+{"task_id": "HumanEval/42", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7895117001608014, "sub_calls": 0}
+{"task_id": "HumanEval/43", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8050436761695892, "sub_calls": 0}
+{"task_id": "HumanEval/43", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.8798168210778385, "sub_calls": 0}
+{"task_id": "HumanEval/43", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8186629610136151, "sub_calls": 0}
+{"task_id": "HumanEval/43", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8221547030843794, "sub_calls": 0}
+{"task_id": "HumanEval/44", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7760944569017738, "sub_calls": 0}
+{"task_id": "HumanEval/44", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7671100408770144, "sub_calls": 0}
+{"task_id": "HumanEval/44", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7984900360461324, "sub_calls": 0}
+{"task_id": "HumanEval/44", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8152072599623352, "sub_calls": 0}
+{"task_id": "HumanEval/45", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.086108461022377, "sub_calls": 0}
+{"task_id": "HumanEval/45", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7258329459000379, "sub_calls": 0}
+{"task_id": "HumanEval/45", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.828448582906276, "sub_calls": 0}
+{"task_id": "HumanEval/45", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.2403305780608207, "sub_calls": 0}
+{"task_id": "HumanEval/46", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7394738718867302, "sub_calls": 0}
+{"task_id": "HumanEval/46", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7480094449128956, "sub_calls": 0}
+{"task_id": "HumanEval/46", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.9381400640122592, "sub_calls": 0}
+{"task_id": "HumanEval/46", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.179741402855143, "sub_calls": 0}
+{"task_id": "HumanEval/47", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7520077899098396, "sub_calls": 0}
+{"task_id": "HumanEval/47", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 2.523591857170686, "sub_calls": 0}
+{"task_id": "HumanEval/47", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.0124464461114258, "sub_calls": 0}
+{"task_id": "HumanEval/47", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.81876340508461, "sub_calls": 0}
+{"task_id": "HumanEval/48", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8963692870456725, "sub_calls": 0}
+{"task_id": "HumanEval/48", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7959508229978383, "sub_calls": 0}
+{"task_id": "HumanEval/48", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.1189679480157793, "sub_calls": 0}
+{"task_id": "HumanEval/48", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.860925666987896, "sub_calls": 0}
+{"task_id": "HumanEval/49", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.8087477828375995, "sub_calls": 0}
+{"task_id": "HumanEval/49", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7516592289321125, "sub_calls": 0}
+{"task_id": "HumanEval/49", "arm": "echo-judge", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.887797593837604, "sub_calls": 0}
+{"task_id": "HumanEval/49", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.043053956935182, "sub_calls": 0}
