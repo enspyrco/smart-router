@@ -1,8 +1,20 @@
-# Echo
+# Smart Router
 
-**Self-consistency as a cost-control mechanism for LLM routing.**
+**Approaches to routing LLM requests across price tiers without training a router.**
 
-## The idea in one paragraph
+> **Renamed from "Echo" (2026-08-09).** Echo was the founding technique and the project grew past it.
+> "Echo" now names *one arm* — self-consistency routing — and keeps that name in the experiment arms
+> (`echo-judge`, `echo-oracle`, `echo-small-judge`), the recorded results, and the published blog post.
+> The repo, project and workstreams are Smart Router. The old GitHub URL redirects here.
+
+## Approaches under comparison
+
+1. **Echo** — self-consistency: call the cheap model twice with different personas, escalate on disagreement (the founding contribution; detailed below).
+2. **Hyperspecialist / type routing** — route by task *type* rather than difficulty. Specialist-beats-frontier holds for maths, not for code.
+3. **Diversity aggregator** — the popularity-trap fix: self-consistency structurally cannot reach the oracle ceiling, because agreement rewards the *popular* answer rather than the correct one.
+4. **Hybrid retrieval** — see [`hybrid-retrieval/`](hybrid-retrieval/).
+
+## Echo, the idea in one paragraph
 
 Most production LLM apps overpay because they send every request to the same model. The standard fix is a *router*: a learned classifier that decides "easy task, use the cheap model; hard task, use the expensive one." Trained routers work but need labelled training data per task domain, which is the bottleneck for adoption.
 
