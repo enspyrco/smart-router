@@ -87,6 +87,7 @@ import json
 import sys
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
@@ -97,7 +98,7 @@ from langchain_core.messages import HumanMessage, SystemMessage  # noqa: E402
 from benchmarks.bbh import load_bbh, score_bbh  # noqa: E402
 from benchmarks.bbh_arms import PERSONA_A, PERSONA_B  # noqa: E402
 from benchmarks.mmlu_pro import ALL_CATEGORIES, load_mmlu_pro, score_mmlu_pro  # noqa: E402
-from chat_oauth import MODEL_IDS, ChatOAuth  # noqa: E402
+from chat_oauth import MODEL_IDS, ChatOAuth, ModelAlias  # noqa: E402
 
 RESULTS = Path(__file__).resolve().parent.parent / "results"
 
@@ -138,9 +139,76 @@ RESULTS = Path(__file__).resolve().parent.parent / "results"
 # implemented "profitability is a function of when you opened the file".
 INTRO_PRICES_START = date(2026, 8, 1)
 INTRO_PRICES_END = date(2026, 8, 31)
-LIST_PRICES = {"haiku": 1.0, "sonnet": 3.0, "opus": 5.0}
-INTRO_PRICES = {"haiku": 1.0, "sonnet": 2.0, "opus": 5.0}
-ESCALATE_TO = {"haiku": "sonnet", "sonnet": "opus"}
+
+# THE MODEL TIER IS A CLOSED SET, SO IT GETS THE CLOSED TYPE (Carnot, round 7).
+# `ModelAlias` already existed in chat_oauth and the pricing path — the code the
+# PR's entire headline claim rests on — was still keyed by bare `str`. That is not
+# a style nit; it produced a real defect. With a `str` domain, "not in ESCALATE_TO"
+# means two unrelated things: a TYPO, or the TOP OF THE LADDER (opus has nothing
+# above it). Unable to tell them apart, the old code returned one `float("nan")`
+# for both — and NaN compares False against everything, so `e_hi < thr` and
+# `e_lo > thr` both failed and the verdict fell through to
+# "INDETERMINATE — production 95% CI [8%, 12%] straddles the nan% break-even".
+# A confident sentence with a NaN in it, from an unrepresented state.
+PRICES_BY_REGIME: dict[str, dict[ModelAlias, float]] = {
+    "list pricing": {"haiku": 1.0, "sonnet": 3.0, "opus": 5.0},
+    f"sonnet introductory pricing ({INTRO_PRICES_START} to {INTRO_PRICES_END})":
+        {"haiku": 1.0, "sonnet": 2.0, "opus": 5.0},
+}
+LIST_PRICES = PRICES_BY_REGIME["list pricing"]
+INTRO_PRICES = PRICES_BY_REGIME[
+    f"sonnet introductory pricing ({INTRO_PRICES_START} to {INTRO_PRICES_END})"]
+
+# The escalation ladder. Absence from this map is MEANINGFUL — it is the top tier.
+ESCALATE_TO: dict[ModelAlias, ModelAlias] = {"haiku": "sonnet", "sonnet": "opus"}
+
+# STARTUP INVARIANT: every alias the transport can produce must have a price in
+# every regime, and every escalation target must itself be priced. Without this,
+# adding a model to MODEL_IDS and forgetting its price is discovered at NaN time —
+# i.e. inside a verdict — instead of at import.
+for _regime, _table in PRICES_BY_REGIME.items():
+    _unpriced = sorted(set(MODEL_IDS) - set(_table))
+    if _unpriced:
+        raise RuntimeError(f"{_regime}: no price for {_unpriced}; every alias in "
+                           "MODEL_IDS must be priced in every regime")
+_bad_targets = sorted({v for v in ESCALATE_TO.values()} - set(MODEL_IDS))
+if _bad_targets:
+    raise RuntimeError(f"ESCALATE_TO points at unknown model(s) {_bad_targets}")
+
+
+@dataclass(frozen=True)
+class Escalation:
+    """`cheap` has a tier above it, so escalation economics are defined."""
+    cheap: ModelAlias
+    expensive: ModelAlias
+    threshold: float          # Echo wins while r < threshold. May be <= 0.
+    regime: str
+    note: str
+
+    @property
+    def satisfiable(self) -> bool:
+        return self.threshold > 0
+
+
+@dataclass(frozen=True)
+class TopTier:
+    """`cheap` is the most expensive tier — there is nothing to escalate TO.
+
+    A legitimate state, not an error, and emphatically not the same state as an
+    unknown model. Unknown models are now unrepresentable: `--model` takes
+    `choices`, `ChatOAuth.model` is a `ModelAlias`, and `break_even` rejects
+    anything outside the closed set rather than inventing a float for it.
+    """
+    cheap: ModelAlias
+    regime: str
+
+    @property
+    def note(self) -> str:
+        return (f"{self.cheap} is the top tier @ {self.regime} — there is nothing "
+                "to escalate to, so Echo's escalation economics do not apply")
+
+
+BreakEven = Escalation | TopTier
 
 # INPUT prices alone are sufficient here, which is a claim worth justifying
 # rather than assuming. Total cost is in_tok*p_in + out_tok*p_out, and every
@@ -150,7 +218,7 @@ ESCALATE_TO = {"haiku": "sonnet", "sonnet": "opus"}
 # If a future tier breaks the 5x ratio this shortcut dies with it.
 
 
-def prices_on(day: date) -> tuple[dict[str, float], str]:
+def prices_on(day: date) -> tuple[dict[ModelAlias, float], str]:
     """(price table, regime label) in effect on `day`.
 
     BOUNDED AT BOTH ENDS. An earlier version returned intro pricing for any date
@@ -165,8 +233,15 @@ def prices_on(day: date) -> tuple[dict[str, float], str]:
     return (LIST_PRICES, "list pricing")
 
 
-def break_even(cheap: str, day: date) -> tuple[float, str]:
-    """(threshold, explanation) for the cheap->expensive pair. May be <= 0.
+def break_even(cheap: ModelAlias, day: date) -> BreakEven:
+    """Escalation economics for `cheap` on `day` — an `Escalation` or a `TopTier`.
+
+    Returns a SEALED RESULT, not a float that might be NaN. The two states this
+    function can be in are genuinely different — there is a tier above, or there
+    isn't — and collapsing them into a sentinel is what let a NaN threshold reach
+    a verdict string (Carnot, round 7). An unknown alias is no longer one of the
+    states: it is rejected here, and made unreachable upstream by `--model`'s
+    `choices` and `ChatOAuth.model: ModelAlias`.
 
     `day` is REQUIRED and has no wall-clock default. That is deliberate: the
     default was `datetime.now()`, which made a replay's verdict a function of
@@ -176,9 +251,17 @@ def break_even(cheap: str, day: date) -> tuple[float, str]:
     fresh measurement, so the choice is always visible at the call site.
     """
     table, regime = prices_on(day)
+    if cheap not in table:
+        # Unrepresentable by construction; if it happens, the closed set has been
+        # widened somewhere without widening the price tables. Fail loudly rather
+        # than inventing a float, which is exactly what the old NaN did.
+        raise ValueError(f"{cheap!r} is not a priced model alias — expected one of "
+                         f"{sorted(table)}. The startup invariant should have caught "
+                         "this; a price table and MODEL_IDS have drifted apart.")
     exp = ESCALATE_TO.get(cheap)
-    if exp is None or cheap not in table:
-        return (float("nan"), f"no price pair known for {cheap!r}")
+    if exp is None:
+        return TopTier(cheap=cheap, regime=regime)
+
     c, e = table[cheap], table[exp]
     thr = (e - 2 * c) / e
     # Both regimes are always printed. A threshold that silently flips on
@@ -189,11 +272,12 @@ def break_even(cheap: str, day: date) -> tuple[float, str]:
     o_table, o_regime = prices_on(other_day)
     o_thr = (o_table[exp] - 2 * o_table[cheap]) / o_table[exp]
     alt = f" [under {o_regime}: {'UNSATISFIABLE' if o_thr <= 0 else f'r < {o_thr*100:.0f}%'}]"
-    if thr <= 0:
-        return (thr, f"{cheap}->{exp} @ {regime}: 2x{cheap} (${2*c}/MTok) already costs "
-                     f">= {exp} (${e}/MTok) — Echo CANNOT be profitable at this tier{alt}")
-    return (thr, f"{cheap}->{exp} @ {regime}: r < {thr*100:.0f}% "
-                 f"(2x${c} + r*${e} < ${e}){alt}")
+    note = (f"{cheap}->{exp} @ {regime}: 2x{cheap} (${2*c}/MTok) already costs "
+            f">= {exp} (${e}/MTok) — Echo CANNOT be profitable at this tier{alt}"
+            if thr <= 0 else
+            f"{cheap}->{exp} @ {regime}: r < {thr*100:.0f}% "
+            f"(2x${c} + r*${e} < ${e}){alt}")
+    return Escalation(cheap=cheap, expensive=exp, threshold=thr, regime=regime, note=note)
 # The last two unexamined constants in the statistics path, and this PR's history
 # is a series of unexamined defaults biting (Maxwell, round 4). They no longer
 # DECIDE anything — economics gates on a Wilson bound and mechanism on a
@@ -302,7 +386,7 @@ def agreement(rows: dict, k1: str, k2: str) -> dict:
     return {"counts": st, "per_task": per_task, "escalate": escalate}
 
 
-def summarise(label: str, res: dict, echo_accept: bool, thr: float, thr_note: str) -> dict:
+def summarise(label: str, res: dict, echo_accept: bool, be: BreakEven) -> dict:
     st = res["counts"]
     n_tot = st["scored"]
     n = n_tot or 1
@@ -320,17 +404,32 @@ def summarise(label: str, res: dict, echo_accept: bool, thr: float, thr_note: st
     pac = st["agree_given_correct"] / (st["correct"] or 1)
     paw = st["agree_given_wrong"] / (st["wrong"] or 1)
 
+    # MATCH ON THE SEALED RESULT. The old chain opened with `thr != thr` — a
+    # hand-rolled isnan whose own comment read "NaN (unknown pair) or
+    # unsatisfiable", i.e. it knew it was conflating two unrelated states and
+    # printed NOT PROFITABLE AT ANY r for both. A top tier is not unprofitable;
+    # it has no escalation economics at all. Pattern matching also means a third
+    # BreakEven case added later cannot be silently swallowed by an `else`.
     if st["scored"] < MIN_SCORED:
         cost = f"INSUFFICIENT — only {st['scored']} scored (need {MIN_SCORED})"
-    elif thr != thr or thr <= 0:            # NaN (unknown pair) or unsatisfiable
-        cost = f"NOT PROFITABLE AT ANY r — {thr_note}"
-    elif e_hi < thr:
-        cost = f"PROFITABLE — production 95% upper bound {e_hi*100:.0f}% < {thr*100:.0f}%"
-    elif e_lo > thr:
-        cost = f"NOT PROFITABLE — production 95% lower bound {e_lo*100:.0f}% > {thr*100:.0f}%"
     else:
-        cost = (f"INDETERMINATE — production 95% CI [{e_lo*100:.0f}%, {e_hi*100:.0f}%] "
-                f"straddles the {thr*100:.0f}% break-even")
+        match be:
+            case TopTier():
+                cost = f"N/A — {be.note}"
+            case Escalation(threshold=thr) if thr <= 0:
+                cost = f"NOT PROFITABLE AT ANY r — {be.note}"
+            case Escalation(threshold=thr) if e_hi < thr:
+                cost = (f"PROFITABLE — production 95% upper bound "
+                        f"{e_hi*100:.0f}% < {thr*100:.0f}%")
+            case Escalation(threshold=thr) if e_lo > thr:
+                cost = (f"NOT PROFITABLE — production 95% lower bound "
+                        f"{e_lo*100:.0f}% > {thr*100:.0f}%")
+            case Escalation(threshold=thr):
+                cost = (f"INDETERMINATE — production 95% CI "
+                        f"[{e_lo*100:.0f}%, {e_hi*100:.0f}%] "
+                        f"straddles the {thr*100:.0f}% break-even")
+            case _:
+                raise AssertionError(f"unhandled BreakEven case: {type(be).__name__}")
 
     # Separation gets an INTERVAL, not a threshold. Round 2 replaced the economics
     # sample-size gate with a Wilson bound on exactly this argument, then left the
@@ -582,8 +681,8 @@ def main() -> None:
 
     arms = {label: agreement(rows, k1, k2) for label, k1, k2, _ in ARMS}
     ECHO_ACCEPT = {label: ok for label, _, _, ok in ARMS}
-    thr, thr_note = break_even(model_name, pricing_as_of)
-    summaries = {k: summarise(k, v, ECHO_ACCEPT[k], thr, thr_note) for k, v in arms.items()}
+    be = break_even(model_name, pricing_as_of)
+    summaries = {k: summarise(k, v, ECHO_ACCEPT[k], be) for k, v in arms.items()}
 
     # Compare ESCALATION decisions (abstention counts as escalate), not agreement
     # over the both-parsed subset — otherwise differential parse failure silently
@@ -805,7 +904,12 @@ def main() -> None:
              pricing_as_of=pricing_as_of.isoformat(),
              pricing_as_of_source=pricing_src,
              price_regime=price_regime, price_table=price_table,
-             break_even_threshold=thr, break_even_note=thr_note,
+             # The sealed result, flattened for JSON. `break_even_kind` names WHICH
+             # case, so a consumer can tell 'top tier, economics N/A' from
+             # 'unsatisfiable threshold' — the distinction the NaN sentinel destroyed.
+             break_even_kind=type(be).__name__,
+             break_even_threshold=(be.threshold if isinstance(be, Escalation) else None),
+             break_even_note=be.note,
              # ALL THREE McNemar rows, not just the headline. The markdown is a
              # projection; the rows are the experiment, so the tests that justify
              # the persona claim belong in the machine record too — a consumer of

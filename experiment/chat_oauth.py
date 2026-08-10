@@ -75,7 +75,7 @@ ENDPOINT = "https://api.anthropic.com/v1/messages"
 # visible after the fact. Pin the dated ids here as soon as they are published.
 ModelAlias = Literal["haiku", "sonnet", "opus"]
 
-MODEL_IDS: dict[str, str] = {
+MODEL_IDS: dict[ModelAlias, str] = {
     "haiku": "claude-haiku-4-5-20251001",
     "sonnet": "claude-sonnet-5",
     "opus": "claude-opus-5",
