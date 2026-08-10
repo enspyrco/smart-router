@@ -226,6 +226,18 @@ class ChatOAuth(BaseChatModel):
         payload = self._post(body)
 
         blocks = payload.get("content", [])
+        # SHAPE IS ALSO A TRANSPORT FAULT (Tesla, cage-match #6 round 5).
+        # If `content` ever arrives as a bare string — or anything that is not a
+        # list of mappings — the `.get("type")` below raises AttributeError, which
+        # the caller's blanket `except Exception` converts into {answer: None},
+        # i.e. an abstention. That is the same transport-fault-into-missing-data
+        # laundering this module spent four rounds closing by TYPE, still open by
+        # SHAPE. Structural failure must not reach the dependent variable.
+        if not isinstance(blocks, list) or not all(isinstance(b, dict) for b in blocks):
+            raise ChatOAuthError(
+                f"malformed response content (model={self.model}): expected a list of "
+                f"blocks, got {type(blocks).__name__} — refusing to score a response "
+                "whose shape this transport does not understand")
         # FAIL CLOSED ON AN UNEXPECTED BLOCK TYPE (Carnot, cage-match #6 round 5).
         # This used to filter for type=="text" and silently drop everything else,
         # so a response carrying e.g. a tool_use block alongside some text would

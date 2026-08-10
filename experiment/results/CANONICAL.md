@@ -33,8 +33,37 @@ analyses the code had since outgrown:
 
 ```
 python3 scripts/measure_agreement_baseline.py \
-  --from-json results/20260810T133611Z_agreement_baseline_mmlu_pro_haiku_n210.json
+  --from-json results/20260810T133611Z_agreement_baseline_mmlu_pro_haiku_n210.json \
+  --write-canonical
 ```
+
+`--write-canonical` is what keeps this file honest. Round 5 gave the canonical
+analysis a fixed name so it would have no mtime story; round 6 caught that the
+rename was a manual `mv`, so following the instruction above produced a
+*timestamped* file and silently aged the canonical copy — the same
+prose-gate-vs-enforced-gate defect, reintroduced by the fix for it. The flag
+makes the script write the stable name. Omit it and you get a timestamped
+analysis, which is the right default for an exploratory re-run.
+
+**A replay no longer copies the datum.** `--from-json` writes only the analysis
+plus a pointer to the file it read. It used to emit a fresh JSON carrying the
+entire `rows` payload — which is exactly how the three-artifact replay chain
+below grew, and leaving that in place meant it could grow again the same way.
+
+### ⚠️ The datum's flat `mcnemar` field is inverted — do not cite it
+
+`20260810T133611Z…json` carries a legacy top-level `mcnemar: {b: 15, c: 7}`.
+The headline pair recomputes to **b=7, c=15** — the *opposite direction*.
+
+It hid for several rounds because **McNemar's p is symmetric**: `p=0.134` agrees
+across both orderings while the effect, `b/(b+c)`, does not — 68% versus 32%.
+Two authoritative surfaces disagreeing about direction, with the number that
+would have exposed it being the one number that matches.
+
+The field is no longer written; `mcnemar_tests` (a list, each entry naming its
+arm ordering explicitly) replaces it. Replaying an artifact that still has the
+old field prints a loud WARNING rather than quietly preferring one surface.
+**Cite `mcnemar_tests`. Never the flat field.**
 
 ### Regeneration is now safe, which it previously was not
 

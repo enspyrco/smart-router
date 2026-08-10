@@ -349,22 +349,36 @@ def summarise(label: str, res: dict, echo_accept: bool, thr: float, thr_note: st
     # never narrow it — so no current verdict depends on getting it.
     c_lo, c_hi = wilson(st["agree_given_correct"], st["correct"])
     w_lo, w_hi = wilson(st["agree_given_wrong"], st["wrong"])
-    sep_lo, sep_hi = pac - paw - (c_hi - c_lo) / 2 - (w_hi - w_lo) / 2, \
-                     pac - paw + (c_hi - c_lo) / 2 + (w_hi - w_lo) / 2
+    # ENDPOINT BOUNDS, because the half-width version was not guaranteed to be
+    # what its own label claimed (Carnot + Tesla, round 6). Wilson intervals are
+    # ASYMMETRIC — centred toward 1/2, not on the point estimate — so a
+    # half-width about `pac` can be SMALLER than the true lower-side drop when
+    # the cell sits near 1, which is exactly where the correct-cell lives here
+    # (151/156: drop 4.08pp vs half-width 2.95pp). On this dataset the wrong-cell
+    # term over-corrects in the other direction and the net stayed conservative
+    # by 0.84pp — but that is two errors cancelling, not a property. "Over-covers"
+    # was a claim the estimator did not carry.
+    #
+    # c_lo - w_hi IS guaranteed: the smallest plausible correct-cell rate minus
+    # the largest plausible wrong-cell rate. Still not Newcombe and still not
+    # exact coverage — but genuinely hard to claim rather than branded as such,
+    # and on this data it is also TIGHTER (+4.49pp vs +3.65pp). Strictly better
+    # on both axes, which is the tell that the old form was simply wrong.
+    sep_lo, sep_hi = c_lo - w_hi, c_hi - w_lo
     band = f"[{sep_lo*100:.0f}pp, {sep_hi*100:.0f}pp]"
     if not echo_accept:
         mech = "n/a — first call is not Echo's accept path"
     elif st["correct"] < MIN_CELL or st["wrong"] < MIN_CELL:
         mech = None
     elif sep_lo > 0.10:
-        mech = (f"mechanism holds — separation conservative lower bound "
-                f"{sep_lo*100:.0f}pp > 10pp (not an exact 95% difference CI)")
+        mech = (f"mechanism holds — separation endpoint lower bound "
+                f"{sep_lo*100:.0f}pp > 10pp (c_lo - w_hi; not an exact difference CI)")
     elif sep_lo > 0:
-        mech = (f"separation positive but weak — conservative bound {band} "
-                "(over-covers; not an exact 95% difference CI)")
+        mech = (f"separation positive but weak — endpoint bound {band} "
+                "(c_lo - w_hi; conservative by construction, not an exact difference CI)")
     else:
         mech = ("agreement does NOT reliably predict correctness — "
-                f"conservative bound {band} includes 0")
+                f"endpoint bound {band} includes 0")
     if mech is None:
         short = []
         if st["correct"] < MIN_CELL:
@@ -424,6 +438,16 @@ def main() -> None:
                     help="take the first n rows (ONE category); default is stratified")
     ap.add_argument("--from-json", default=None,
                     help="re-analyse a saved run; spends no calls and needs no other flags")
+    # The stable canonical name is now WRITTEN BY THE SCRIPT, not produced by a
+    # manual `mv`. Round 5 gave the canonical analysis an untimestamped filename so
+    # it would have no mtime story to tell — then left the rename as a hand step,
+    # so following CANONICAL.md's own regenerate instruction produced a timestamped
+    # file and quietly aged the canonical copy. That is the same prose-gate-vs-
+    # enforced-gate defect this PR keeps closing, reintroduced by the fix for it
+    # (Maxwell + Carnot, round 6).
+    ap.add_argument("--write-canonical", action="store_true",
+                    help="write results/CANONICAL_ANALYSIS.md instead of a timestamped "
+                         "analysis. Use when regenerating the analysis CANONICAL.md points at.")
     ap.add_argument("--pricing-as-of", default=None, metavar="YYYY-MM-DD",
                     help="override the pricing date used for the economics verdict. "
                          "Default: the artifact's recorded pricing_as_of on --from-json, "
@@ -455,15 +479,27 @@ def main() -> None:
         # CANONICAL.md says those files must not be cited for any number; that was
         # a PROSE gate against a script that cheerfully regenerated them. This is
         # the enforced one.
+        # THE QUANTIFIER IS THE WHOLE GUARD (Maxwell + Carnot + Tesla, round 6 —
+        # all three families independently). The first version asked
+        # `required - set().union(...)`, i.e. "does ANY row have b2" — the dual of
+        # what is needed. The n=150 files were blocked only because ZERO rows have
+        # b2; total absence is a lucky special case, not proof the seal holds. One
+        # complete row among 209 incomplete ones would have passed the guard and
+        # let `agreement()` fabricate the arm from abstentions exactly as before.
+        # Partial coverage is not exotic — this transport raises per call, so a
+        # mid-run quota lapse or transport fault produces precisely that shape.
+        # The invariant is per-row: EVERY row carries EVERY required call.
         required = {k for _, k1, k2, _ in ARMS for k in (k1, k2)}
-        missing = sorted(required - set().union(*(set(r) for r in rows.values())) ) if rows else sorted(required)
-        if missing:
+        short = {tid: sorted(required - set(r)) for tid, r in rows.items() if required - set(r)}
+        if short or not rows:
+            sample = list(short.items())[:3]
             raise SystemExit(
-                f"REFUSING TO REPLAY {args.from_json}: rows are missing call(s) "
-                f"{missing}, which this analysis requires. This datum predates the "
-                f"current arm design — see results/CANONICAL.md. Re-analysing it "
-                f"would fabricate the missing arm from abstentions and reprint "
-                f"superseded numbers under a fresh timestamp.")
+                f"REFUSING TO REPLAY {args.from_json}: {len(short)}/{len(rows)} rows are "
+                f"missing required call(s). This analysis needs {sorted(required)} on "
+                f"EVERY row. Sample: " + "; ".join(f"{t}->missing {m}" for t, m in sample) +
+                ". A datum from an older arm design (see results/CANONICAL.md), or a "
+                "partially-failed run. Re-analysing it would fabricate the missing arm "
+                "from abstentions and reprint superseded numbers under a fresh timestamp.")
 
         print(f"re-analysing {len(rows)} saved rows from {args.from_json}")
         print(f"  identity from datum: benchmark={benchmark} model={model_name} "
@@ -508,6 +544,16 @@ def main() -> None:
     pricing_src = ""
     if args.pricing_as_of:
         pricing_as_of = date.fromisoformat(args.pricing_as_of)
+        # Bounded. An unbounded override silently priced 1999-01-01 under "list
+        # pricing" and recorded a confident threshold for a regime that never
+        # existed — in a file whose entire thesis is that recorded provenance is
+        # what makes a number citable later (Maxwell, round 6).
+        if not (date(2025, 1, 1) <= pricing_as_of <= date(2030, 1, 1)):
+            raise SystemExit(
+                f"--pricing-as-of {pricing_as_of} is outside the range these price "
+                "tables describe (2025-01-01 to 2030-01-01). The tables encode one "
+                "known intro window and one list regime; a date outside that span "
+                "would produce a confident threshold for pricing nobody verified.")
         pricing_src = "--pricing-as-of (operator override)"
     elif args.from_json and saved.get("pricing_as_of"):
         pricing_as_of = date.fromisoformat(saved["pricing_as_of"])
@@ -579,6 +625,23 @@ def main() -> None:
     # The headline pair stays first so the primary claim is unambiguous.
     b, c, p = persona_results[0][1], persona_results[0][2], persona_results[0][3]
 
+    # SURFACE A TWO-SOURCE CONFLICT, DO NOT SILENTLY TIE-BREAK. Legacy artifacts
+    # carry a flat `mcnemar` field whose b/c can be INVERTED relative to what this
+    # code computes — the canonical datum stores {b:15, c:7} against a recomputed
+    # b=7, c=15 (Tesla, round 6). It went unnoticed for rounds because McNemar's p
+    # is symmetric: p=0.134 agrees while the effect direction, 68% vs 32%, does
+    # not. The field is no longer written, but a datum that has one must say so out
+    # loud rather than let the next reader quote whichever surface they opened.
+    if args.from_json:
+        legacy = saved.get("mcnemar")
+        if legacy and (legacy.get("b"), legacy.get("c")) != (b, c):
+            print(f"  WARNING: {Path(args.from_json).name} carries a legacy `mcnemar` "
+                  f"field b={legacy.get('b')} c={legacy.get('c')}, but the headline pair "
+                  f"recomputes to b={b} c={c} — INVERTED. McNemar's p is symmetric so "
+                  f"this hides in the p-value; the EFFECT direction differs. The datum's "
+                  f"field is stale; this analysis is authoritative. Cite `mcnemar_tests`, "
+                  f"never the flat field.\n")
+
     L = [f"# Agreement baseline — {benchmark}, model={model_name}, n={len(rows)}", "",
          f"Generation config: `{gen_cfg}`",
          f"Personas sha256[:12]: `{personas_sha}`",
@@ -638,25 +701,39 @@ def main() -> None:
     # b/(b+c) = 0.5. Two tests concur when their intervals on that split overlap.
     _, hb_, hc_, _, _ = persona_results[0]
     _, rb_, rc_, _, _ = persona_results[1]
-    h_lo, h_hi = wilson(hb_, hb_ + hc_)
-    r_lo, r_hi = wilson(rb_, rb_ + rc_)
-    overlap = (h_lo <= r_hi) and (r_lo <= h_hi)
-    both_include_null = (h_lo <= 0.5 <= h_hi) and (r_lo <= 0.5 <= r_hi)
-    L += ["",
-          f"**Do the two anchors agree?** Compare the effects, not the p-values: "
-          f"McNemar's effect is the discordant split b/(b+c), with 0.5 meaning no "
-          f"difference. Headline {hb_}/{hb_+hc_} = "
-          f"{hb_/(hb_+hc_)*100:.0f}% [{h_lo*100:.0f}%, {h_hi*100:.0f}%]; "
-          f"b1-anchored replicate {rb_}/{rb_+rc_} = "
-          f"{rb_/(rb_+rc_)*100:.0f}% [{r_lo*100:.0f}%, {r_hi*100:.0f}%]. "
-          + ("The intervals OVERLAP" if overlap else "The intervals DO NOT overlap")
-          + (" and both contain 0.5" if both_include_null else "")
-          + ", so the two anchors are "
-          + ("consistent with each other" if overlap else "in tension")
-          + ". Consistency across anchors is what licenses reading this as a "
-            "statement about personas rather than about which call the two arms "
-            "happen to share; tension would mean the common mode is driving the "
-            "answer and neither number should be quoted.",
+    # A test with no discordant pairs has no effect estimate — b/(b+c) is 0/0.
+    # The headline prose already handled that case; this block, added in the same
+    # round, divided straight through (Carnot, round 6). An all-concordant replay
+    # is unlikely but perfectly possible, and crashing on it violates the
+    # fail-closed doctrine the rest of the file is built on.
+    if not (hb_ + hc_) or not (rb_ + rc_):
+        which = "headline" if not (hb_ + hc_) else "b1-anchored replicate"
+        concordance = (
+            f"**Do the two anchors agree?** Not comparable — the {which} test has no "
+            "discordant pairs, so its effect (the discordant split b/(b+c)) is 0/0 and "
+            "undefined. With no disagreement to measure, neither concordance nor "
+            "tension can be claimed in either direction.")
+    else:
+        h_lo, h_hi = wilson(hb_, hb_ + hc_)
+        r_lo, r_hi = wilson(rb_, rb_ + rc_)
+        overlap = (h_lo <= r_hi) and (r_lo <= h_hi)
+        both_include_null = (h_lo <= 0.5 <= h_hi) and (r_lo <= 0.5 <= r_hi)
+        concordance = (
+            "**Do the two anchors agree?** Compare the effects, not the p-values: "
+            "McNemar's effect is the discordant split b/(b+c), with 0.5 meaning no "
+            f"difference. Headline {hb_}/{hb_+hc_} = "
+            f"{hb_/(hb_+hc_)*100:.0f}% [{h_lo*100:.0f}%, {h_hi*100:.0f}%]; "
+            f"b1-anchored replicate {rb_}/{rb_+rc_} = "
+            f"{rb_/(rb_+rc_)*100:.0f}% [{r_lo*100:.0f}%, {r_hi*100:.0f}%]. "
+            + ("The intervals OVERLAP" if overlap else "The intervals DO NOT overlap")
+            + (" and both contain 0.5" if both_include_null else "")
+            + ", so the two anchors are "
+            + ("consistent with each other" if overlap else "in tension")
+            + ". Consistency across anchors is what licenses reading this as a "
+              "statement about personas rather than about which call the two arms "
+              "happen to share; tension would mean the common mode is driving the "
+              "answer and neither number should be quoted.")
+    L += ["", concordance,
           "",
           "`cross (a2 vs b1)` shares a2 with the control AND b1 with the persona arm — "
           "it is NOT an independent falsifier on either side, and an earlier revision "
@@ -683,10 +760,12 @@ def main() -> None:
           "both as parallel mechanism evidence double-counts one first-call correctness "
           "frequency (Tesla, round 4). `persona-B self` conditions on `b1` and is the "
           "only row carrying an independent split.",
-          "- The separation interval is a CONSERVATIVE bound (summed Wilson half-widths), "
-          "not an exact 95% CI on the difference. It over-covers, so it makes claims "
-          "harder rather than easier; a Newcombe/bootstrap difference interval is the "
-          "follow-up and can only widen what we claim.",
+          "- The separation interval is an ENDPOINT bound: `c_lo - w_hi` to `c_hi - w_lo`, "
+          "the smallest plausible correct-cell rate minus the largest plausible wrong-cell "
+          "rate. It is conservative BY CONSTRUCTION, not by assertion. An earlier version "
+          "summed Wilson half-widths and called that over-covering; Wilson intervals are "
+          "asymmetric, so that form could under-cover near 0 or 1 — it held here only "
+          "because two errors cancelled. Still not Newcombe and still not exact coverage.",
           "- agree(B,B) IS now measured, as the `persona-B self` arm. Wu's round-1 point "
           "was that B's self-agreement was merely ASSUMED to mirror A's; the "
           "`control vs B-self` row above tests that symmetry directly rather than "
@@ -694,6 +773,24 @@ def main() -> None:
 
     RESULTS.mkdir(exist_ok=True)
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+
+    # A REPLAY EMITS AN ANALYSIS, NOT A COPY OF THE DATUM (Maxwell, round 6).
+    # `--from-json` used to write a fresh JSON carrying the entire `rows` payload —
+    # 1.5 MB of data already on disk, byte-identical. That is precisely how the
+    # "three siblings that were never siblings" chain grew (each a replay of the
+    # last, all sharing sha256 97a56d9f44df3b44), and leaving the mechanism in
+    # place meant the chain could grow again the same way. A re-analysis now
+    # writes only the markdown plus a pointer to the datum it read.
+    if args.from_json:
+        out_md = (RESULTS / "CANONICAL_ANALYSIS.md" if args.write_canonical
+                  else RESULTS / f"{stamp}_analysis_{benchmark}_{model_name}_n{len(rows)}.md")
+        out_md.write_text("\n".join(L) + f"\n\n---\n\n*Analysis of `{Path(args.from_json).name}` "
+                          f"(datum unchanged; this file is derived). Pricing as of "
+                          f"{pricing_as_of} — {pricing_src}.*\n")
+        print("\n".join(L))
+        print(f"\nWrote {out_md.name} (analysis only — the datum was not copied)")
+        return
+
     base = RESULTS / f"{stamp}_agreement_baseline_{benchmark}_{model_name}_n{len(rows)}"
     base.with_suffix(".json").write_text(json.dumps(
         dict(benchmark=benchmark, model=model_name, n=len(rows),
@@ -714,7 +811,14 @@ def main() -> None:
              # the persona claim belong in the machine record too — a consumer of
              # the JSON could previously see only the coupled pair and had no way
              # to know the replicate or the disjoint symmetry test existed (Tesla).
-             mcnemar=dict(b=b, c=c, p=p),          # headline, kept for compatibility
+             # The legacy flat `mcnemar` field is GONE, not kept for compatibility.
+             # Keeping it was the bug: the canonical datum stores {b:15, c:7} while
+             # the analysis computes b=7, c=15 — INVERTED (Tesla, round 6). It hid
+             # because McNemar's p is symmetric, so p=0.134 matched on both sides
+             # while the effect direction was opposite (68% vs 32%). A compatibility
+             # field that can silently disagree with the analysis is a second source
+             # of truth, which is the thing this whole PR keeps deleting. One field,
+             # named, with its arm ordering explicit in `name`.
              mcnemar_tests=[dict(name=n_, b=b_, c=c_, p=p_, note=note_)
                             for n_, b_, c_, p_, note_ in persona_results],
              rows=rows), indent=2))
