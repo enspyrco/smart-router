@@ -44,7 +44,7 @@ cd experiment
 python3 -m venv .venv
 source .venv/bin/activate
 
-pip install "langchain-core>=0.3,<0.4" "langchain>=0.3,<0.4" "langchain-ollama>=0.2,<0.4" "langchain-openai>=0.3" "langchain-google-genai>=2.0"
+pip install "langchain-core>=0.3,<0.4" "langchain>=0.3,<0.4" "langchain-ollama>=0.2,<0.4" "langchain-openai>=0.3" "langchain-google-genai>=2.0" "datasets>=2.14"
 ```
 
 ## Quick start (1 task)
@@ -169,10 +169,13 @@ jq -s 'group_by(.arm) | map({arm: .[0].arm, n: length, passed: (map(select(.pass
 | `echo-judge-gemini requires langchain-google-genai` | `pip install "langchain-google-genai>=2.0"` and set `GOOGLE_API_KEY` |
 | Ollama connection errors | Start Ollama; `ollama pull qwen2.5:7b-instruct-q4_K_M`; check `SMALL_JUDGE_BASE_URL` in `run_pilot.py` |
 | Very slow runs | Expected — each call spawns `claude --print` (~seconds overhead per call) |
+| Sonnet 90–125s / unparseable BBH outputs | Pre-fix harness bug (#1305). Pull `feat/mmlu-pro-harness` or later; needs `--setting-sources ""` |
 
-## BBH (ready for Nick to run)
+## BBH
 
-Big-Bench Hard loader, scoring, and BBH-specific Echo arms — **no Claude needed** for local tests.
+Big-Bench Hard loader, scoring, and BBH-specific Echo arms — **no Claude needed** for local tests. Model sweeps require the Claude Code CLI on a machine with Max auth.
+
+**Harness note:** `chat_claude_code.py` passes `--setting-sources ""` so `claude --print` does not inherit project `CLAUDE.md` or hooks (see #1305). Without this, BBH accuracy numbers are invalid.
 
 ```bash
 cd experiment
@@ -182,8 +185,8 @@ pip install "datasets>=2.14"
 # Pre-flight (tests + arm wiring; no model calls)
 python scripts/validate_harness.py
 
-# Unit tests
-python -m unittest tests.test_bbh_scoring tests.test_bbh_arms -v
+# Unit tests (41 tests, no model calls)
+python -m unittest discover tests -v
 
 # Print sample tasks
 python scripts/inspect_bbh.py --n 1
@@ -198,11 +201,54 @@ python scripts/analyze_sweep.py results/20260519T085620Z_n64.jsonl
 python scripts/run_bbh_pilot.py \
   --subtasks logical_deduction_three_objects,causal_judgement,date_understanding \
   --n-per-subtask 5
+
+# Long sweeps (auto-resume on usage window)
+./scripts/run_bbh_resumable.sh
 ```
 
-Files: `benchmarks/bbh.py`, `benchmarks/bbh_arms.py`, `scripts/inspect_bbh.py`, `scripts/run_bbh_pilot.py`, `scripts/analyze_sweep.py`.
+Canonical results and interpretation: [`results/README.md`](results/README.md#bbh--claude-baselines-clean-harness-1305).
 
-Pilot subtasks: `logical_deduction_three_objects`, `causal_judgement`, `date_understanding` (confirm with team).
+Files: `benchmarks/bbh.py`, `benchmarks/bbh_arms.py`, `scripts/inspect_bbh.py`, `scripts/run_bbh_pilot.py`, `scripts/analyze_sweep.py`, `scripts/run_bbh_resumable.sh`.
+
+Pilot subtasks: `logical_deduction_three_objects`, `causal_judgement`, `date_understanding`. MCQ BBH is near-ceiling for current Claude — see results README.
+
+## MMLU-Pro
+
+Multiple-choice reasoning benchmark (14 domains, up to 10 options per question). Reuses the same MCQ Echo arms as BBH.
+
+```bash
+# Pre-flight + unit tests (includes MMLU-Pro loader)
+python scripts/validate_harness.py
+python -m unittest tests.test_mmlu_pro_scoring -v
+
+# Inspect tasks (downloads HF dataset on first run)
+python scripts/inspect_mmlu_pro.py --n 1
+
+# Pilot sweep: 5 categories × 5 questions = 25 tasks (default arms)
+python scripts/run_mmlu_pro_pilot.py --n-per-category 5
+
+# Canonical first run (match BBH scale): 5 × 25 = 125 tasks
+python scripts/run_mmlu_pro_pilot.py \
+  --categories physics,math,law,chemistry,philosophy \
+  --n-per-category 25 \
+  --arms haiku-only,sonnet-only,echo-judge,echo-oracle
+
+# Research diagnostics: category pass rates, Sonnet gaps, oracle routing errors,
+# plus category-specialist routing probes
+python scripts/analyze_mmlu_pro.py results/<timestamp>_mmlu_pro_n125.jsonl --report
+
+# Long sweeps (auto-resume on usage window)
+./scripts/run_mmlu_pro_resumable.sh \
+  --categories physics,math,law,chemistry,philosophy \
+  --n-per-category 25 \
+  --arms haiku-only,sonnet-only,echo-judge,echo-oracle
+```
+
+Pilot categories: `physics`, `math`, `law`, `chemistry`, `philosophy`. Data: [`TIGER-Lab/MMLU-Pro`](https://huggingface.co/datasets/TIGER-Lab/MMLU-Pro) (`test` split).
+
+Files: `benchmarks/mmlu_pro.py`, `scripts/inspect_mmlu_pro.py`, `scripts/run_mmlu_pro_pilot.py`, `scripts/run_mmlu_pro_resumable.sh`.
+
+Advanced analysis: `scripts/analyze_mmlu_pro.py` reports per-category pass rate, escalation rate, cost per task, pass-rate gap vs `sonnet-only`, oracle diagnostics (`false_accept_rate`, `false_escalation_rate`, `oracle_alignment`) when `echo-oracle` is included, and category-specialist probes. `--report` writes a Markdown report next to the JSONL file.
 
 ## Layout
 
@@ -212,8 +258,9 @@ experiment/
   dataset.py            # HumanEval loader
   benchmarks/bbh.py     # BBH loader + scoring
   benchmarks/bbh_arms.py # BBH Echo arms (MCQ personas + oracle)
-  scripts/              # inspect_bbh, run_bbh_pilot, analyze_sweep, RUN_FOR_NICK
-  tests/                # test_bbh_scoring, test_bbh_arms
+  benchmarks/mmlu_pro.py # MMLU-Pro loader + scoring
+  scripts/              # inspect/run pilots, analyze_sweep, RUN_FOR_NICK
+  tests/                # test_bbh_*, test_mmlu_pro_scoring
   chat_claude_code.py   # LangChain wrapper around `claude --print`
   results/              # JSONL sweep logs (committed)
   pyproject.toml

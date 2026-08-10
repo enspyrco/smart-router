@@ -1,0 +1,192 @@
+{"task_id": "HumanEval/100", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 7.197261099936441, "sub_calls": 1}
+{"task_id": "HumanEval/100", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.7536438149400055, "sub_calls": 1}
+{"task_id": "HumanEval/100", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 9.852938357973471, "sub_calls": 3}
+{"task_id": "HumanEval/101", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 6.948713390855119, "sub_calls": 1}
+{"task_id": "HumanEval/101", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.0731288969982415, "sub_calls": 1}
+{"task_id": "HumanEval/101", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 8.623262337874621, "sub_calls": 3}
+{"task_id": "HumanEval/102", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 7.401243248023093, "sub_calls": 1}
+{"task_id": "HumanEval/102", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.6323806589934975, "sub_calls": 1}
+{"task_id": "HumanEval/102", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 13.736581217031926, "sub_calls": 3}
+{"task_id": "HumanEval/103", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 5.731631129980087, "sub_calls": 1}
+{"task_id": "HumanEval/103", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.0595870909746736, "sub_calls": 1}
+{"task_id": "HumanEval/103", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 8.342178703984246, "sub_calls": 3}
+{"task_id": "HumanEval/104", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 6.9550249869935215, "sub_calls": 1}
+{"task_id": "HumanEval/104", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.4121326860040426, "sub_calls": 1}
+{"task_id": "HumanEval/104", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 10.246873362921178, "sub_calls": 3}
+{"task_id": "HumanEval/105", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 6.667920317966491, "sub_calls": 1}
+{"task_id": "HumanEval/105", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.599546492798254, "sub_calls": 1}
+{"task_id": "HumanEval/105", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 12.239296925952658, "sub_calls": 3}
+{"task_id": "HumanEval/106", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 6.6047036030795425, "sub_calls": 1}
+{"task_id": "HumanEval/106", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 8.987590159056708, "sub_calls": 1}
+{"task_id": "HumanEval/106", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 14.430851528886706, "sub_calls": 3}
+{"task_id": "HumanEval/107", "arm": "haiku-only", "passed": false, "detail": "AssertionError", "wall_seconds": 7.439035956049338, "sub_calls": 1}
+{"task_id": "HumanEval/107", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 5.126347396988422, "sub_calls": 1}
+{"task_id": "HumanEval/107", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 9.695998686132953, "sub_calls": 3}
+{"task_id": "HumanEval/108", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 7.992183997994289, "sub_calls": 1}
+{"task_id": "HumanEval/108", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 5.8564419008325785, "sub_calls": 1}
+{"task_id": "HumanEval/108", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 13.930411566980183, "sub_calls": 3}
+{"task_id": "HumanEval/109", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 17.81803016900085, "sub_calls": 1}
+{"task_id": "HumanEval/109", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.63353308592923, "sub_calls": 1}
+{"task_id": "HumanEval/109", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 29.485547801014036, "sub_calls": 3}
+{"task_id": "HumanEval/110", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 8.21383360796608, "sub_calls": 1}
+{"task_id": "HumanEval/110", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.5884093660861254, "sub_calls": 1}
+{"task_id": "HumanEval/110", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 16.193434543907642, "sub_calls": 3}
+{"task_id": "HumanEval/111", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 6.322256591171026, "sub_calls": 1}
+{"task_id": "HumanEval/111", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.645634958986193, "sub_calls": 1}
+{"task_id": "HumanEval/111", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 17.03513246309012, "sub_calls": 3}
+{"task_id": "HumanEval/112", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 5.6450073178857565, "sub_calls": 1}
+{"task_id": "HumanEval/112", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.0786932571791112, "sub_calls": 1}
+{"task_id": "HumanEval/112", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 7.927206919994205, "sub_calls": 3}
+{"task_id": "HumanEval/113", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 7.804522952996194, "sub_calls": 1}
+{"task_id": "HumanEval/113", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.724512887885794, "sub_calls": 1}
+{"task_id": "HumanEval/113", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 11.436603737995028, "sub_calls": 3}
+{"task_id": "HumanEval/114", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 7.142521776026115, "sub_calls": 1}
+{"task_id": "HumanEval/114", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 5.7006118160206825, "sub_calls": 1}
+{"task_id": "HumanEval/114", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 13.340871653985232, "sub_calls": 3}
+{"task_id": "HumanEval/115", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 9.288694842951372, "sub_calls": 1}
+{"task_id": "HumanEval/115", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.782191680977121, "sub_calls": 1}
+{"task_id": "HumanEval/115", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 11.118975538993254, "sub_calls": 3}
+{"task_id": "HumanEval/116", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 17.48050046688877, "sub_calls": 1}
+{"task_id": "HumanEval/116", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 2.8523321161046624, "sub_calls": 1}
+{"task_id": "HumanEval/116", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 36.73228895687498, "sub_calls": 3}
+{"task_id": "HumanEval/117", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 6.819618420908228, "sub_calls": 1}
+{"task_id": "HumanEval/117", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.5800491720438004, "sub_calls": 1}
+{"task_id": "HumanEval/117", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 12.486138005042449, "sub_calls": 3}
+{"task_id": "HumanEval/118", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 12.72055870294571, "sub_calls": 1}
+{"task_id": "HumanEval/118", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 10.84694037400186, "sub_calls": 1}
+{"task_id": "HumanEval/118", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 16.499576024943963, "sub_calls": 3}
+{"task_id": "HumanEval/119", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 8.716406441060826, "sub_calls": 1}
+{"task_id": "HumanEval/119", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.107640017056838, "sub_calls": 1}
+{"task_id": "HumanEval/119", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 11.1806349249091, "sub_calls": 3}
+{"task_id": "HumanEval/120", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 11.422876593889669, "sub_calls": 1}
+{"task_id": "HumanEval/120", "arm": "sonnet-only", "passed": false, "detail": "AssertionError", "wall_seconds": 3.6288501089438796, "sub_calls": 1}
+{"task_id": "HumanEval/120", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 10.446522101992741, "sub_calls": 3}
+{"task_id": "HumanEval/121", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 7.032849854091182, "sub_calls": 1}
+{"task_id": "HumanEval/121", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.196478171972558, "sub_calls": 1}
+{"task_id": "HumanEval/121", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 9.162343970965594, "sub_calls": 3}
+{"task_id": "HumanEval/122", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 9.112349977018312, "sub_calls": 1}
+{"task_id": "HumanEval/122", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.131264364114031, "sub_calls": 1}
+{"task_id": "HumanEval/122", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 8.531139831990004, "sub_calls": 3}
+{"task_id": "HumanEval/123", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 6.609762490959838, "sub_calls": 1}
+{"task_id": "HumanEval/123", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.014479028992355, "sub_calls": 1}
+{"task_id": "HumanEval/123", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 18.786527205025777, "sub_calls": 3}
+{"task_id": "HumanEval/124", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 13.048185465857387, "sub_calls": 1}
+{"task_id": "HumanEval/124", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.706603541970253, "sub_calls": 1}
+{"task_id": "HumanEval/124", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 19.526947849895805, "sub_calls": 4}
+{"task_id": "HumanEval/125", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 5.597180770942941, "sub_calls": 1}
+{"task_id": "HumanEval/125", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.839141766075045, "sub_calls": 1}
+{"task_id": "HumanEval/125", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 7.603476116899401, "sub_calls": 3}
+{"task_id": "HumanEval/126", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 14.900873242877424, "sub_calls": 1}
+{"task_id": "HumanEval/126", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.618251593085006, "sub_calls": 1}
+{"task_id": "HumanEval/126", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 24.53115794295445, "sub_calls": 3}
+{"task_id": "HumanEval/127", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 9.2155765988864, "sub_calls": 1}
+{"task_id": "HumanEval/127", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 9.375225313007832, "sub_calls": 1}
+{"task_id": "HumanEval/127", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 13.806380968075246, "sub_calls": 3}
+{"task_id": "HumanEval/128", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 12.764243550831452, "sub_calls": 1}
+{"task_id": "HumanEval/128", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.379765135003254, "sub_calls": 1}
+{"task_id": "HumanEval/128", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 11.102855394827202, "sub_calls": 3}
+{"task_id": "HumanEval/129", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 35.22687456803396, "sub_calls": 1}
+{"task_id": "HumanEval/129", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 28.768654190935194, "sub_calls": 1}
+{"task_id": "HumanEval/129", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 81.97718986799009, "sub_calls": 4}
+{"task_id": "HumanEval/130", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 17.435352868866175, "sub_calls": 1}
+{"task_id": "HumanEval/130", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 10.897964657051489, "sub_calls": 1}
+{"task_id": "HumanEval/130", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 49.32910595997237, "sub_calls": 3}
+{"task_id": "HumanEval/131", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 6.7979709089268, "sub_calls": 1}
+{"task_id": "HumanEval/131", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.7491200759541243, "sub_calls": 1}
+{"task_id": "HumanEval/131", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 18.12617827905342, "sub_calls": 3}
+{"task_id": "HumanEval/132", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 51.94694359600544, "sub_calls": 1}
+{"task_id": "HumanEval/132", "arm": "sonnet-only", "passed": false, "detail": "AssertionError", "wall_seconds": 3.734567823121324, "sub_calls": 1}
+{"task_id": "HumanEval/132", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 165.80165975820273, "sub_calls": 4}
+{"task_id": "HumanEval/133", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 6.285346186021343, "sub_calls": 1}
+{"task_id": "HumanEval/133", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.438189252978191, "sub_calls": 1}
+{"task_id": "HumanEval/133", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 8.530717609915882, "sub_calls": 3}
+{"task_id": "HumanEval/134", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 9.668373975902796, "sub_calls": 1}
+{"task_id": "HumanEval/134", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.6698203759733588, "sub_calls": 1}
+{"task_id": "HumanEval/134", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 15.743615210987628, "sub_calls": 3}
+{"task_id": "HumanEval/135", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 8.52948848111555, "sub_calls": 1}
+{"task_id": "HumanEval/135", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.8371592578478158, "sub_calls": 1}
+{"task_id": "HumanEval/135", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 12.094938846072182, "sub_calls": 3}
+{"task_id": "HumanEval/136", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 5.749168005073443, "sub_calls": 1}
+{"task_id": "HumanEval/136", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.5994534171186388, "sub_calls": 1}
+{"task_id": "HumanEval/136", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 9.243318605003878, "sub_calls": 3}
+{"task_id": "HumanEval/137", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 10.768240940989926, "sub_calls": 1}
+{"task_id": "HumanEval/137", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 5.258460907964036, "sub_calls": 1}
+{"task_id": "HumanEval/137", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 9.19380213599652, "sub_calls": 3}
+{"task_id": "HumanEval/138", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 7.447603021049872, "sub_calls": 1}
+{"task_id": "HumanEval/138", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 6.014790937071666, "sub_calls": 1}
+{"task_id": "HumanEval/138", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 9.279012264916673, "sub_calls": 3}
+{"task_id": "HumanEval/139", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 6.038449523970485, "sub_calls": 1}
+{"task_id": "HumanEval/139", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 5.429968015057966, "sub_calls": 1}
+{"task_id": "HumanEval/139", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 12.771339013939723, "sub_calls": 3}
+{"task_id": "HumanEval/140", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 11.039244825951755, "sub_calls": 1}
+{"task_id": "HumanEval/140", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 10.57030034600757, "sub_calls": 1}
+{"task_id": "HumanEval/140", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 10.21590229915455, "sub_calls": 3}
+{"task_id": "HumanEval/141", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 9.2287902708631, "sub_calls": 1}
+{"task_id": "HumanEval/141", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.476262595970184, "sub_calls": 1}
+{"task_id": "HumanEval/141", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 10.60522256186232, "sub_calls": 3}
+{"task_id": "HumanEval/142", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 8.018669893965125, "sub_calls": 1}
+{"task_id": "HumanEval/142", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 9.04406503890641, "sub_calls": 1}
+{"task_id": "HumanEval/142", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 11.971350467996672, "sub_calls": 3}
+{"task_id": "HumanEval/143", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 7.214901688043028, "sub_calls": 1}
+{"task_id": "HumanEval/143", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.0595107190310955, "sub_calls": 1}
+{"task_id": "HumanEval/143", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 10.118910491000861, "sub_calls": 3}
+{"task_id": "HumanEval/144", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 7.663256000028923, "sub_calls": 1}
+{"task_id": "HumanEval/144", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.222194571979344, "sub_calls": 1}
+{"task_id": "HumanEval/144", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 9.679872156819329, "sub_calls": 3}
+{"task_id": "HumanEval/145", "arm": "haiku-only", "passed": false, "detail": "AssertionError", "wall_seconds": 23.668264863081276, "sub_calls": 1}
+{"task_id": "HumanEval/145", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 11.848489660071209, "sub_calls": 1}
+{"task_id": "HumanEval/145", "arm": "echo-judge-openai", "passed": false, "detail": "AssertionError", "wall_seconds": 45.73875201190822, "sub_calls": 3}
+{"task_id": "HumanEval/146", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 10.621644618920982, "sub_calls": 1}
+{"task_id": "HumanEval/146", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 10.959430043119937, "sub_calls": 1}
+{"task_id": "HumanEval/146", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 13.957625071052462, "sub_calls": 3}
+{"task_id": "HumanEval/147", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 44.08462626300752, "sub_calls": 1}
+{"task_id": "HumanEval/147", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 13.376814453164116, "sub_calls": 1}
+{"task_id": "HumanEval/147", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 35.407614869996905, "sub_calls": 3}
+{"task_id": "HumanEval/148", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 7.309734235052019, "sub_calls": 1}
+{"task_id": "HumanEval/148", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.878025413956493, "sub_calls": 1}
+{"task_id": "HumanEval/148", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 13.462902066996321, "sub_calls": 3}
+{"task_id": "HumanEval/149", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 5.328102374915034, "sub_calls": 1}
+{"task_id": "HumanEval/149", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.803824604023248, "sub_calls": 1}
+{"task_id": "HumanEval/149", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 7.733452871907502, "sub_calls": 3}
+{"task_id": "HumanEval/150", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 6.912148718023673, "sub_calls": 1}
+{"task_id": "HumanEval/150", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.040038916049525, "sub_calls": 1}
+{"task_id": "HumanEval/150", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 14.496226819930598, "sub_calls": 3}
+{"task_id": "HumanEval/151", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 23.610703330952674, "sub_calls": 1}
+{"task_id": "HumanEval/151", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.5057653749827296, "sub_calls": 1}
+{"task_id": "HumanEval/151", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 20.46135220117867, "sub_calls": 4}
+{"task_id": "HumanEval/152", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 7.219337190035731, "sub_calls": 1}
+{"task_id": "HumanEval/152", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.0864659370854497, "sub_calls": 1}
+{"task_id": "HumanEval/152", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.9173175778705627, "sub_calls": 0}
+{"task_id": "HumanEval/153", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.7551493679638952, "sub_calls": 0}
+{"task_id": "HumanEval/153", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.9705313898157328, "sub_calls": 0}
+{"task_id": "HumanEval/153", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.9635053060483187, "sub_calls": 0}
+{"task_id": "HumanEval/154", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.098255663877353, "sub_calls": 0}
+{"task_id": "HumanEval/154", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.9736795690841973, "sub_calls": 0}
+{"task_id": "HumanEval/154", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.5796004349831492, "sub_calls": 0}
+{"task_id": "HumanEval/155", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.5277727919165045, "sub_calls": 0}
+{"task_id": "HumanEval/155", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.5207643888425082, "sub_calls": 0}
+{"task_id": "HumanEval/155", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.6211508130654693, "sub_calls": 0}
+{"task_id": "HumanEval/156", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.5554533649701625, "sub_calls": 0}
+{"task_id": "HumanEval/156", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.5499136899597943, "sub_calls": 0}
+{"task_id": "HumanEval/156", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.6215993359219283, "sub_calls": 0}
+{"task_id": "HumanEval/157", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.5452298210002482, "sub_calls": 0}
+{"task_id": "HumanEval/157", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.51250337716192, "sub_calls": 0}
+{"task_id": "HumanEval/157", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.6867293419782072, "sub_calls": 0}
+{"task_id": "HumanEval/158", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.665742491837591, "sub_calls": 0}
+{"task_id": "HumanEval/158", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.7646906280424446, "sub_calls": 0}
+{"task_id": "HumanEval/158", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.6045634308829904, "sub_calls": 0}
+{"task_id": "HumanEval/159", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.5374250530730933, "sub_calls": 0}
+{"task_id": "HumanEval/159", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.5458299848251045, "sub_calls": 0}
+{"task_id": "HumanEval/159", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.6378899980336428, "sub_calls": 0}
+{"task_id": "HumanEval/160", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.5509482971392572, "sub_calls": 0}
+{"task_id": "HumanEval/160", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.564617021009326, "sub_calls": 0}
+{"task_id": "HumanEval/160", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.6012358500156552, "sub_calls": 0}
+{"task_id": "HumanEval/161", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.5568172929342836, "sub_calls": 0}
+{"task_id": "HumanEval/161", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.5371716909576207, "sub_calls": 0}
+{"task_id": "HumanEval/161", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.823020150884986, "sub_calls": 0}
+{"task_id": "HumanEval/162", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.5614013620652258, "sub_calls": 0}
+{"task_id": "HumanEval/162", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.6997481829021126, "sub_calls": 0}
+{"task_id": "HumanEval/162", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 2.164087553974241, "sub_calls": 0}
+{"task_id": "HumanEval/163", "arm": "haiku-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.6471345759928226, "sub_calls": 0}
+{"task_id": "HumanEval/163", "arm": "sonnet-only", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=sonnet): <no stderr>", "wall_seconds": 1.632257082965225, "sub_calls": 0}
+{"task_id": "HumanEval/163", "arm": "echo-judge-openai", "passed": false, "detail": "RuntimeError: claude --print failed (rc=1, model=haiku): <no stderr>", "wall_seconds": 1.9917490009684116, "sub_calls": 0}

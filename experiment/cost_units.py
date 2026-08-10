@@ -106,6 +106,9 @@ def _judge_model_key(arm: str) -> str | None:
 
 
 def escalated(arm: str, sub_calls: int) -> bool:
+    if arm == "echo-specialist":
+        # 3 = specialist broke the tie locally, no Sonnet call.
+        return sub_calls > 3
     if _uses_judge_call(arm):
         return sub_calls > 3
     if arm.startswith("echo-"):
@@ -128,6 +131,17 @@ def cost_units(arm: str, sub_calls: int) -> float:
     if arm == "echo-small-judge":
         if sub_calls <= 2:
             return sub_calls * HAIKU_PERSONA
+        return 2 * HAIKU_PERSONA + SONNET_PERSONA
+
+    # Domain specialists run locally via Ollama — 0 units, same as local-qwen.
+    if arm == "specialist-only":
+        # 1 = specialist answered (free); 2 = no specialist, Haiku fallback.
+        return 0.0 if sub_calls <= 1 else HAIKU_PERSONA
+
+    if arm == "echo-specialist":
+        # 2 = accepted pair; 3 = specialist tiebreak (free); 4 = Sonnet fallback.
+        if sub_calls <= 3:
+            return 2 * HAIKU_PERSONA
         return 2 * HAIKU_PERSONA + SONNET_PERSONA
 
     if _uses_judge_call(arm):

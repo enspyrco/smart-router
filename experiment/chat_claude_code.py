@@ -67,7 +67,18 @@ class ChatClaudeCode(BaseChatModel):
         prompt = self._format(messages)
         try:
             result = subprocess.run(
-                [self.binary, "--print", "--model", self.model, prompt],
+                # --setting-sources "" loads NONE of {user, project, local}
+                # settings. Without it, `claude --print` run from inside a
+                # project dir inherits that project's CLAUDE.md, SessionStart
+                # hooks, and any task-restore injection — so the model answers
+                # AS the project agent ("All 8 tasks restored...") instead of
+                # the benchmark question. That contaminated every BBH sweep
+                # before 2026-07-01 (#1305): inflated wall times (loading a
+                # huge CLAUDE.md), unparseable agent-preamble outputs, and
+                # confounded accuracy. Empty sources keeps the Max OAuth auth
+                # (unlike --bare, which drops it) while stripping all priming.
+                [self.binary, "--print", "--setting-sources", "",
+                 "--model", self.model, prompt],
                 capture_output=True,
                 text=True,
                 timeout=self.timeout,
@@ -79,9 +90,17 @@ class ChatClaudeCode(BaseChatModel):
             ) from exc
 
         if result.returncode != 0:
+            # The CLI reports quota exhaustion ("You've hit your weekly limit")
+            # on stdout, not stderr. Reporting stderr alone yielded "<no stderr>",
+            # so _is_usage_exhaustion() never matched, the sweep never exited 2,
+            # and the resumable wrapper skipped its backoff — recording ~2s
+            # failure rows for every remaining pair instead of pausing (#1418).
+            detail = " | ".join(
+                part for part in (result.stderr.strip(), result.stdout.strip()) if part
+            )
             raise RuntimeError(
                 f"claude --print failed (rc={result.returncode}, model={self.model}): "
-                f"{result.stderr.strip() or '<no stderr>'}"
+                f"{detail or '<no output>'}"
             )
 
         text = result.stdout.rstrip()

@@ -1,0 +1,15 @@
+{"task_id": "HumanEval/0", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 4.98566286615096, "sub_calls": 1}
+{"task_id": "HumanEval/0", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 6.388310763984919, "sub_calls": 1}
+{"task_id": "HumanEval/0", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 9.418942166026682, "sub_calls": 3}
+{"task_id": "HumanEval/1", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 7.605886629084125, "sub_calls": 1}
+{"task_id": "HumanEval/1", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 7.677130192052573, "sub_calls": 1}
+{"task_id": "HumanEval/1", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 22.38893140712753, "sub_calls": 3}
+{"task_id": "HumanEval/2", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 4.5927783728111535, "sub_calls": 1}
+{"task_id": "HumanEval/2", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 5.116814756998792, "sub_calls": 1}
+{"task_id": "HumanEval/2", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 5.60082377307117, "sub_calls": 3}
+{"task_id": "HumanEval/3", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 4.222217463189736, "sub_calls": 1}
+{"task_id": "HumanEval/3", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.205567490076646, "sub_calls": 1}
+{"task_id": "HumanEval/3", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 5.3121075730305165, "sub_calls": 3}
+{"task_id": "HumanEval/4", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 6.85215732594952, "sub_calls": 1}
+{"task_id": "HumanEval/4", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 3.3590228450484574, "sub_calls": 1}
+{"task_id": "HumanEval/4", "arm": "echo-judge-openai", "passed": true, "detail": "passed", "wall_seconds": 7.190307311946526, "sub_calls": 3}

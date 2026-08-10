@@ -1,0 +1,16 @@
+{"task_id": "HumanEval/100", "arm": "echo-judge-gemini-flash", "passed": true, "detail": "passed", "wall_seconds": 14.36802384792827, "sub_calls": 3}
+{"task_id": "HumanEval/101", "arm": "echo-judge-gemini-flash", "passed": true, "detail": "passed", "wall_seconds": 30.789216534001753, "sub_calls": 4}
+{"task_id": "HumanEval/102", "arm": "echo-judge-gemini-flash", "passed": true, "detail": "passed", "wall_seconds": 27.764084205962718, "sub_calls": 4}
+{"task_id": "HumanEval/103", "arm": "echo-judge-gemini-flash", "passed": true, "detail": "passed", "wall_seconds": 10.496099310228601, "sub_calls": 3}
+{"task_id": "HumanEval/104", "arm": "echo-judge-gemini-flash", "passed": true, "detail": "passed", "wall_seconds": 13.730982054024935, "sub_calls": 3}
+{"task_id": "HumanEval/105", "arm": "echo-judge-gemini-flash", "passed": true, "detail": "passed", "wall_seconds": 13.802437426056713, "sub_calls": 3}
+{"task_id": "HumanEval/106", "arm": "echo-judge-gemini-flash", "passed": true, "detail": "passed", "wall_seconds": 15.318411310901865, "sub_calls": 3}
+{"task_id": "HumanEval/107", "arm": "echo-judge-gemini-flash", "passed": true, "detail": "passed", "wall_seconds": 18.07991849910468, "sub_calls": 4}
+{"task_id": "HumanEval/108", "arm": "echo-judge-gemini-flash", "passed": true, "detail": "passed", "wall_seconds": 13.924097216920927, "sub_calls": 3}
+{"task_id": "HumanEval/109", "arm": "echo-judge-gemini-flash", "passed": true, "detail": "passed", "wall_seconds": 16.456178362946957, "sub_calls": 3}
+{"task_id": "HumanEval/110", "arm": "echo-judge-gemini-flash", "passed": true, "detail": "passed", "wall_seconds": 12.965226377127692, "sub_calls": 3}
+{"task_id": "HumanEval/111", "arm": "echo-judge-gemini-flash", "passed": true, "detail": "passed", "wall_seconds": 12.29635061416775, "sub_calls": 3}
+{"task_id": "HumanEval/112", "arm": "echo-judge-gemini-flash", "passed": true, "detail": "passed", "wall_seconds": 11.598407310899347, "sub_calls": 3}
+{"task_id": "HumanEval/113", "arm": "echo-judge-gemini-flash", "passed": true, "detail": "passed", "wall_seconds": 17.235781392082572, "sub_calls": 3}
+{"task_id": "HumanEval/114", "arm": "echo-judge-gemini-flash", "passed": true, "detail": "passed", "wall_seconds": 12.004102615173906, "sub_calls": 3}
+{"task_id": "HumanEval/115", "arm": "echo-judge-gemini-flash", "passed": true, "detail": "passed", "wall_seconds": 16.44176851795055, "sub_calls": 3}

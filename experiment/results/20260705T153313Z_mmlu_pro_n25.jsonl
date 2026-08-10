@@ -1,0 +1,101 @@
+{"_meta": true, "benchmark": "mmlu_pro", "categories": ["physics", "math", "law", "chemistry", "philosophy"], "split": "test", "n_per_category": 5, "start": 0, "arms": ["haiku-only", "sonnet-only", "echo-judge", "echo-oracle"]}
+{"task_id": "mmlu_pro/physics/9044", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 28.723302631638944, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/physics/9044", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 16.945085225626826, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/physics/9044", "arm": "echo-judge", "passed": true, "detail": "passed", "wall_seconds": 44.12592892162502, "sub_calls": 4, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/physics/9044", "arm": "echo-oracle", "passed": true, "detail": "passed", "wall_seconds": 36.49302672594786, "sub_calls": 2, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/physics/9045", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 16.594989295117557, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/physics/9045", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 32.05421881657094, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/physics/9045", "arm": "echo-judge", "passed": true, "detail": "passed", "wall_seconds": 19.618075355887413, "sub_calls": 3, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/physics/9045", "arm": "echo-oracle", "passed": true, "detail": "passed", "wall_seconds": 16.93811943847686, "sub_calls": 2, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/physics/9046", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 12.595979414880276, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/physics/9046", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 8.973827778361738, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/physics/9046", "arm": "echo-judge", "passed": true, "detail": "passed", "wall_seconds": 20.106046332977712, "sub_calls": 3, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/physics/9046", "arm": "echo-oracle", "passed": true, "detail": "passed", "wall_seconds": 11.03727721888572, "sub_calls": 2, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/physics/9047", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 7.11745335906744, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/physics/9047", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 6.172029438428581, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/physics/9047", "arm": "echo-judge", "passed": true, "detail": "passed", "wall_seconds": 10.4766980195418, "sub_calls": 3, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/physics/9047", "arm": "echo-oracle", "passed": true, "detail": "passed", "wall_seconds": 6.797667101956904, "sub_calls": 2, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/physics/9048", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 20.892605904489756, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/physics/9048", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 8.418480223044753, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/physics/9048", "arm": "echo-judge", "passed": true, "detail": "passed", "wall_seconds": 21.10554191097617, "sub_calls": 3, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/physics/9048", "arm": "echo-oracle", "passed": true, "detail": "passed", "wall_seconds": 16.742640072479844, "sub_calls": 2, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/math/7687", "arm": "haiku-only", "passed": false, "detail": "expected H got A", "wall_seconds": 22.12073052302003, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/math/7687", "arm": "sonnet-only", "passed": false, "detail": "expected H got A", "wall_seconds": 15.768879002891481, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/math/7687", "arm": "echo-judge", "passed": false, "detail": "expected H got A", "wall_seconds": 20.61642928328365, "sub_calls": 3, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/math/7687", "arm": "echo-oracle", "passed": false, "detail": "expected H got A", "wall_seconds": 47.259011515416205, "sub_calls": 3, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/math/7688", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 12.087320003658533, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/math/7688", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 11.72449782025069, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/math/7688", "arm": "echo-judge", "passed": true, "detail": "passed", "wall_seconds": 21.585493096150458, "sub_calls": 3, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/math/7688", "arm": "echo-oracle", "passed": true, "detail": "passed", "wall_seconds": 14.774629306048155, "sub_calls": 2, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/math/7689", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 11.88918885961175, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/math/7689", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 10.87644565384835, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/math/7689", "arm": "echo-judge", "passed": true, "detail": "passed", "wall_seconds": 15.274430213496089, "sub_calls": 3, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/math/7689", "arm": "echo-oracle", "passed": true, "detail": "passed", "wall_seconds": 7.361762431450188, "sub_calls": 2, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/math/7690", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 10.069274018518627, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/math/7690", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 9.870208757929504, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/math/7690", "arm": "echo-judge", "passed": true, "detail": "passed", "wall_seconds": 15.48039494920522, "sub_calls": 3, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/math/7690", "arm": "echo-oracle", "passed": true, "detail": "passed", "wall_seconds": 9.753236656077206, "sub_calls": 2, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/math/7691", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 14.192256932146847, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/math/7691", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 21.540979833342135, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/math/7691", "arm": "echo-judge", "passed": true, "detail": "passed", "wall_seconds": 42.378820264711976, "sub_calls": 3, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/math/7691", "arm": "echo-oracle", "passed": true, "detail": "passed", "wall_seconds": 41.23721956741065, "sub_calls": 2, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/law/866", "arm": "haiku-only", "passed": false, "detail": "expected D got F", "wall_seconds": 61.32347980886698, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/law/866", "arm": "sonnet-only", "passed": false, "detail": "expected D got G", "wall_seconds": 31.384013772010803, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/law/866", "arm": "echo-judge", "passed": false, "detail": "expected D got G", "wall_seconds": 52.37978525366634, "sub_calls": 3, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/law/866", "arm": "echo-oracle", "passed": false, "detail": "expected D got G", "wall_seconds": 69.6525895036757, "sub_calls": 3, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/law/867", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 13.76842444203794, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/law/867", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 17.65048627741635, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/law/867", "arm": "echo-judge", "passed": true, "detail": "passed", "wall_seconds": 29.677395705133677, "sub_calls": 3, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/law/867", "arm": "echo-oracle", "passed": true, "detail": "passed", "wall_seconds": 18.871191013604403, "sub_calls": 2, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/law/868", "arm": "haiku-only", "passed": false, "detail": "expected F got I", "wall_seconds": 36.427797141484916, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/law/868", "arm": "sonnet-only", "passed": false, "detail": "expected F got A", "wall_seconds": 111.7097777435556, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/law/868", "arm": "echo-judge", "passed": false, "detail": "expected F got H", "wall_seconds": 140.62684117164463, "sub_calls": 4, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/law/868", "arm": "echo-oracle", "passed": false, "detail": "expected F got A", "wall_seconds": 107.31883170828223, "sub_calls": 3, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/law/869", "arm": "haiku-only", "passed": false, "detail": "expected A got H", "wall_seconds": 26.036180334165692, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/law/869", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 19.146365707740188, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/law/869", "arm": "echo-judge", "passed": false, "detail": "expected A got I", "wall_seconds": 29.15200482495129, "sub_calls": 3, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/law/869", "arm": "echo-oracle", "passed": true, "detail": "passed", "wall_seconds": 37.34823069348931, "sub_calls": 2, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/law/870", "arm": "haiku-only", "passed": false, "detail": "expected E got C", "wall_seconds": 25.1970555158332, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/law/870", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 56.74331862293184, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/law/870", "arm": "echo-judge", "passed": true, "detail": "passed", "wall_seconds": 126.21312348358333, "sub_calls": 4, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/law/870", "arm": "echo-oracle", "passed": true, "detail": "passed", "wall_seconds": 110.39645004924387, "sub_calls": 3, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/chemistry/3526", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 19.504886687733233, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/chemistry/3526", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 19.456404785625637, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/chemistry/3526", "arm": "echo-judge", "passed": true, "detail": "passed", "wall_seconds": 18.917614833451807, "sub_calls": 3, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/chemistry/3526", "arm": "echo-oracle", "passed": true, "detail": "passed", "wall_seconds": 11.553761847317219, "sub_calls": 2, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/chemistry/3527", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 9.754172357730567, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/chemistry/3527", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 13.420156537555158, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/chemistry/3527", "arm": "echo-judge", "passed": true, "detail": "passed", "wall_seconds": 17.867225465364754, "sub_calls": 3, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/chemistry/3527", "arm": "echo-oracle", "passed": true, "detail": "passed", "wall_seconds": 18.023173140361905, "sub_calls": 2, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/chemistry/3528", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 7.601525174453855, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/chemistry/3528", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 6.862944774329662, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/chemistry/3528", "arm": "echo-judge", "passed": true, "detail": "passed", "wall_seconds": 19.13191110175103, "sub_calls": 3, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/chemistry/3528", "arm": "echo-oracle", "passed": true, "detail": "passed", "wall_seconds": 9.586902474053204, "sub_calls": 2, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/chemistry/3529", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 19.594517163001, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/chemistry/3529", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 17.986658421345055, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/chemistry/3529", "arm": "echo-judge", "passed": true, "detail": "passed", "wall_seconds": 34.84466999955475, "sub_calls": 3, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/chemistry/3529", "arm": "echo-oracle", "passed": true, "detail": "passed", "wall_seconds": 15.58042636141181, "sub_calls": 2, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/chemistry/3530", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 15.416031952947378, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/chemistry/3530", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 14.505817378871143, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/chemistry/3530", "arm": "echo-judge", "passed": true, "detail": "passed", "wall_seconds": 24.52990996465087, "sub_calls": 3, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/chemistry/3530", "arm": "echo-oracle", "passed": true, "detail": "passed", "wall_seconds": 19.727157921530306, "sub_calls": 2, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/philosophy/10774", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 8.586802589707077, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/philosophy/10774", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 4.878813018091023, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/philosophy/10774", "arm": "echo-judge", "passed": true, "detail": "passed", "wall_seconds": 10.737596668303013, "sub_calls": 3, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/philosophy/10774", "arm": "echo-oracle", "passed": true, "detail": "passed", "wall_seconds": 10.181238731369376, "sub_calls": 2, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/philosophy/10775", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 38.027705473825336, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/philosophy/10775", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 36.414576639421284, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/philosophy/10775", "arm": "echo-judge", "passed": false, "detail": "expected D got G", "wall_seconds": 68.37495286948979, "sub_calls": 3, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/philosophy/10775", "arm": "echo-oracle", "passed": true, "detail": "passed", "wall_seconds": 109.99058715626597, "sub_calls": 3, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/philosophy/10776", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 51.351625472307205, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/philosophy/10776", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 26.72878152038902, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/philosophy/10776", "arm": "echo-judge", "passed": true, "detail": "passed", "wall_seconds": 16.22810603864491, "sub_calls": 3, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/philosophy/10776", "arm": "echo-oracle", "passed": true, "detail": "passed", "wall_seconds": 16.649589508771896, "sub_calls": 2, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/philosophy/10777", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 7.906284853816032, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/philosophy/10777", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 6.570231527090073, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/philosophy/10777", "arm": "echo-judge", "passed": true, "detail": "passed", "wall_seconds": 10.633373316377401, "sub_calls": 3, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/philosophy/10777", "arm": "echo-oracle", "passed": true, "detail": "passed", "wall_seconds": 8.82274040300399, "sub_calls": 2, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/philosophy/10778", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 9.491382761858404, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/philosophy/10778", "arm": "sonnet-only", "passed": true, "detail": "passed", "wall_seconds": 6.1586256036534905, "sub_calls": 1, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/philosophy/10778", "arm": "echo-judge", "passed": true, "detail": "passed", "wall_seconds": 13.224870063364506, "sub_calls": 3, "benchmark": "mmlu_pro"}
+{"task_id": "mmlu_pro/philosophy/10778", "arm": "echo-oracle", "passed": true, "detail": "passed", "wall_seconds": 8.049394280649722, "sub_calls": 2, "benchmark": "mmlu_pro"}

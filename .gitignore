@@ -6,6 +6,7 @@ __pycache__/
 # Virtual environments
 .venv/
 venv/
+o/
 
 # Experiment artefacts: KEEP results JSONL in git — they're the source of
 # truth for paper plots. Only cache and venv are excluded.
