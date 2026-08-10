@@ -225,8 +225,22 @@ class ChatOAuth(BaseChatModel):
 
         payload = self._post(body)
 
-        parts = [b.get("text", "") for b in payload.get("content", [])
-                 if b.get("type") == "text"]
+        blocks = payload.get("content", [])
+        # FAIL CLOSED ON AN UNEXPECTED BLOCK TYPE (Carnot, cage-match #6 round 5).
+        # This used to filter for type=="text" and silently drop everything else,
+        # so a response carrying e.g. a tool_use block alongside some text would
+        # score as a clean answer. This transport's whole claim is that it is
+        # STRUCTURALLY tool-free — a non-text block would mean that claim is false,
+        # which is precisely the event we must not discard. Declaring no tools
+        # should make it impossible; "impossible" is what this file keeps being
+        # wrong about, so the assumption is checked rather than trusted.
+        unexpected = sorted({b.get("type") for b in blocks} - {"text"})
+        if unexpected:
+            raise ChatOAuthError(
+                f"unexpected non-text content block(s) {unexpected} (model={self.model}) — "
+                "this transport declares no tools, so a non-text block means the "
+                "tool-free premise is violated; refusing to score the text alongside it")
+        parts = [b.get("text", "") for b in blocks]
         text = "".join(parts).rstrip()
         if payload.get("stop_reason") == "max_tokens":
             # Failing closed on an EMPTY 200 was only half the fault. A completion

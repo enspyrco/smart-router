@@ -97,7 +97,7 @@ from langchain_core.messages import HumanMessage, SystemMessage  # noqa: E402
 from benchmarks.bbh import load_bbh, score_bbh  # noqa: E402
 from benchmarks.bbh_arms import PERSONA_A, PERSONA_B  # noqa: E402
 from benchmarks.mmlu_pro import ALL_CATEGORIES, load_mmlu_pro, score_mmlu_pro  # noqa: E402
-from chat_oauth import ChatOAuth  # noqa: E402
+from chat_oauth import MODEL_IDS, ChatOAuth  # noqa: E402
 
 RESULTS = Path(__file__).resolve().parent.parent / "results"
 
@@ -122,9 +122,21 @@ RESULTS = Path(__file__).resolve().parent.parent / "results"
 # 2026-08-31, reverting to $3.00/$15.00. That is not a footnote — it moves the
 # haiku->sonnet break-even from r < 33% to r < 0%, i.e. Echo CANNOT pay for
 # itself at that tier while the intro price is live, because two haiku calls
-# ($2) already cost a whole sonnet call ($2). The verdict must therefore depend
-# on the RUN DATE, and the run date is recorded in the artifact (Carnot,
-# cage-match #6 round 4).
+# ($2) already cost a whole sonnet call ($2). The verdict therefore depends on
+# a DATE (Carnot, cage-match #6 round 4).
+#
+# WHICH date is the whole ballgame, and an earlier revision of this comment
+# claimed "the run date is recorded in the artifact" while recording no such
+# thing (Tesla, round 5) — the same overclaim-in-a-comment as the "every alias
+# is PINNED" line killed two rounds earlier. Made true rather than deleted:
+# `pricing_as_of` and the resolved table/threshold are now written into every
+# artifact, and `--from-json` resolves economics from the RECORDED date, not
+# from the wall clock. Without that, replaying the same 210 rows on 2026-09-01
+# would stamp PROFITABLE where the committed artifact says NOT PROFITABLE AT
+# ANY r — and CANONICAL.md is the document telling readers to replay. The thesis
+# is "profitability is a function of the intro window"; the wall-clock version
+# implemented "profitability is a function of when you opened the file".
+INTRO_PRICES_START = date(2026, 8, 1)
 INTRO_PRICES_END = date(2026, 8, 31)
 LIST_PRICES = {"haiku": 1.0, "sonnet": 3.0, "opus": 5.0}
 INTRO_PRICES = {"haiku": 1.0, "sonnet": 2.0, "opus": 5.0}
@@ -139,15 +151,30 @@ ESCALATE_TO = {"haiku": "sonnet", "sonnet": "opus"}
 
 
 def prices_on(day: date) -> tuple[dict[str, float], str]:
-    """(price table, regime label) in effect on `day`."""
-    if day <= INTRO_PRICES_END:
-        return (INTRO_PRICES, f"sonnet introductory pricing (through {INTRO_PRICES_END})")
+    """(price table, regime label) in effect on `day`.
+
+    BOUNDED AT BOTH ENDS. An earlier version returned intro pricing for any date
+    <= the end of the window, including dates before the window opened — so
+    replaying a pre-August datum would silently price it under a regime that did
+    not yet exist (Maxwell, round 5). If a date is going to govern the verdict,
+    the window needs both edges.
+    """
+    if INTRO_PRICES_START <= day <= INTRO_PRICES_END:
+        return (INTRO_PRICES,
+                f"sonnet introductory pricing ({INTRO_PRICES_START} to {INTRO_PRICES_END})")
     return (LIST_PRICES, "list pricing")
 
 
-def break_even(cheap: str, day: date | None = None) -> tuple[float, str]:
-    """(threshold, explanation) for the cheap->expensive pair. May be <= 0."""
-    day = day or datetime.now(timezone.utc).date()
+def break_even(cheap: str, day: date) -> tuple[float, str]:
+    """(threshold, explanation) for the cheap->expensive pair. May be <= 0.
+
+    `day` is REQUIRED and has no wall-clock default. That is deliberate: the
+    default was `datetime.now()`, which made a replay's verdict a function of
+    when someone opened the file rather than of the data (Maxwell + Tesla,
+    round 5 — found independently by two families). Callers must resolve the
+    pricing date explicitly, from the artifact for a replay or from today for a
+    fresh measurement, so the choice is always visible at the call site.
+    """
     table, regime = prices_on(day)
     exp = ESCALATE_TO.get(cheap)
     if exp is None or cheap not in table:
@@ -157,7 +184,8 @@ def break_even(cheap: str, day: date | None = None) -> tuple[float, str]:
     # Both regimes are always printed. A threshold that silently flips on
     # 2026-09-01 is exactly the kind of stale-artifact trap this file keeps
     # finding in itself, so the reader gets to see the flip coming.
-    other_day = INTRO_PRICES_END + timedelta(days=1) if day <= INTRO_PRICES_END else INTRO_PRICES_END
+    in_intro = INTRO_PRICES_START <= day <= INTRO_PRICES_END
+    other_day = INTRO_PRICES_END + timedelta(days=1) if in_intro else INTRO_PRICES_START
     o_table, o_regime = prices_on(other_day)
     o_thr = (o_table[exp] - 2 * o_table[cheap]) / o_table[exp]
     alt = f" [under {o_regime}: {'UNSATISFIABLE' if o_thr <= 0 else f'r < {o_thr*100:.0f}%'}]"
@@ -355,18 +383,52 @@ def summarise(label: str, res: dict, echo_accept: bool, thr: float, thr_note: st
                 verdict=cost, mechanism_verdict=mech)
 
 
+# ECHO_ACCEPT (the 4th field) marks arms whose FIRST key is the answer production
+# Echo would accept. P(agree|correct) on any other ordering is not the Echo
+# premise, so its mechanism verdict is suppressed rather than quietly cited
+# (Tesla). Module scope so the replay guard in main() can derive the set of calls
+# a datum must contain from the same definition the analysis uses — deriving it
+# from one source keeps the guard from drifting out of step with the arms.
+ARMS = [
+    ("persona (a1 vs b1)", "a1", "b1", True),
+    ("control (a1 vs a2)", "a1", "a2", True),
+    # NOT "unshared", and the name was mathematically false (Carnot + Tesla,
+    # round 2). It shares a2 with the control AND b1 with the persona arm, so
+    # it is an independent falsifier of NEITHER — the earlier comment named
+    # only the a2 overlap, which understated the coupling by half (Kelvin,
+    # round 4). With three calls no pair could be disjoint from the control at
+    # all; the fourth call is what buys one.
+    ("cross (a2 vs b1)", "a2", "b1", False),
+    # Disjoint from the CONTROL: {b1,b2} n {a1,a2} = {}. Still shares b1 with
+    # the persona arm — "disjoint" is a relation between two named arms, not a
+    # property this row owns. It also answers Wu's round-1 point that
+    # agree(B,B) was never measured, and supplies the only correctness split
+    # not keyed on a1.
+    ("persona-B self (b1 vs b2)", "b1", "b2", False),
+]
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--benchmark", choices=["mmlu_pro", "bbh"], default="mmlu_pro")
     ap.add_argument("--n", type=int, default=210,
                     help="target total; stratified mode rounds DOWN to a whole "
                          "number per category (n // 14 each across 14 categories)")
-    ap.add_argument("--model", default="haiku")
+    # choices, not a free string: an unknown --model previously sailed past
+    # argparse, made break_even() return NaN, and only failed later inside
+    # pydantic — so the transport and the pricing logic could disagree about
+    # which model was being measured before anything complained (Carnot, round 5).
+    ap.add_argument("--model", default="haiku", choices=sorted(MODEL_IDS))
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--single-category", action="store_true",
                     help="take the first n rows (ONE category); default is stratified")
     ap.add_argument("--from-json", default=None,
                     help="re-analyse a saved run; spends no calls and needs no other flags")
+    ap.add_argument("--pricing-as-of", default=None, metavar="YYYY-MM-DD",
+                    help="override the pricing date used for the economics verdict. "
+                         "Default: the artifact's recorded pricing_as_of on --from-json, "
+                         "else today (UTC). Set this to ask 'what would this datum say "
+                         "under a different pricing regime' — explicitly, in the artifact.")
     args = ap.parse_args()
 
     if args.from_json:
@@ -381,6 +443,28 @@ def main() -> None:
         gen_cfg = saved.get("generation_config", "NOT RECORDED (pre-cage-match run)")
         categories = saved.get("categories", "NOT RECORDED (pre-cage-match run)")
         personas_sha = saved.get("personas_sha", "NOT RECORDED")
+
+        # FAIL CLOSED ON A SCHEMA-INCOMPLETE DATUM (Carnot, round 5).
+        # The retained n=150 artifacts predate the fourth call and have no `b2`.
+        # Replaying one used to SUCCEED: `agreement()` counted every missing b2 as
+        # an abstention, so the `persona-B self` arm was manufactured out of
+        # nothing (scored=0, abstained=150, and a meaningless "r (abstain
+        # escalates) = 100%") — and the run exited 0 while REPRINTING the +48pp
+        # physics-only separation that this whole review exists to have retracted,
+        # into a freshly-timestamped file that looks like a current analysis.
+        # CANONICAL.md says those files must not be cited for any number; that was
+        # a PROSE gate against a script that cheerfully regenerated them. This is
+        # the enforced one.
+        required = {k for _, k1, k2, _ in ARMS for k in (k1, k2)}
+        missing = sorted(required - set().union(*(set(r) for r in rows.values())) ) if rows else sorted(required)
+        if missing:
+            raise SystemExit(
+                f"REFUSING TO REPLAY {args.from_json}: rows are missing call(s) "
+                f"{missing}, which this analysis requires. This datum predates the "
+                f"current arm design — see results/CANONICAL.md. Re-analysing it "
+                f"would fabricate the missing arm from abstentions and reprint "
+                f"superseded numbers under a fresh timestamp.")
+
         print(f"re-analysing {len(rows)} saved rows from {args.from_json}")
         print(f"  identity from datum: benchmark={benchmark} model={model_name} "
               f"categories={categories}\n")
@@ -417,29 +501,42 @@ def main() -> None:
                 print(".", end="", flush=True)
         print("\n")
 
-    # ECHO_ACCEPT marks arms whose FIRST key is the answer production Echo would
-    # accept. P(agree|correct) on any other ordering is not the Echo premise, so
-    # its mechanism verdict is suppressed rather than quietly cited (Tesla).
-    ARMS = [
-        ("persona (a1 vs b1)", "a1", "b1", True),
-        ("control (a1 vs a2)", "a1", "a2", True),
-        # NOT "unshared", and the name was mathematically false (Carnot + Tesla,
-        # round 2). It shares a2 with the control AND b1 with the persona arm, so
-        # it is an independent falsifier of NEITHER — the earlier comment named
-        # only the a2 overlap, which understated the coupling by half (Kelvin,
-        # round 4). With three calls no pair could be disjoint from the control at
-        # all; the fourth call is what buys one.
-        ("cross (a2 vs b1)", "a2", "b1", False),
-        # Disjoint from the CONTROL: {b1,b2} n {a1,a2} = {}. Still shares b1 with
-        # the persona arm — "disjoint" is a relation between two named arms, not a
-        # property this row owns. It also answers Wu's round-1 point that
-        # agree(B,B) was never measured, and supplies the only correctness split
-        # not keyed on a1.
-        ("persona-B self (b1 vs b2)", "b1", "b2", False),
-    ]
+    # ---- Resolve the pricing date. Precedence, most explicit first. ----
+    # The economics verdict must be a pure function of (rows, pricing_as_of).
+    # `break_even` has no wall-clock default any more, so this is the only place
+    # the date is chosen and it is always recorded into the artifact below.
+    pricing_src = ""
+    if args.pricing_as_of:
+        pricing_as_of = date.fromisoformat(args.pricing_as_of)
+        pricing_src = "--pricing-as-of (operator override)"
+    elif args.from_json and saved.get("pricing_as_of"):
+        pricing_as_of = date.fromisoformat(saved["pricing_as_of"])
+        pricing_src = f"recorded in {Path(args.from_json).name}"
+    elif args.from_json:
+        # Legacy datum written before this field existed (including the current
+        # canonical one). Infer from the filename's UTC stamp rather than the wall
+        # clock: the stamp is when the artifact was written, which is the closest
+        # honest proxy for when its prices were in force. Say so out loud — an
+        # inferred date must never look like a recorded one.
+        stem = Path(args.from_json).name[:8]
+        try:
+            pricing_as_of = datetime.strptime(stem, "%Y%m%d").date()
+        except ValueError:
+            raise SystemExit(
+                f"{args.from_json} records no `pricing_as_of` and its filename has no "
+                "YYYYMMDD stamp to infer one from. Pass --pricing-as-of explicitly; "
+                "economics must not fall back to the wall clock.")
+        pricing_src = f"INFERRED from filename stamp (artifact predates `pricing_as_of`)"
+        print(f"  NOTE: pricing date {pricing_as_of} {pricing_src}\n")
+    else:
+        pricing_as_of = datetime.now(timezone.utc).date()
+        pricing_src = "measurement date (fresh run, UTC)"
+
+    price_table, price_regime = prices_on(pricing_as_of)
+
     arms = {label: agreement(rows, k1, k2) for label, k1, k2, _ in ARMS}
     ECHO_ACCEPT = {label: ok for label, _, _, ok in ARMS}
-    thr, thr_note = break_even(model_name)
+    thr, thr_note = break_even(model_name, pricing_as_of)
     summaries = {k: summarise(k, v, ECHO_ACCEPT[k], thr, thr_note) for k, v in arms.items()}
 
     # Compare ESCALATION decisions (abstention counts as escalate), not agreement
@@ -530,14 +627,36 @@ def main() -> None:
                  "equivalence claim, pre-specify a margin and run TOST. Note the "
                  "discordant set is thinned by the shared `a1`, so power is lower than "
                  f"{hb+hc} paired tasks would suggest; see the replicate row.")
-    agree_word = ("AGREES with" if (hp < 0.05) == (replicate_p < 0.05)
-                  else "**DISAGREES with**")
+    # COMPARE THE EFFECTS, NOT THE SIGNIFICANCE DECISIONS. An earlier version
+    # decided concordance with `(hp < 0.05) == (replicate_p < 0.05)` — which
+    # would call p=0.049 and p=0.051 a DISAGREEMENT and p=0.134 and p=0.361 an
+    # AGREEMENT despite a 2.7x spread. That is a threshold gate wearing an
+    # agreement claim: exactly the sin removed from economics (now a Wilson
+    # bound) and mechanism (now an interval), reintroduced one verdict over, in
+    # the same commit that claimed to have fixed the class (Maxwell, round 5).
+    # McNemar's effect measure is the discordant split b/(b+c); no difference is
+    # b/(b+c) = 0.5. Two tests concur when their intervals on that split overlap.
+    _, hb_, hc_, _, _ = persona_results[0]
+    _, rb_, rc_, _, _ = persona_results[1]
+    h_lo, h_hi = wilson(hb_, hb_ + hc_)
+    r_lo, r_hi = wilson(rb_, rb_ + rc_)
+    overlap = (h_lo <= r_hi) and (r_lo <= h_hi)
+    both_include_null = (h_lo <= 0.5 <= h_hi) and (r_lo <= 0.5 <= r_hi)
     L += ["",
-          f"The b1-anchored replicate {agree_word} the headline "
-          f"(p={replicate_p:.3f} vs p={hp:.3f}). Agreement across anchors is the "
-          "evidence that the result is about personas rather than about which call "
-          "the two arms happen to share; disagreement would mean the common mode is "
-          "driving the answer and neither number should be quoted.",
+          f"**Do the two anchors agree?** Compare the effects, not the p-values: "
+          f"McNemar's effect is the discordant split b/(b+c), with 0.5 meaning no "
+          f"difference. Headline {hb_}/{hb_+hc_} = "
+          f"{hb_/(hb_+hc_)*100:.0f}% [{h_lo*100:.0f}%, {h_hi*100:.0f}%]; "
+          f"b1-anchored replicate {rb_}/{rb_+rc_} = "
+          f"{rb_/(rb_+rc_)*100:.0f}% [{r_lo*100:.0f}%, {r_hi*100:.0f}%]. "
+          + ("The intervals OVERLAP" if overlap else "The intervals DO NOT overlap")
+          + (" and both contain 0.5" if both_include_null else "")
+          + ", so the two anchors are "
+          + ("consistent with each other" if overlap else "in tension")
+          + ". Consistency across anchors is what licenses reading this as a "
+            "statement about personas rather than about which call the two arms "
+            "happen to share; tension would mean the common mode is driving the "
+            "answer and neither number should be quoted.",
           "",
           "`cross (a2 vs b1)` shares a2 with the control AND b1 with the persona arm — "
           "it is NOT an independent falsifier on either side, and an earlier revision "
@@ -580,7 +699,25 @@ def main() -> None:
         dict(benchmark=benchmark, model=model_name, n=len(rows),
              generation_config=gen_cfg, categories=categories, personas_sha=personas_sha,
              source_json=args.from_json, arms=summaries,
-             mcnemar=dict(b=b, c=c, p=p), rows=rows), indent=2))
+             # ECONOMICS INPUTS ARE PART OF THE DATUM (Tesla + Maxwell, round 5).
+             # Everything the verdict depends on is written down, so a replay
+             # reproduces the verdict instead of recomputing it against whatever
+             # day it happens to be run. `pricing_as_of_source` records HOW the
+             # date was chosen, so an inferred date can never be mistaken for a
+             # recorded one on the next hop of a replay chain.
+             pricing_as_of=pricing_as_of.isoformat(),
+             pricing_as_of_source=pricing_src,
+             price_regime=price_regime, price_table=price_table,
+             break_even_threshold=thr, break_even_note=thr_note,
+             # ALL THREE McNemar rows, not just the headline. The markdown is a
+             # projection; the rows are the experiment, so the tests that justify
+             # the persona claim belong in the machine record too — a consumer of
+             # the JSON could previously see only the coupled pair and had no way
+             # to know the replicate or the disjoint symmetry test existed (Tesla).
+             mcnemar=dict(b=b, c=c, p=p),          # headline, kept for compatibility
+             mcnemar_tests=[dict(name=n_, b=b_, c=c_, p=p_, note=note_)
+                            for n_, b_, c_, p_, note_ in persona_results],
+             rows=rows), indent=2))
     base.with_suffix(".md").write_text("\n".join(L))
     print("\n".join(L))
     print(f"\nWrote {base.with_suffix('.md').name}")

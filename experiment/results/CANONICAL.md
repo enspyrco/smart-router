@@ -15,21 +15,52 @@ delete the ambiguity, not the data.
 | | |
 |---|---|
 | **Datum** | `20260810T133611Z_agreement_baseline_mmlu_pro_haiku_n210.json` |
-| **Analysis** | `20260810T212604Z_agreement_baseline_mmlu_pro_haiku_n210.md` |
+| **Analysis** | `CANONICAL_ANALYSIS.md` — deliberately *untimestamped* |
 | n | 210 tasks, 15 per category across all 14 MMLU-Pro categories |
 | Calls | 4 per task (`a1`, `a2`, `b1`, `b2`), raw output persisted |
 | Model | `claude-haiku-4-5-20251001`, temperature 1.0, max_tokens 4096 |
 | Personas | sha256[:12] `9e1c3c3a871e` |
+| Pricing as of | **2026-08-10** — sonnet introductory window; `haiku->sonnet` break-even is `r < 0%`, i.e. unsatisfiable |
 
-**Cite nothing else.** Regenerate the analysis rather than reading a committed
-`.md` that predates a scoring change: `.md` files are *derived*, the `.json` is
-the datum, and this repo has already shipped analyses that the code had since
-outgrown.
+The analysis has a **stable filename on purpose.** Every other artifact here is
+timestamped, which is what made "pick the newest `.md`" a plausible-looking way
+to choose a number — the failure mode this file exists to prevent. A fixed name
+has no mtime story to tell.
+
+**Cite nothing else.** Regenerate rather than trusting a committed `.md` blindly
+— `.md` files are *derived*, the `.json` is the datum, and this repo has shipped
+analyses the code had since outgrown:
 
 ```
 python3 scripts/measure_agreement_baseline.py \
   --from-json results/20260810T133611Z_agreement_baseline_mmlu_pro_haiku_n210.json
 ```
+
+### Regeneration is now safe, which it previously was not
+
+Two things made "just regenerate it" dangerous until round 5:
+
+**Economics used to read the wall clock.** `break_even()` defaulted the pricing
+date to `datetime.now()`, so replaying this datum on 2026-09-01 would have
+printed `PROFITABLE` where the committed analysis says `NOT PROFITABLE AT ANY r`
+— identical rows, opposite verdict, no code change, and this very document
+instructing the reader to regenerate. Found independently by two model families.
+Fixed: `break_even()` has no wall-clock default, every artifact records
+`pricing_as_of` / `price_regime` / `price_table` / `break_even_threshold`, and a
+replay resolves economics from the recorded date. Asking what the datum says
+under a different regime is still possible, but only *explicitly*:
+
+```
+… --from-json <datum> --pricing-as-of 2026-09-01     # → PROFITABLE, as an ASKED question
+```
+
+This datum predates the field, so its date is **inferred from the filename stamp**
+and the run prints a `NOTE:` saying so. An inferred date must never be mistaken
+for a recorded one; `pricing_as_of_source` carries that distinction forward into
+any artifact derived from it.
+
+**The n=150 files used to replay happily.** See below — that is now enforced,
+not merely requested.
 
 ## Why the n=210 "siblings" were never siblings
 
@@ -75,5 +106,24 @@ documented defect, not as results. Both are:
 - **3 calls per task** (`a1`, `a2`, `b1`), so no disjoint arm and no `agree(B,B)`.
 - **No raw output persisted**, so they can only ever reproduce that day's parser.
 
-They cannot be replayed by the current script (it needs `b2`) and must not be
-cited for any number.
+They must not be cited for any number, and the script now **enforces** that
+rather than asking for it.
+
+Until round 5 this section was a prose gate against a script that cheerfully
+ignored it. Replaying one of these files *succeeded*: `agreement()` counted every
+missing `b2` as an abstention, so the `persona-B self` arm was fabricated out of
+nothing (`scored=0, abstained=150`, and a meaningless `r (abstain escalates) =
+100%`), the process exited **0**, and it reprinted the discredited **+48pp**
+physics-only separation into a freshly-timestamped file that looked exactly like
+a current analysis. A document saying "don't cite this" is worth very little
+against a tool that regenerates it on request.
+
+The replay path now derives the required call set from the same `ARMS` definition
+the analysis uses, and refuses a datum missing any of them:
+
+```
+REFUSING TO REPLAY …_n150.json: rows are missing call(s) ['b2'], which this
+analysis requires. This datum predates the current arm design — see
+results/CANONICAL.md. Re-analysing it would fabricate the missing arm from
+abstentions and reprint superseded numbers under a fresh timestamp.
+```
