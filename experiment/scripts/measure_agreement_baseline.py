@@ -5,15 +5,19 @@ Echo accepts the cheap answer when two cheap calls agree and escalates when they
 disagree. Three quantities decide whether that is a good idea:
 
 1. ESCALATION RATE r -- how often the two cheap calls disagree.
-   Echo's cost is 2*cheap + r*expensive. At the README's prices (haiku x2 = $2/M,
-   sonnet x1 = $3/M) Echo is cheaper than sonnet-only iff
+   Echo's cost is 2*cheap + r*expensive, so Echo wins while r < (exp - 2*cheap)/exp.
 
-       2 + 3r < 3   =>   r < 1/3
+   THE THRESHOLD IS NOT A CONSTANT AND NOT EVEN A CONSTANT OVER TIME. At list
+   prices haiku->sonnet is $1 vs $3, giving 2 + 3r < 3 => r < 1/3. But Sonnet 5
+   is in an introductory window at $2/MTok through 2026-08-31, and at $1 vs $2
+   the threshold is (2 - 2)/2 = 0: two haiku calls already cost a whole sonnet
+   call, so Echo CANNOT pay for itself at that tier until the intro price
+   lapses. See `break_even`, which resolves the regime from the run date.
 
-   A hard break-even at 33%. The verdict uses the Wilson UPPER BOUND on r, not the
-   point estimate: near the break-even, "r=30% at n=60" has an interval that
-   swallows 1/3, and printing PROFITABLE off that is a sample-size gate pretending
-   to be a confidence statement (Wu, cage-match #6).
+   The verdict uses the Wilson UPPER BOUND on r, not the point estimate: near the
+   break-even, "r=30% at n=60" has an interval that swallows the threshold, and
+   printing PROFITABLE off that is a sample-size gate pretending to be a
+   confidence statement (Wu, cage-match #6).
 
 2. THE ASYMMETRY -- P(agree | correct) vs P(agree | wrong).
    Echo's premise is that agreement predicts correctness, and the mechanism is
@@ -83,7 +87,7 @@ import json
 import sys
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -102,28 +106,66 @@ RESULTS = Path(__file__).resolve().parent.parent / "results"
 # still stamped PROFITABLE against haiku->sonnet economics -- and the PR body
 # itself notes sonnet->opus is UNSATISFIABLE (2*3 > 15... i.e. negative
 # threshold), which the script would happily have blessed (Tesla, round 3).
-# $/M input. UNVERIFIED AND CONFLICTING — surfaced, not silently tie-broken.
-# The README states "Sonnet vs Opus is only ~1.7x, not 3x", and an earlier PR body
-# repeated that to claim the sonnet->opus tier is UNSATISFIABLE. These numbers say
-# 5x and r < 60%, i.e. MORE permissive than haiku->sonnet. Both cannot be right.
-# Neither has been checked against current published pricing. Verify before any
-# claim about a tier other than haiku->sonnet, and treat the sonnet row as
-# provisional until then.
-PRICES = {"haiku": 1.0, "sonnet": 3.0, "opus": 15.0}
+# $/MTok, VERIFIED against Anthropic's published pricing on 2026-08-11. The
+# earlier table was UNVERIFIED and wrong, and the README was right:
+#
+#   opus was 15.0 — that is SONNET'S OUTPUT price, mislabelled as OPUS INPUT.
+#   Opus 5 input is $5.00. So sonnet->opus is 1.67x, exactly the README's "~1.7x,
+#   not 3x", and the sonnet row's permissive r < 60% was an artefact of a
+#   transcription error, not a real economics finding.
+#
+# Two authoritative sources disagreed and the table lost. Recorded because the
+# round-3 handling (surface the conflict, mark the row provisional) was correct
+# procedure but is NOT a substitute for going and reading the price list.
+#
+# SONNET 5 IS IN AN INTRODUCTORY WINDOW: $2.00/$10.00 per MTok through
+# 2026-08-31, reverting to $3.00/$15.00. That is not a footnote — it moves the
+# haiku->sonnet break-even from r < 33% to r < 0%, i.e. Echo CANNOT pay for
+# itself at that tier while the intro price is live, because two haiku calls
+# ($2) already cost a whole sonnet call ($2). The verdict must therefore depend
+# on the RUN DATE, and the run date is recorded in the artifact (Carnot,
+# cage-match #6 round 4).
+INTRO_PRICES_END = date(2026, 8, 31)
+LIST_PRICES = {"haiku": 1.0, "sonnet": 3.0, "opus": 5.0}
+INTRO_PRICES = {"haiku": 1.0, "sonnet": 2.0, "opus": 5.0}
 ESCALATE_TO = {"haiku": "sonnet", "sonnet": "opus"}
 
+# INPUT prices alone are sufficient here, which is a claim worth justifying
+# rather than assuming. Total cost is in_tok*p_in + out_tok*p_out, and every
+# tier — including intro sonnet — prices output at exactly 5x input. So p_out
+# factors out and the break-even ratio is unchanged, PROVIDED the token mix is
+# comparable across tiers. It is, since all arms answer the same benchmark item.
+# If a future tier breaks the 5x ratio this shortcut dies with it.
 
-def break_even(cheap: str) -> tuple[float, str]:
+
+def prices_on(day: date) -> tuple[dict[str, float], str]:
+    """(price table, regime label) in effect on `day`."""
+    if day <= INTRO_PRICES_END:
+        return (INTRO_PRICES, f"sonnet introductory pricing (through {INTRO_PRICES_END})")
+    return (LIST_PRICES, "list pricing")
+
+
+def break_even(cheap: str, day: date | None = None) -> tuple[float, str]:
     """(threshold, explanation) for the cheap->expensive pair. May be <= 0."""
+    day = day or datetime.now(timezone.utc).date()
+    table, regime = prices_on(day)
     exp = ESCALATE_TO.get(cheap)
-    if exp is None or cheap not in PRICES:
+    if exp is None or cheap not in table:
         return (float("nan"), f"no price pair known for {cheap!r}")
-    c, e = PRICES[cheap], PRICES[exp]
+    c, e = table[cheap], table[exp]
     thr = (e - 2 * c) / e
+    # Both regimes are always printed. A threshold that silently flips on
+    # 2026-09-01 is exactly the kind of stale-artifact trap this file keeps
+    # finding in itself, so the reader gets to see the flip coming.
+    other_day = INTRO_PRICES_END + timedelta(days=1) if day <= INTRO_PRICES_END else INTRO_PRICES_END
+    o_table, o_regime = prices_on(other_day)
+    o_thr = (o_table[exp] - 2 * o_table[cheap]) / o_table[exp]
+    alt = f" [under {o_regime}: {'UNSATISFIABLE' if o_thr <= 0 else f'r < {o_thr*100:.0f}%'}]"
     if thr <= 0:
-        return (thr, f"{cheap}->{exp}: 2x{cheap} (${2*c}/M) already costs >= "
-                     f"{exp} (${e}/M) — Echo CANNOT be profitable at this tier")
-    return (thr, f"{cheap}->{exp}: r < {thr*100:.0f}% (2x${c} + r*${e} < ${e})")
+        return (thr, f"{cheap}->{exp} @ {regime}: 2x{cheap} (${2*c}/MTok) already costs "
+                     f">= {exp} (${e}/MTok) — Echo CANNOT be profitable at this tier{alt}")
+    return (thr, f"{cheap}->{exp} @ {regime}: r < {thr*100:.0f}% "
+                 f"(2x${c} + r*${e} < ${e}){alt}")
 MIN_CELL = 30        # minimum tasks in the correct AND wrong cells
 MIN_SCORED = 60      # minimum scored tasks before quoting r at all
 
@@ -249,21 +291,35 @@ def summarise(label: str, res: dict, echo_accept: bool, thr: float, thr_note: st
     # sample-size gate with a Wilson bound on exactly this argument, then left the
     # mechanism verdict firing off `(pac - paw) > 0.10` with a cell-size guard —
     # the same asymmetry of rigor, one verdict over (Carnot rounds 2 AND 3).
+    #
+    # THIS IS NOT A 95% CI ON THE DIFFERENCE, AND CALLING IT ONE WAS THE BUG.
+    # Wilson intervals are asymmetric, so summing half-widths about each point
+    # estimate is neither Newcombe nor score nor bootstrap — it is a CONSERVATIVE
+    # BOUND that over-covers (Tesla + Maxwell, round 4). Conservative is the right
+    # direction to err for a claim we want to be hard to make, and erring this way
+    # is what correctly downgraded "mechanism holds" to "positive but weak". But
+    # the label has to match the estimator: it is reported as a conservative
+    # bound, not quoted as exact coverage. A proper Newcombe/bootstrap difference
+    # interval is the follow-up, and it can only WIDEN the set of claims we make,
+    # never narrow it — so no current verdict depends on getting it.
     c_lo, c_hi = wilson(st["agree_given_correct"], st["correct"])
     w_lo, w_hi = wilson(st["agree_given_wrong"], st["wrong"])
     sep_lo, sep_hi = pac - paw - (c_hi - c_lo) / 2 - (w_hi - w_lo) / 2, \
                      pac - paw + (c_hi - c_lo) / 2 + (w_hi - w_lo) / 2
+    band = f"[{sep_lo*100:.0f}pp, {sep_hi*100:.0f}pp]"
     if not echo_accept:
         mech = "n/a — first call is not Echo's accept path"
     elif st["correct"] < MIN_CELL or st["wrong"] < MIN_CELL:
         mech = None
     elif sep_lo > 0.10:
-        mech = f"mechanism holds — separation 95% lower bound {sep_lo*100:.0f}pp > 10pp"
+        mech = (f"mechanism holds — separation conservative lower bound "
+                f"{sep_lo*100:.0f}pp > 10pp (not an exact 95% difference CI)")
     elif sep_lo > 0:
-        mech = (f"separation positive but weak — 95% CI "
-                f"[{sep_lo*100:.0f}pp, {sep_hi*100:.0f}pp]")
+        mech = (f"separation positive but weak — conservative bound {band} "
+                "(over-covers; not an exact 95% difference CI)")
     else:
-        mech = f"agreement does NOT reliably predict correctness — CI includes 0"
+        mech = ("agreement does NOT reliably predict correctness — "
+                f"conservative bound {band} includes 0")
     if mech is None:
         short = []
         if st["correct"] < MIN_CELL:
