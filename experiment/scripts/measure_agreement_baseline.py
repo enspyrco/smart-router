@@ -167,15 +167,18 @@ def load_tasks(benchmark: str, n: int, stratified: bool):
 def agreement(rows: dict, k1: str, k2: str) -> dict:
     """Per-arm stats. Abstentions counted, never silently folded into either side."""
     st: Counter = Counter()
-    per_task: dict[str, bool] = {}
+    per_task: dict[str, bool] = {}          # agreement, scored tasks only
+    escalate: dict[str, bool] = {}          # PRODUCTION decision, every task
     for tid, r in rows.items():
         x, y = r.get(k1) or {}, r.get(k2) or {}
         if x.get("answer") is None or y.get("answer") is None:
             st["abstained"] += 1
+            escalate[tid] = True            # unparseable cheap answer => escalate
             continue
         st["scored"] += 1
         agree = x["answer"] == y["answer"]
         per_task[tid] = bool(agree)
+        escalate[tid] = not agree
         st["agree"] += agree
         if x["correct"]:
             st["correct"] += 1
@@ -183,7 +186,7 @@ def agreement(rows: dict, k1: str, k2: str) -> dict:
         else:
             st["wrong"] += 1
             st["agree_given_wrong"] += agree
-    return {"counts": st, "per_task": per_task}
+    return {"counts": st, "per_task": per_task, "escalate": escalate}
 
 
 def summarise(label: str, res: dict, echo_accept: bool = True) -> dict:
@@ -214,12 +217,26 @@ def summarise(label: str, res: dict, echo_accept: bool = True) -> dict:
         cost = (f"INDETERMINATE — production 95% CI [{e_lo*100:.0f}%, {e_hi*100:.0f}%] "
                 f"straddles the {BREAK_EVEN*100:.0f}% break-even")
 
+    # Separation gets an INTERVAL, not a threshold. Round 2 replaced the economics
+    # sample-size gate with a Wilson bound on exactly this argument, then left the
+    # mechanism verdict firing off `(pac - paw) > 0.10` with a cell-size guard —
+    # the same asymmetry of rigor, one verdict over (Carnot rounds 2 AND 3).
+    c_lo, c_hi = wilson(st["agree_given_correct"], st["correct"])
+    w_lo, w_hi = wilson(st["agree_given_wrong"], st["wrong"])
+    sep_lo, sep_hi = pac - paw - (c_hi - c_lo) / 2 - (w_hi - w_lo) / 2, \
+                     pac - paw + (c_hi - c_lo) / 2 + (w_hi - w_lo) / 2
     if not echo_accept:
         mech = "n/a — first call is not Echo's accept path"
-    elif st["correct"] >= MIN_CELL and st["wrong"] >= MIN_CELL:
-        mech = ("mechanism holds" if (pac - paw) > 0.10
-                else "agreement barely predicts correctness")
+    elif st["correct"] < MIN_CELL or st["wrong"] < MIN_CELL:
+        mech = None
+    elif sep_lo > 0.10:
+        mech = f"mechanism holds — separation 95% lower bound {sep_lo*100:.0f}pp > 10pp"
+    elif sep_lo > 0:
+        mech = (f"separation positive but weak — 95% CI "
+                f"[{sep_lo*100:.0f}pp, {sep_hi*100:.0f}pp]")
     else:
+        mech = f"agreement does NOT reliably predict correctness — CI includes 0"
+    if mech is None:
         short = []
         if st["correct"] < MIN_CELL:
             short.append(f"{st['correct']} correct")
@@ -233,7 +250,8 @@ def summarise(label: str, res: dict, echo_accept: bool = True) -> dict:
                 escalation_rate_abstain_escalates=r_escalate,
                 escalation_rate_production_ci=[e_lo, e_hi], echo_accept_path=echo_accept,
                 p_agree_given_correct=pac, p_agree_given_wrong=paw,
-                separation=pac - paw, verdict=cost, mechanism_verdict=mech)
+                separation=pac - paw, separation_ci=[sep_lo, sep_hi],
+                verdict=cost, mechanism_verdict=mech)
 
 
 def main() -> None:
@@ -316,8 +334,11 @@ def main() -> None:
     ECHO_ACCEPT = {label: ok for label, _, _, ok in ARMS}
     summaries = {k: summarise(k, v, ECHO_ACCEPT[k]) for k, v in arms.items()}
 
-    pa = arms["persona (a1 vs b1)"]["per_task"]
-    pc = arms["control (a1 vs a2)"]["per_task"]
+    # Compare ESCALATION decisions (abstention counts as escalate), not agreement
+    # over the both-parsed subset — otherwise differential parse failure silently
+    # removes tasks from the test and pulls the arms together (Carnot round 3).
+    pa = arms["persona (a1 vs b1)"]["escalate"]
+    pc = arms["control (a1 vs a2)"]["escalate"]
     both = set(pa) & set(pc)
     b = sum(1 for t in both if pa[t] and not pc[t])
     c = sum(1 for t in both if pc[t] and not pa[t])

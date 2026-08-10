@@ -26,7 +26,7 @@
     "psychology": 15
   },
   "personas_sha": "9e1c3c3a871e",
-  "source_json": null,
+  "source_json": "results/20260810T133611Z_agreement_baseline_mmlu_pro_haiku_n210.json",
   "arms": {
     "persona (a1 vs b1)": {
       "label": "persona (a1 vs b1)",
@@ -48,8 +48,12 @@
       "p_agree_given_correct": 0.967948717948718,
       "p_agree_given_wrong": 0.7962962962962963,
       "separation": 0.17165242165242167,
+      "separation_ci": [
+        0.0364777753760826,
+        0.30682706792876074
+      ],
       "verdict": "PROFITABLE \u2014 production 95% upper bound 12% < 33%",
-      "mechanism_verdict": "mechanism holds"
+      "mechanism_verdict": "separation positive but weak \u2014 95% CI [4pp, 31pp]"
     },
     "control (a1 vs a2)": {
       "label": "control (a1 vs a2)",
@@ -71,8 +75,12 @@
       "p_agree_given_correct": 0.9487179487179487,
       "p_agree_given_wrong": 0.7037037037037037,
       "separation": 0.24501424501424496,
+      "separation_ci": [
+        0.09070618091241683,
+        0.3993223091160731
+      ],
       "verdict": "PROFITABLE \u2014 production 95% upper bound 16% < 33%",
-      "mechanism_verdict": "mechanism holds"
+      "mechanism_verdict": "separation positive but weak \u2014 95% CI [9pp, 40pp]"
     },
     "cross (a2 vs b1)": {
       "label": "cross (a2 vs b1)",
@@ -94,6 +102,10 @@
       "p_agree_given_correct": 0.9548387096774194,
       "p_agree_given_wrong": 0.7090909090909091,
       "separation": 0.24574780058651025,
+      "separation_ci": [
+        0.0947819941327524,
+        0.3967136070402681
+      ],
       "verdict": "PROFITABLE \u2014 production 95% upper bound 16% < 33%",
       "mechanism_verdict": "n/a \u2014 first call is not Echo's accept path"
     },
@@ -117,13 +129,17 @@
       "p_agree_given_correct": 0.9358974358974359,
       "p_agree_given_wrong": 0.7777777777777778,
       "separation": 0.1581196581196581,
+      "separation_ci": [
+        0.010010832978219752,
+        0.3062284832610965
+      ],
       "verdict": "PROFITABLE \u2014 production 95% upper bound 15% < 33%",
       "mechanism_verdict": "n/a \u2014 first call is not Echo's accept path"
     }
   },
   "mcnemar": {
-    "b": 15,
-    "c": 7,
+    "b": 7,
+    "c": 15,
     "p": 0.13380050659179688
   },
   "rows": {
