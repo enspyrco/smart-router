@@ -1,4 +1,4 @@
-# Echo experiment results
+# Smart Router experiment results
 
 Per-sweep JSONL logs live here — one line per `(task, arm)` pair. Each record:
 
