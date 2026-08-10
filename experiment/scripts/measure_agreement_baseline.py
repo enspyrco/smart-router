@@ -166,6 +166,23 @@ def break_even(cheap: str, day: date | None = None) -> tuple[float, str]:
                      f">= {exp} (${e}/MTok) — Echo CANNOT be profitable at this tier{alt}")
     return (thr, f"{cheap}->{exp} @ {regime}: r < {thr*100:.0f}% "
                  f"(2x${c} + r*${e} < ${e}){alt}")
+# The last two unexamined constants in the statistics path, and this PR's history
+# is a series of unexamined defaults biting (Maxwell, round 4). They no longer
+# DECIDE anything — economics gates on a Wilson bound and mechanism on a
+# conservative interval, both of which widen honestly at small n — so these only
+# decide whether a verdict is quoted AT ALL. That makes them a legibility gate,
+# not an inference gate, and they are set accordingly:
+#
+#   MIN_CELL = 30    Below ~30 the Wilson interval on a cell proportion is wide
+#                    enough that a separation bound is nearly always inconclusive.
+#                    Printing "inconclusive" is fine; printing a pp figure readers
+#                    will quote out of context is not. So suppress rather than emit.
+#   MIN_SCORED = 60  Two cells of 30. Not independently motivated — it is MIN_CELL
+#                    doubled, and named separately only so the two can diverge if a
+#                    future benchmark has a lopsided correct/wrong split.
+#
+# Neither is a power calculation. If a claim ever turns on one of these numbers,
+# that is the signal to do the power analysis, not to tune the constant.
 MIN_CELL = 30        # minimum tasks in the correct AND wrong cells
 MIN_SCORED = 60      # minimum scored tasks before quoting r at all
 
@@ -406,12 +423,18 @@ def main() -> None:
     ARMS = [
         ("persona (a1 vs b1)", "a1", "b1", True),
         ("control (a1 vs a2)", "a1", "a2", True),
-        # NOT "unshared": control is a1-vs-a2, so a2-vs-b1 SHARES a2 with it.
-        # With three calls no pair can be disjoint from the control -- naming it
-        # unshared was mathematically false (Carnot + Tesla, round 2).
+        # NOT "unshared", and the name was mathematically false (Carnot + Tesla,
+        # round 2). It shares a2 with the control AND b1 with the persona arm, so
+        # it is an independent falsifier of NEITHER — the earlier comment named
+        # only the a2 overlap, which understated the coupling by half (Kelvin,
+        # round 4). With three calls no pair could be disjoint from the control at
+        # all; the fourth call is what buys one.
         ("cross (a2 vs b1)", "a2", "b1", False),
-        # THIS is the genuinely disjoint arm: {b1,b2} n {a1,a2} = {}. It also
-        # answers Wu's round-1 point that agree(B,B) was never measured.
+        # Disjoint from the CONTROL: {b1,b2} n {a1,a2} = {}. Still shares b1 with
+        # the persona arm — "disjoint" is a relation between two named arms, not a
+        # property this row owns. It also answers Wu's round-1 point that
+        # agree(B,B) was never measured, and supplies the only correctness split
+        # not keyed on a1.
         ("persona-B self (b1 vs b2)", "b1", "b2", False),
     ]
     arms = {label: agreement(rows, k1, k2) for label, k1, k2, _ in ARMS}
@@ -422,12 +445,42 @@ def main() -> None:
     # Compare ESCALATION decisions (abstention counts as escalate), not agreement
     # over the both-parsed subset — otherwise differential parse failure silently
     # removes tasks from the test and pulls the arms together (Carnot round 3).
-    pa = arms["persona (a1 vs b1)"]["escalate"]
-    pc = arms["control (a1 vs a2)"]["escalate"]
-    both = set(pa) & set(pc)
-    b = sum(1 for t in both if pa[t] and not pc[t])
-    c = sum(1 for t in both if pc[t] and not pa[t])
-    p = mcnemar(b, c)
+    def mcnemar_arms(x_label: str, y_label: str) -> tuple[int, int, float]:
+        px, py = arms[x_label]["escalate"], arms[y_label]["escalate"]
+        both = set(px) & set(py)
+        b_ = sum(1 for t in both if px[t] and not py[t])
+        c_ = sum(1 for t in both if py[t] and not px[t])
+        return b_, c_, mcnemar(b_, c_)
+
+    # ONE TEST WAS NOT ENOUGH, AND THE REASON IS STRUCTURAL (Tesla + Carnot, round 4).
+    # The headline persona test compares a1-vs-b1 against a1-vs-a2. Both decisions
+    # are functions of the same a1 draw, so they are positively correlated: good for
+    # the VARIANCE of their difference (that is what pairing buys) but it THINS the
+    # discordant set, and McNemar reads only discordant pairs. "No detectable effect"
+    # is then partly the expected hum of a coupled circuit rather than a finding.
+    #
+    # With four calls NO pair-vs-pair comparison is fully disjoint: persona(a1,b1)
+    # shares a1 with the control and b1 with the B-self arm. So "use the disjoint
+    # arm" is not on the menu. What IS on the menu is running the persona test twice
+    # with DIFFERENT shared anchors — if the conclusion survives both, it is not an
+    # artefact of which call supplies the common mode.
+    PERSONA_TESTS = [
+        ("persona vs control (shared anchor: a1)",
+         "persona (a1 vs b1)", "control (a1 vs a2)",
+         "cross-persona vs A-self resampling"),
+        ("persona vs B-self (shared anchor: b1)",
+         "persona (a1 vs b1)", "persona-B self (b1 vs b2)",
+         "same question, anchored on the OTHER call — a robustness replicate"),
+        ("control vs B-self (DISJOINT: {a1,a2} n {b1,b2} = {})",
+         "control (a1 vs a2)", "persona-B self (b1 vs b2)",
+         "not a persona-effect test — asks whether the resampling BASELINE itself "
+         "differs by persona, i.e. whether 'the control' is one baseline or two. "
+         "This is Wu's symmetry question, and it is the only fully uncoupled pair."),
+    ]
+    persona_results = [(name, *mcnemar_arms(x, y), note)
+                       for name, x, y, note in PERSONA_TESTS]
+    # The headline pair stays first so the primary claim is unambiguous.
+    b, c, p = persona_results[0][1], persona_results[0][2], persona_results[0][3]
 
     L = [f"# Agreement baseline — {benchmark}, model={model_name}, n={len(rows)}", "",
          f"Generation config: `{gen_cfg}`",
@@ -449,33 +502,76 @@ def main() -> None:
                  f"{a['separation']*100:+.0f}pp | {a['verdict']} | {a['mechanism_verdict']} |")
 
     L += ["", "## Do personas beat plain resampling?", "",
-          f"McNemar on persona-vs-control discordant pairs: b={b}, c={c}, **p={p:.3f}**.", ""]
-    if b + c == 0:
+          "Three McNemar tests, not one. Every pair-vs-pair comparison available from "
+          "four calls shares at least one call, so a single test cannot distinguish "
+          "\"no persona effect\" from \"the shared call thinned the discordant set\". "
+          "Running the same question against two different anchors is the check that "
+          "the conclusion is not an artefact of the coupling (Tesla + Carnot, round 4).",
+          "",
+          "| test | b | c | discordant | p | reads as |",
+          "|---|---|---|---|---|---|"]
+    for name, bb, cc, pp, note in persona_results:
+        reads = ("no discordant pairs" if bb + cc == 0
+                 else "**difference detected**" if pp < 0.05
+                 else "no detectable difference")
+        L.append(f"| {name} | {bb} | {cc} | {bb+cc} | {pp:.3f} | {reads} — {note} |")
+
+    headline_name, hb, hc, hp, _ = persona_results[0]
+    replicate_p = persona_results[1][3]
+    L += ["", f"**Headline ({headline_name}):** b={hb}, c={hc}, **p={hp:.3f}**.", ""]
+    if hb + hc == 0:
         L.append("No discordant pairs — the arms made identical decisions on every task.")
-    elif p < 0.05:
-        L.append(f"**Personas DO change the escalation decision** (p={p:.3f} over {b+c} "
+    elif hp < 0.05:
+        L.append(f"**Personas DO change the escalation decision** (p={hp:.3f} over {hb+hc} "
                  "discordant tasks). A small net delta hides real churn in both directions.")
     else:
-        L.append(f"**No detectable persona effect** (p={p:.3f} over {b+c} discordant tasks). "
-                 "This is a failure to reject, NOT proof of equivalence — for an "
-                 "equivalence claim, pre-specify a margin and run TOST.")
+        L.append(f"**No detectable persona effect** (p={hp:.3f} over {hb+hc} discordant "
+                 "tasks). This is a failure to reject, NOT proof of equivalence — for an "
+                 "equivalence claim, pre-specify a margin and run TOST. Note the "
+                 "discordant set is thinned by the shared `a1`, so power is lower than "
+                 f"{hb+hc} paired tasks would suggest; see the replicate row.")
+    agree_word = ("AGREES with" if (hp < 0.05) == (replicate_p < 0.05)
+                  else "**DISAGREES with**")
     L += ["",
-          "`cross (a2 vs b1)` shares a2 with the control and b1 with the persona arm — it "
-          "is NOT an independent falsifier, and an earlier revision wrongly claimed it "
-          "shared nothing. `persona-B self (b1 vs b2)` IS disjoint from the control "
-          "({b1,b2} ∩ {a1,a2} = ∅), and is also the agree(B,B) measurement that was "
-          "previously missing.",
+          f"The b1-anchored replicate {agree_word} the headline "
+          f"(p={replicate_p:.3f} vs p={hp:.3f}). Agreement across anchors is the "
+          "evidence that the result is about personas rather than about which call "
+          "the two arms happen to share; disagreement would mean the common mode is "
+          "driving the answer and neither number should be quoted.",
+          "",
+          "`cross (a2 vs b1)` shares a2 with the control AND b1 with the persona arm — "
+          "it is NOT an independent falsifier on either side, and an earlier revision "
+          "wrongly claimed it shared nothing. `persona-B self (b1 vs b2)` is disjoint "
+          "from the control ({b1,b2} ∩ {a1,a2} = ∅) but still shares b1 with the "
+          "persona arm; it is the agree(B,B) measurement that was previously missing.",
           "",
           "## Reading the numbers", "",
-          "- `r` gates on the Wilson upper bound vs the break-even, not a point estimate.",
-          "- `r (abstain escalates)` is the PRODUCTION policy: Echo cannot accept an "
-          "unparseable cheap answer. Excluding abstentions biases r DOWNWARD and flatters "
-          "Echo; both are shown so neither convention hides.",
+          "- **Economics gates on `r (abstain escalates)`** — the production rate — and "
+          "specifically on the Wilson UPPER bound of that rate vs the break-even, never "
+          "on a point estimate and never on the flattering abstentions-dropped `r`. An "
+          "earlier version of this bullet named the wrong meter while the code used the "
+          "right one, which is worse than either being wrong alone (Tesla, round 4).",
+          "- `r` (abstentions dropped) is reported for comparison only. Excluding "
+          "abstentions biases r DOWNWARD and flatters Echo, because parse failures "
+          "correlate with hard tasks and hard tasks are where disagreement lives.",
+          "- **The break-even is date-dependent.** Sonnet 5's introductory price runs "
+          f"through {INTRO_PRICES_END}; the threshold in force is stated in the "
+          "`economics` cell along with the threshold on the other side of that date.",
           "- `wrong` means the FIRST call was wrong — the answer Echo would accept. It is "
           "not the free-floating claim that the model reproduces its own errors.",
+          "- **`separation` for `persona` and `control` is NOT two independent readings.** "
+          "Both condition on `a1`, so they partition the SAME correctness split; quoting "
+          "both as parallel mechanism evidence double-counts one first-call correctness "
+          "frequency (Tesla, round 4). `persona-B self` conditions on `b1` and is the "
+          "only row carrying an independent split.",
+          "- The separation interval is a CONSERVATIVE bound (summed Wilson half-widths), "
+          "not an exact 95% CI on the difference. It over-covers, so it makes claims "
+          "harder rather than easier; a Newcombe/bootstrap difference interval is the "
+          "follow-up and can only widen what we claim.",
           "- agree(B,B) IS now measured, as the `persona-B self` arm. Wu's round-1 point "
-          "was that B's self-agreement was merely ASSUMED to mirror A's; compare the two "
-          "control-style rows rather than assuming the symmetry."]
+          "was that B's self-agreement was merely ASSUMED to mirror A's; the "
+          "`control vs B-self` row above tests that symmetry directly rather than "
+          "leaving it to eyeball."]
 
     RESULTS.mkdir(exist_ok=True)
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
