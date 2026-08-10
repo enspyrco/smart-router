@@ -1,0 +1,196 @@
+{
+  "benchmark": "mmlu_pro",
+  "model": "haiku",
+  "n": 12,
+  "persona_arm": {
+    "label": "persona A vs B",
+    "scored": 12,
+    "abstained": 0,
+    "escalation_rate": 0.33333333333333337,
+    "p_agree_given_correct": 0.8,
+    "p_agree_given_wrong": 0.0,
+    "separation": 0.8,
+    "verdict": "NOT PROFITABLE \u2014 costs more than expensive-only"
+  },
+  "control_arm": {
+    "label": "plain resample (A vs A)",
+    "scored": 12,
+    "abstained": 0,
+    "escalation_rate": 0.33333333333333337,
+    "p_agree_given_correct": 0.6,
+    "p_agree_given_wrong": 1.0,
+    "separation": -0.4,
+    "verdict": "NOT PROFITABLE \u2014 costs more than expensive-only"
+  },
+  "persona_delta": 0.0,
+  "rows": {
+    "mmlu_pro/physics/9047": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9046": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9045": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9044": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": false,
+        "answer": "expected I got E"
+      },
+      "b1": {
+        "correct": false,
+        "answer": "expected I got E"
+      }
+    },
+    "mmlu_pro/physics/9048": {
+      "a1": {
+        "correct": false,
+        "answer": "expected J got F"
+      },
+      "a2": {
+        "correct": false,
+        "answer": "expected J got F"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9051": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9049": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9050": {
+      "a1": {
+        "correct": false,
+        "answer": "expected G got A"
+      },
+      "a2": {
+        "correct": false,
+        "answer": "expected G got A"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9054": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9052": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": false,
+        "answer": "expected C got D"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9053": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": false,
+        "answer": "expected J got I"
+      },
+      "b1": {
+        "correct": false,
+        "answer": "expected J got C"
+      }
+    },
+    "mmlu_pro/physics/9055": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": false,
+        "answer": "expected F got A"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    }
+  }
+}

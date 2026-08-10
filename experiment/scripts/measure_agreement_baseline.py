@@ -97,6 +97,8 @@ def main() -> None:
     ap.add_argument("--n", type=int, default=40)
     ap.add_argument("--model", default="haiku")
     ap.add_argument("--workers", type=int, default=4)
+    ap.add_argument("--from-json", default=None,
+                    help="re-analyse a saved run's rows; spends no calls")
     args = ap.parse_args()
 
     if args.benchmark == "mmlu_pro":
@@ -121,13 +123,23 @@ def main() -> None:
                 out[key] = {"correct": None, "answer": None, "error": repr(exc)[:120]}
         return task["task_id"], out
 
-    rows = {}
-    with ThreadPoolExecutor(max_workers=args.workers) as ex:
+    if args.from_json:
+        # Raw model output is the datum; everything downstream is interpretation
+        # and must be re-runnable without re-spending the calls to fix a gate.
+        saved = json.loads(Path(args.from_json).read_text())
+        rows = saved["rows"]
+        print(f"re-analysing {len(rows)} saved rows from {args.from_json}\n")
+        tasks = tasks[:len(rows)]
+    else:
+        rows = {}
+        _pool = ThreadPoolExecutor(max_workers=args.workers)
+    if not args.from_json:
+      with _pool as ex:
         for fut in as_completed([ex.submit(work, t) for t in tasks]):
             tid, out = fut.result()
             rows[tid] = out
             print(".", end="", flush=True)
-    print("\n")
+      print("\n")
 
     def agreement(rows, k1, k2):
         """Returns per-arm stats. Abstentions are excluded, never counted as either."""
@@ -155,24 +167,37 @@ def main() -> None:
         pac = st["agree_given_correct"] / (st["correct"] or 1)
         paw = st["agree_given_wrong"] / (st["wrong"] or 1)
 
-        underpowered = []
-        if st["scored"] < MIN_SCORED:
-            underpowered.append(f"only {st['scored']} scored (need {MIN_SCORED})")
-        if st["correct"] < MIN_CELL:
-            underpowered.append(f"only {st['correct']} correct (need {MIN_CELL})")
-        if st["wrong"] < MIN_CELL:
-            underpowered.append(f"only {st['wrong']} wrong (need {MIN_CELL})")
+        # GATE EACH STATISTIC ON ITS OWN DENOMINATOR. r is computed over every
+        # scored task; the separation is computed over the correct and wrong
+        # cells separately. A single blanket gate blocked a well-powered r=13%
+        # (n=150) because the wrong cell held 22 — the same wrong-denominator
+        # mistake this script exists to avoid, made by the guard itself.
+        r_ok = st["scored"] >= MIN_SCORED
+        sep_ok = st["correct"] >= MIN_CELL and st["wrong"] >= MIN_CELL
 
-        if underpowered:
-            verdict = "INSUFFICIENT DATA — " + "; ".join(underpowered) + ". No claim."
+        if not r_ok:
+            cost_verdict = f"INSUFFICIENT — only {st['scored']} scored (need {MIN_SCORED})"
         else:
-            verdict = ("PROFITABLE" if r < BREAK_EVEN else
-                       "NOT PROFITABLE — costs more than expensive-only")
+            cost_verdict = ("PROFITABLE" if r < BREAK_EVEN else
+                            "NOT PROFITABLE — costs more than expensive-only")
+        if sep_ok:
+            mech_verdict = ("mechanism holds" if (pac - paw) > 0.10 else
+                            "agreement barely predicts correctness")
+        else:
+            short = [] 
+            if st["correct"] < MIN_CELL:
+                short.append(f"{st['correct']} correct")
+            if st["wrong"] < MIN_CELL:
+                short.append(f"{st['wrong']} wrong")
+            mech_verdict = f"INSUFFICIENT — {', '.join(short)} (need {MIN_CELL} each)"
+
         return dict(label=label, scored=st["scored"], abstained=st["abstained"],
                     correct=st["correct"], wrong=st["wrong"],
                     escalation_rate=r, p_agree_given_correct=pac,
                     p_agree_given_wrong=paw, separation=pac - paw,
-                    underpowered=bool(underpowered), verdict=verdict)
+                    r_powered=r_ok, sep_powered=sep_ok,
+                    verdict=cost_verdict, mechanism_verdict=mech_verdict,
+                    underpowered=not (r_ok and sep_ok))
 
     persona_arm = summarise("persona A vs B", agreement(rows, "a1", "b1"))
     control_arm = summarise("plain resample (A vs A)", agreement(rows, "a1", "a2"))
@@ -183,16 +208,16 @@ def main() -> None:
          "files on both tiers, so it cannot be used for a measurement whose dependent "
          "variable is agreement.",
          "",
-         "| arm | scored | abstained | escalation r | P(agree\\|correct) | P(agree\\|wrong) | separation | Echo economics |",
-         "|---|---|---|---|---|---|---|---|"]
+         "| arm | scored | correct | wrong | escalation r | P(agree\\|correct) | P(agree\\|wrong) | separation | Echo economics | mechanism |",
+         "|---|---|---|---|---|---|---|---|---|---|"]
     for a in (persona_arm, control_arm):
-        L.append(f"| {a['label']} | {a['scored']} | {a['abstained']} | "
+        L.append(f"| {a['label']} | {a['scored']} | {a['correct']} | {a['wrong']} | "
                  f"**{a['escalation_rate']*100:.0f}%** | {a['p_agree_given_correct']*100:.0f}% | "
                  f"{a['p_agree_given_wrong']*100:.0f}% | {a['separation']*100:+.0f}pp | "
-                 f"{a['verdict']} |")
+                 f"{a['verdict']} | {a['mechanism_verdict']} |")
 
     delta = persona_arm["escalation_rate"] - control_arm["escalation_rate"]
-    powered = not (persona_arm["underpowered"] or control_arm["underpowered"])
+    powered = persona_arm["r_powered"] and control_arm["r_powered"]
     L += ["",
           f"**Break-even is r < {BREAK_EVEN*100:.0f}%** (Echo = 2 + 3r vs expensive-only = 3).",
           "",
