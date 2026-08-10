@@ -1,0 +1,2172 @@
+{
+  "benchmark": "mmlu_pro",
+  "model": "haiku",
+  "n": 150,
+  "generation_config": "NOT RECORDED (pre-cage-match run)",
+  "categories": "NOT RECORDED (pre-cage-match run)",
+  "personas_sha": "NOT RECORDED",
+  "source_json": "results/20260810T071425Z_agreement_baseline_mmlu_pro_haiku_n150.json",
+  "arms": {
+    "persona (a1 vs b1)": {
+      "label": "persona (a1 vs b1)",
+      "scored": 150,
+      "abstained": 0,
+      "correct": 128,
+      "wrong": 22,
+      "escalation_rate": 0.13333333333333333,
+      "escalation_rate_ci": [
+        0.08799732892586416,
+        0.1969815064476629
+      ],
+      "escalation_rate_abstain_escalates": 0.13333333333333333,
+      "p_agree_given_correct": 0.9375,
+      "p_agree_given_wrong": 0.45454545454545453,
+      "separation": 0.48295454545454547,
+      "verdict": "PROFITABLE \u2014 95% upper bound 20% < 33%",
+      "mechanism_verdict": "INSUFFICIENT \u2014 22 wrong (need 30 each)"
+    },
+    "control (a1 vs a2)": {
+      "label": "control (a1 vs a2)",
+      "scored": 150,
+      "abstained": 0,
+      "correct": 128,
+      "wrong": 22,
+      "escalation_rate": 0.12666666666666668,
+      "escalation_rate_ci": [
+        0.082610643407449,
+        0.18936780715468765
+      ],
+      "escalation_rate_abstain_escalates": 0.12666666666666668,
+      "p_agree_given_correct": 0.9453125,
+      "p_agree_given_wrong": 0.45454545454545453,
+      "separation": 0.49076704545454547,
+      "verdict": "PROFITABLE \u2014 95% upper bound 19% < 33%",
+      "mechanism_verdict": "INSUFFICIENT \u2014 22 wrong (need 30 each)"
+    },
+    "unshared (a2 vs b1)": {
+      "label": "unshared (a2 vs b1)",
+      "scored": 150,
+      "abstained": 0,
+      "correct": 130,
+      "wrong": 20,
+      "escalation_rate": 0.12666666666666668,
+      "escalation_rate_ci": [
+        0.082610643407449,
+        0.18936780715468765
+      ],
+      "escalation_rate_abstain_escalates": 0.12666666666666668,
+      "p_agree_given_correct": 0.9307692307692308,
+      "p_agree_given_wrong": 0.5,
+      "separation": 0.4307692307692308,
+      "verdict": "PROFITABLE \u2014 95% upper bound 19% < 33%",
+      "mechanism_verdict": "INSUFFICIENT \u2014 20 wrong (need 30 each)"
+    }
+  },
+  "mcnemar": {
+    "b": 7,
+    "c": 8,
+    "p": 1.0
+  },
+  "rows": {
+    "mmlu_pro/physics/9047": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9049": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9044": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9046": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9048": {
+      "a1": {
+        "correct": false,
+        "answer": "expected J got F"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9045": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9051": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9054": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9050": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": false,
+        "answer": "expected G got A"
+      }
+    },
+    "mmlu_pro/physics/9052": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9053": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": false,
+        "answer": "expected J got F"
+      }
+    },
+    "mmlu_pro/physics/9057": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9055": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9056": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9059": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9060": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9058": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9061": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9064": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9062": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9066": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9063": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9069": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9065": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9072": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9068": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9071": {
+      "a1": {
+        "correct": false,
+        "answer": "expected D got C"
+      },
+      "a2": {
+        "correct": false,
+        "answer": "expected D got C"
+      },
+      "b1": {
+        "correct": false,
+        "answer": "expected D got C"
+      }
+    },
+    "mmlu_pro/physics/9067": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": false,
+        "answer": "expected B got F"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9070": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9077": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9073": {
+      "a1": {
+        "correct": false,
+        "answer": "expected B got E"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": false,
+        "answer": "expected B got E"
+      }
+    },
+    "mmlu_pro/physics/9075": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9078": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9074": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9076": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9081": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9082": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9079": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9083": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9080": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9085": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9088": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9087": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9086": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9084": {
+      "a1": {
+        "correct": false,
+        "answer": "expected E got C"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": false,
+        "answer": "expected E got C"
+      }
+    },
+    "mmlu_pro/physics/9090": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9089": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9092": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9094": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9093": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9095": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9097": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9091": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9099": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9100": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9101": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9104": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9096": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9098": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": false,
+        "answer": "expected A got B"
+      }
+    },
+    "mmlu_pro/physics/9102": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9105": {
+      "a1": {
+        "correct": false,
+        "answer": "expected B got I"
+      },
+      "a2": {
+        "correct": false,
+        "answer": "expected B got I"
+      },
+      "b1": {
+        "correct": false,
+        "answer": "expected B got I"
+      }
+    },
+    "mmlu_pro/physics/9103": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9107": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9106": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9108": {
+      "a1": {
+        "correct": false,
+        "answer": "expected G got E"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9109": {
+      "a1": {
+        "correct": false,
+        "answer": "expected G got I"
+      },
+      "a2": {
+        "correct": false,
+        "answer": "expected G got I"
+      },
+      "b1": {
+        "correct": false,
+        "answer": "expected G got I"
+      }
+    },
+    "mmlu_pro/physics/9113": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9112": {
+      "a1": {
+        "correct": false,
+        "answer": "expected F got G"
+      },
+      "a2": {
+        "correct": false,
+        "answer": "expected F got G"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9110": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9111": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9114": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9116": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9115": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9118": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9119": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9117": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9120": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9122": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9123": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9121": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": false,
+        "answer": "expected H got D"
+      },
+      "b1": {
+        "correct": false,
+        "answer": "expected H got D"
+      }
+    },
+    "mmlu_pro/physics/9124": {
+      "a1": {
+        "correct": false,
+        "answer": "expected J got I"
+      },
+      "a2": {
+        "correct": false,
+        "answer": "expected J got I"
+      },
+      "b1": {
+        "correct": false,
+        "answer": "expected J got I"
+      }
+    },
+    "mmlu_pro/physics/9125": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9126": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9128": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9127": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9131": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9129": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": false,
+        "answer": "expected F got H"
+      },
+      "b1": {
+        "correct": false,
+        "answer": "expected F got H"
+      }
+    },
+    "mmlu_pro/physics/9130": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9133": {
+      "a1": {
+        "correct": false,
+        "answer": "expected A got G"
+      },
+      "a2": {
+        "correct": false,
+        "answer": "expected A got G"
+      },
+      "b1": {
+        "correct": false,
+        "answer": "expected A got B"
+      }
+    },
+    "mmlu_pro/physics/9132": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": false,
+        "answer": "expected I got D"
+      }
+    },
+    "mmlu_pro/physics/9134": {
+      "a1": {
+        "correct": false,
+        "answer": "expected B got J"
+      },
+      "a2": {
+        "correct": false,
+        "answer": "expected B got J"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9138": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9136": {
+      "a1": {
+        "correct": false,
+        "answer": "expected E got F"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9135": {
+      "a1": {
+        "correct": false,
+        "answer": "expected E got H"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": false,
+        "answer": "expected E got I"
+      }
+    },
+    "mmlu_pro/physics/9137": {
+      "a1": {
+        "correct": false,
+        "answer": "expected D got J"
+      },
+      "a2": {
+        "correct": false,
+        "answer": "expected D got I"
+      },
+      "b1": {
+        "correct": false,
+        "answer": "expected D got A"
+      }
+    },
+    "mmlu_pro/physics/9144": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9141": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9140": {
+      "a1": {
+        "correct": false,
+        "answer": "expected D got B"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9139": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9142": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9143": {
+      "a1": {
+        "correct": false,
+        "answer": "expected H got D"
+      },
+      "a2": {
+        "correct": false,
+        "answer": "expected H got D"
+      },
+      "b1": {
+        "correct": false,
+        "answer": "expected H got D"
+      }
+    },
+    "mmlu_pro/physics/9145": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9146": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9147": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9148": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9150": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9152": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9151": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9154": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9149": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9157": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9153": {
+      "a1": {
+        "correct": false,
+        "answer": "expected H got B"
+      },
+      "a2": {
+        "correct": false,
+        "answer": "expected H got C"
+      },
+      "b1": {
+        "correct": false,
+        "answer": "expected H got A"
+      }
+    },
+    "mmlu_pro/physics/9159": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9155": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": false,
+        "answer": "expected I got C"
+      },
+      "b1": {
+        "correct": false,
+        "answer": "expected I got A"
+      }
+    },
+    "mmlu_pro/physics/9156": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9158": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9161": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9160": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9163": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9164": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9162": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9165": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9168": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9167": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9166": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9169": {
+      "a1": {
+        "correct": false,
+        "answer": "expected F got A"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": false,
+        "answer": "expected F got A"
+      }
+    },
+    "mmlu_pro/physics/9171": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9172": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9173": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": false,
+        "answer": "expected C got I"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9170": {
+      "a1": {
+        "correct": false,
+        "answer": "expected A got G"
+      },
+      "a2": {
+        "correct": false,
+        "answer": "expected A got B"
+      },
+      "b1": {
+        "correct": false,
+        "answer": "expected A got B"
+      }
+    },
+    "mmlu_pro/physics/9174": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9175": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9180": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9177": {
+      "a1": {
+        "correct": false,
+        "answer": "expected E got C"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": false,
+        "answer": "expected E got C"
+      }
+    },
+    "mmlu_pro/physics/9176": {
+      "a1": {
+        "correct": false,
+        "answer": "expected E got I"
+      },
+      "a2": {
+        "correct": false,
+        "answer": "expected E got I"
+      },
+      "b1": {
+        "correct": false,
+        "answer": "expected E got J"
+      }
+    },
+    "mmlu_pro/physics/9178": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": false,
+        "answer": "expected D got B"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9182": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9184": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9185": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9183": {
+      "a1": {
+        "correct": false,
+        "answer": "expected H got G"
+      },
+      "a2": {
+        "correct": false,
+        "answer": "expected H got G"
+      },
+      "b1": {
+        "correct": false,
+        "answer": "expected H got G"
+      }
+    },
+    "mmlu_pro/physics/9179": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": false,
+        "answer": "expected G got B"
+      },
+      "b1": {
+        "correct": false,
+        "answer": "expected G got B"
+      }
+    },
+    "mmlu_pro/physics/9181": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9188": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9189": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9187": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9191": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9190": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9186": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9193": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    },
+    "mmlu_pro/physics/9192": {
+      "a1": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "a2": {
+        "correct": true,
+        "answer": "passed"
+      },
+      "b1": {
+        "correct": true,
+        "answer": "passed"
+      }
+    }
+  }
+}

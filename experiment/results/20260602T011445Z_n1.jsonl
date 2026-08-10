@@ -1,0 +1,2 @@
+{"task_id": "HumanEval/100", "arm": "haiku-only", "passed": true, "detail": "passed", "wall_seconds": 8.814767208881676, "sub_calls": 1}
+{"task_id": "HumanEval/100", "arm": "echo-oracle", "passed": true, "detail": "passed", "wall_seconds": 36.92797970818356, "sub_calls": 2}

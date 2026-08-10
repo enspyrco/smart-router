@@ -18,37 +18,42 @@ WHY THAT MATTERS SPECIFICALLY FOR ECHO. Tool use is opportunistic, not uniform.
 Two calls to the same model on the same task can differ in whether a tool was
 reached for, so the agreement signal picks up tool-luck as well as task
 difficulty. Echo escalates on disagreement; a disagreement caused by "run A shelled
-out and run B reasoned" is noise in the dependent variable, not signal about
-whether the task is hard. It also inflates per-tier accuracy and can distort the
-haiku/sonnet gap unevenly, which is exactly what the per-category cheap/expensive
-table is trying to measure.
+out and run B reasoned" is noise in the dependent variable.
 
-WHY NOT JUST PASS ``--disallowed-tools``. It is a mitigation, not a fix. On haiku
-it blocked 3/3 trials here, but the same flag leaked 2/3 on a different model in
-sibling work (see ~/git/research/eval-hygiene). More fundamentally a behavioural
-probe can only prove tools ARE reachable; "blocked in N trials" is absence of
-evidence. Do not build a measurement on it.
+WHY NOT JUST PASS ``--disallowed-tools``. It is a mitigation, not a fix: it blocked
+3/3 on haiku here but leaked 2/3 on a different model in sibling work, and a
+behavioural probe can only prove tools ARE reachable -- "blocked in N trials" is
+absence of evidence.
 
 THIS MODULE IS STRUCTURALLY TOOL-FREE. A raw HTTPS completions endpoint has no
-harness that could execute anything -- the isolation is a property of the
-transport, not of a flag someone has to remember.
+harness that could execute anything.
 
-COST IS UNCHANGED. Direct-Bearer OAuth bills the Max subscription, exactly like
-the CLI: pass the ``claude setup-token`` credential as ``Authorization: Bearer``
-plus ``anthropic-beta: oauth-2025-04-20``. Zero marginal API spend. It is also
-markedly faster, since it drops the ~3s CLI startup per call.
+NOT A SEMANTIC DROP-IN -- READ THIS BEFORE SWAPPING (cage-match #6, Maxwell/Wu/Tesla).
+``ChatClaudeCode`` never sends temperature and imposes no caller-side token cap;
+this transport sends both. On a measurement whose dependent variable IS
+run-to-run agreement, temperature is not a detail, it is the independent
+variable. So:
+  * ``temperature`` and ``max_tokens`` are EXPLICIT fields with documented
+    defaults, and
+  * ``generation_config()`` exposes the resolved settings so callers can RECORD
+    them in their artifacts. A result that does not state its temperature is not
+    reproducible.
 
-Credential: ``CLAUDE_CODE_OAUTH_TOKEN`` (or ``CLAUDE_OAUTH_TOKEN``) from
-``~/.claude/.env``. Never ``ANTHROPIC_API_KEY`` -- that is metered.
+COST IS UNCHANGED. Direct-Bearer OAuth bills the Max subscription exactly like
+the CLI. Zero marginal API spend, and it drops the ~3s CLI startup per call.
+Credential: ``CLAUDE_CODE_OAUTH_TOKEN`` (or ``CLAUDE_OAUTH_TOKEN``). Never
+``ANTHROPIC_API_KEY`` -- that is metered.
 """
 
 from __future__ import annotations
 
 import json
 import os
+import random
+import time
 import urllib.error
 import urllib.request
-from typing import Any, List, Optional
+from typing import Any, List, Literal, Optional
 
 from langchain_core.callbacks import CallbackManagerForLLMRun
 from langchain_core.language_models.chat_models import BaseChatModel
@@ -58,12 +63,24 @@ from pydantic import Field
 
 ENDPOINT = "https://api.anthropic.com/v1/messages"
 
-# Aliases kept identical to ChatClaudeCode so this is a drop-in swap.
-MODEL_IDS = {
+# Aliases kept identical to ChatClaudeCode so this is a drop-in swap at the call
+# site. Every alias is PINNED to a dated snapshot: a floating alias can silently
+# resolve to a different model between runs, which breaks the replicate-this-run
+# invariant this project argues for elsewhere (Wu's catch, cage-match #6).
+ModelAlias = Literal["haiku", "sonnet", "opus"]
+
+MODEL_IDS: dict[str, str] = {
     "haiku": "claude-haiku-4-5-20251001",
     "sonnet": "claude-sonnet-5",
     "opus": "claude-opus-5",
 }
+
+# 429 on this path is a SHARED Max-plan window: transient, and it carries
+# x-should-retry: true. Raising immediately converts a rate limit into MISSING
+# DATA in any caller that catches exceptions per-task -- and 429s cluster in
+# time, so the dropped set is not random. Retry with jittered backoff instead.
+RETRY_STATUSES = {429, 500, 502, 503, 504}
+MAX_RETRIES = 5
 
 
 def _token() -> str:
@@ -77,10 +94,14 @@ def _token() -> str:
     return tok
 
 
+class ChatOAuthError(RuntimeError):
+    """Any transport failure, so callers can distinguish it from a scoring error."""
+
+
 class ChatOAuth(BaseChatModel):
     """Chat model over the raw Anthropic endpoint. Structurally tool-free."""
 
-    model: str = Field(default="sonnet", description="Alias: haiku | sonnet | opus")
+    model: ModelAlias = Field(default="sonnet", description="haiku | sonnet | opus")
     max_tokens: int = Field(default=4096)
     temperature: float = Field(default=1.0)
     timeout: int = Field(default=300)
@@ -91,7 +112,22 @@ class ChatOAuth(BaseChatModel):
 
     @property
     def _identifying_params(self) -> dict[str, Any]:
-        return {"model": self.model, "endpoint": ENDPOINT}
+        return self.generation_config()
+
+    def generation_config(self) -> dict[str, Any]:
+        """The resolved settings a caller MUST record alongside any result.
+
+        r (agreement rate) is temperature-dependent, so a measured escalation rate
+        is meaningless without the temperature that produced it. Exposing this makes
+        the artifact self-describing rather than pinned to a config nobody wrote down.
+        """
+        return {
+            "endpoint": ENDPOINT,
+            "model_alias": self.model,
+            "model_id": MODEL_IDS.get(self.model, self.model),
+            "temperature": self.temperature,
+            "max_tokens": self.max_tokens,
+        }
 
     def _split(self, messages: List[BaseMessage]) -> tuple[Optional[str], list[dict]]:
         """Anthropic takes the system prompt as a top-level field, not a message."""
@@ -99,12 +135,51 @@ class ChatOAuth(BaseChatModel):
         for m in messages:
             if m.type == "system":
                 system = m.content if system is None else f"{system}\n\n{m.content}"
+            elif m.type == "ai":
+                turns.append({"role": "assistant", "content": m.content})
+            elif m.type == "human":
+                turns.append({"role": "user", "content": m.content})
             else:
-                turns.append({"role": "assistant" if m.type == "ai" else "user",
-                              "content": m.content})
+                # Previously every non-system, non-ai message silently became a
+                # user turn. Fine for this harness's System+Human calls, a
+                # semantic collapse if reused generally (Tesla + Wu).
+                raise ChatOAuthError(
+                    f"unsupported message type {m.type!r}; ChatOAuth handles "
+                    "system / human / ai only"
+                )
         if not turns:
-            turns = [{"role": "user", "content": ""}]
+            # An empty content block is a 400 from the API; surface it as the
+            # programming error it is rather than a generic transport failure.
+            raise ChatOAuthError("no human/ai turns — a system prompt alone is not a request")
         return system, turns
+
+    def _post(self, body: dict[str, Any]) -> dict[str, Any]:
+        req_headers = {
+            "Authorization": f"Bearer {_token()}",
+            "anthropic-beta": "oauth-2025-04-20",
+            "anthropic-version": "2023-06-01",
+            "content-type": "application/json",
+        }
+        last: Exception | None = None
+        for attempt in range(MAX_RETRIES):
+            req = urllib.request.Request(
+                ENDPOINT, data=json.dumps(body).encode(), headers=req_headers
+            )
+            try:
+                return json.loads(urllib.request.urlopen(req, timeout=self.timeout).read())
+            except urllib.error.HTTPError as exc:
+                detail = exc.read()[:300].decode(errors="replace")
+                last = ChatOAuthError(f"anthropic {exc.code} (model={self.model}): {detail}")
+                if exc.code not in RETRY_STATUSES or attempt == MAX_RETRIES - 1:
+                    raise last from exc
+            except (urllib.error.URLError, TimeoutError, OSError, json.JSONDecodeError) as exc:
+                # Previously only HTTPError was wrapped, so timeouts and DNS
+                # failures escaped with a different type and no model context.
+                last = ChatOAuthError(f"anthropic transport error (model={self.model}): {exc!r}")
+                if attempt == MAX_RETRIES - 1:
+                    raise last from exc
+            time.sleep(min(2 ** attempt, 30) + random.random())
+        raise last or ChatOAuthError("unreachable")
 
     def _generate(
         self,
@@ -122,29 +197,23 @@ class ChatOAuth(BaseChatModel):
         }
         if system:
             body["system"] = system
+        if stop:
+            # Previously accepted and silently discarded — a BaseChatModel
+            # contract violation that fails quietly rather than loudly.
+            body["stop_sequences"] = list(stop)
 
-        req = urllib.request.Request(
-            ENDPOINT,
-            data=json.dumps(body).encode(),
-            headers={
-                "Authorization": f"Bearer {_token()}",
-                "anthropic-beta": "oauth-2025-04-20",
-                "anthropic-version": "2023-06-01",
-                "content-type": "application/json",
-            },
-        )
-        try:
-            payload = json.loads(urllib.request.urlopen(req, timeout=self.timeout).read())
-        except urllib.error.HTTPError as exc:
-            detail = exc.read()[:300].decode(errors="replace")
-            # 429 here is a SHARED Max-plan window, not a broken credential or a
-            # permanently unavailable path. It carries x-should-retry: true and
-            # clears on its own. Do not re-architect around it; retry later.
-            raise RuntimeError(
-                f"anthropic {exc.code} (model={self.model}): {detail}"
-            ) from exc
+        payload = self._post(body)
 
         parts = [b.get("text", "") for b in payload.get("content", [])
                  if b.get("type") == "text"]
-        return ChatResult(generations=[ChatGeneration(message=AIMessage(
-            content="".join(parts).rstrip()))])
+        text = "".join(parts).rstrip()
+        if not text:
+            # A 200 with no text block used to return a cheerful empty ChatResult,
+            # which the scorer then read as an abstention — a transport failure
+            # laundered into missing data (Tesla + Wu).
+            raise ChatOAuthError(
+                f"empty completion (model={self.model}, "
+                f"stop_reason={payload.get('stop_reason')!r}) — "
+                "possible max_tokens truncation before any text was emitted"
+            )
+        return ChatResult(generations=[ChatGeneration(message=AIMessage(content=text))])
