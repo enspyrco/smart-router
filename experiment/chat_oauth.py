@@ -90,9 +90,16 @@ MAX_RETRIES = 5
 
 
 def _token() -> str:
-    tok = os.environ.get("CLAUDE_CODE_OAUTH_TOKEN") or os.environ.get("CLAUDE_OAUTH_TOKEN")
+    # .strip() is load-bearing, not tidiness: a trailing newline from a sourced
+    # env file becomes a malformed Bearer that 401s, and a 401 caught per-task
+    # reads as an ABSTENTION — a config fault laundered into missing data on the
+    # exact tasks that happened to run first (Tesla, cage-match #6 round 4).
+    tok = (os.environ.get("CLAUDE_CODE_OAUTH_TOKEN")
+           or os.environ.get("CLAUDE_OAUTH_TOKEN") or "").strip()
     if not tok:
-        raise RuntimeError(
+        # ChatOAuthError, not RuntimeError: callers distinguish transport faults
+        # from scoring faults by TYPE, and this is a transport fault.
+        raise ChatOAuthError(
             "No OAuth token. Run `claude setup-token`, put it in ~/.claude/.env as "
             "CLAUDE_CODE_OAUTH_TOKEN, and `source ~/.claude/.env` before running. "
             "Do NOT fall back to ANTHROPIC_API_KEY — that is metered."
