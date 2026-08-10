@@ -1,6 +1,11 @@
-# Echo experiment harness
+# Smart Router experiment harness
 
-Python runner for HumanEval routing sweeps. Each **arm** is a strategy (always cheap, always expensive, Echo variants). The harness logs one JSON line per `(task, arm)` under `results/`.
+Python runner for routing sweeps (HumanEval, BBH, MMLU-Pro). Each **arm** is a strategy (always cheap, always expensive, Echo variants). The harness logs one JSON line per `(task, arm)` under `results/`.
+
+Arm names keep the `echo-` prefix (`echo-judge`, `echo-oracle`): **Echo** is the
+self-consistency mechanism, which is one signal inside Smart Router rather than
+the project itself. Those names also appear in every historical results file,
+so they are data-bearing and must not be renamed.
 
 For sweep narratives and headline numbers, see [`results/README.md`](results/README.md). Public summary: [blog post](https://enspyr.co/blog/echo-cheap-routing-without-a-router).
 
