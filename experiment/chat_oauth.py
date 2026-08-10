@@ -63,10 +63,16 @@ from pydantic import Field
 
 ENDPOINT = "https://api.anthropic.com/v1/messages"
 
-# Aliases kept identical to ChatClaudeCode so this is a drop-in swap at the call
-# site. Every alias is PINNED to a dated snapshot: a floating alias can silently
-# resolve to a different model between runs, which breaks the replicate-this-run
-# invariant this project argues for elsewhere (Wu's catch, cage-match #6).
+# Aliases kept identical to ChatClaudeCode so this is a drop-in swap at the call site.
+#
+# PINNING IS PARTIAL, AND CLAIMING OTHERWISE WAS THE BUG. Only `haiku` resolves to
+# a dated snapshot; `sonnet` and `opus` are FLOATING and can silently resolve to a
+# different model between runs. An earlier revision of this comment asserted
+# "every alias is PINNED" — precisely the replicate-this-run overclaim Wu killed
+# once already, restated one line below the fix (Tesla, cage-match #6 round 2).
+# The mitigation that actually works is downstream: generation_config() records
+# the RESOLVED model_id into every artifact, so a mid-cohort swap is at least
+# visible after the fact. Pin the dated ids here as soon as they are published.
 ModelAlias = Literal["haiku", "sonnet", "opus"]
 
 MODEL_IDS: dict[str, str] = {

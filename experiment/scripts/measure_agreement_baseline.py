@@ -29,24 +29,35 @@ disagree. Three quantities decide whether that is a good idea:
    tasks in each direction, and "personas add nothing" is an EQUIVALENCE claim,
    which a small observed difference does not establish (Carnot/Tesla/Wu).
 
-FOUR ARMS, and the third is the point. Three calls per task -- a1, a2 (both
-PERSONA_A), b1 (PERSONA_B) -- yield:
+FOUR CALLS, FOUR ARMS. Per task: a1, a2 (PERSONA_A), b1, b2 (PERSONA_B).
 
-    persona    a1 vs b1     (A vs B, shares a1 with the control)
-    control    a1 vs a2     (A vs A, plain resampling)
-    unshared   a2 vs b1     (A vs B sharing NOTHING with the control)
+    persona         a1 vs b1    A vs B
+    control         a1 vs a2    A vs A -- plain resampling
+    cross           a2 vs b1    A vs B; shares a2 with control, b1 with persona
+    persona-B self  b1 vs b2    B vs B -- DISJOINT from control: {b1,b2} n {a1,a2} = {}
 
-Sharing a1 between persona and control is a PAIRED design: it correlates the two
-estimates, which REDUCES the variance of their difference. That is a strength,
-not a confound, and the marginal expectations are unbiased either way. But the
-narration "two independent statistics" was wrong, and the honest check is free
-with data already collected: `unshared` is an A-vs-B estimate sharing no call
-with `control`. If persona and unshared agree, the shared-a1 objection is
-answered with evidence rather than argument.
+An earlier revision called `a2 vs b1` "unshared" and claimed it shared nothing
+with the control. That was mathematically FALSE -- the control is a1-vs-a2, so
+a2-vs-b1 shares a2. With only THREE calls no pair can be disjoint from the
+control; every arm is common-mode coupled, and renaming the pipe does not stop
+the leak (Carnot + Tesla, cage-match #6 round 2). The fourth call is what buys a
+genuinely disjoint arm, and it simultaneously answers Wu's round-1 point that
+agree(B,B) was never measured.
 
-STILL MISSING (needs a run, not a code change): agree(B, B). The control measures
-A-vs-A only, so persona B's self-agreement is ASSUMED to mirror A's. Wu is right
-that this is the untested symmetry.
+Sharing a1 between persona and control remains a PAIRED design: it reduces the
+variance of their difference and does not bias the null of no persona effect,
+which is why McNemar on the discordant pairs is the right test. What it does NOT
+do is make equal marginal rates across arms evidence of independence.
+
+MECHANISM IS ONLY MEANINGFUL ON ECHO'S ACCEPT PATH. P(agree|correct) conditions
+on the FIRST call of a pair, which is Echo's accepted answer for the persona and
+control arms only. For cross and persona-B-self it is not, so their mechanism
+verdict is suppressed as n/a rather than quietly cited (Tesla).
+
+ECONOMICS GATES ON THE PRODUCTION RATE. Verdicts use r-with-abstention-escalating
+and its Wilson interval, not the abstentions-dropped rate. Computing the honest
+number and then stamping PROFITABLE off the flattering one was internally
+inconsistent (Carnot + Tesla).
 
 ABSTENTION IS NOT DISAGREEMENT, BUT EXCLUDING IT IS NOT NEUTRAL EITHER.
 An earlier version of this docstring claimed exclusion was the conservative
@@ -81,7 +92,7 @@ from langchain_core.messages import HumanMessage, SystemMessage  # noqa: E402
 
 from benchmarks.bbh import load_bbh, score_bbh  # noqa: E402
 from benchmarks.bbh_arms import PERSONA_A, PERSONA_B  # noqa: E402
-from benchmarks.mmlu_pro import load_mmlu_pro, score_mmlu_pro  # noqa: E402
+from benchmarks.mmlu_pro import ALL_CATEGORIES, load_mmlu_pro, score_mmlu_pro  # noqa: E402
 from chat_oauth import ChatOAuth  # noqa: E402
 
 RESULTS = Path(__file__).resolve().parent.parent / "results"
@@ -139,8 +150,17 @@ def load_tasks(benchmark: str, n: int, stratified: bool):
     if benchmark == "bbh":
         return load_bbh(n=n), score_bbh
     if stratified:
-        tasks = load_mmlu_pro(n_per_category=max(1, n // 14))
-        return tasks[:n], score_mmlu_pro
+        # Pass ALL_CATEGORIES explicitly and derive the per-category quota from
+        # its LENGTH. The first version of this fix hardcoded `n // 14` while
+        # letting `categories` default -- and that default is PILOT_CATEGORIES,
+        # which is FIVE categories. So the "stratified" run silently produced 70
+        # tasks over 5 categories while asking for 200 over 14: the same class of
+        # bug as the physics-only sample it was written to fix, one layer down,
+        # caught only because the run printed its category counts. Never infer a
+        # loader's population from a constant you typed yourself.
+        per_cat = max(1, n // len(ALL_CATEGORIES))
+        tasks = load_mmlu_pro(categories=ALL_CATEGORIES, n_per_category=per_cat)
+        return tasks, score_mmlu_pro
     return load_mmlu_pro(n=n), score_mmlu_pro
 
 
@@ -166,7 +186,7 @@ def agreement(rows: dict, k1: str, k2: str) -> dict:
     return {"counts": st, "per_task": per_task}
 
 
-def summarise(label: str, res: dict) -> dict:
+def summarise(label: str, res: dict, echo_accept: bool = True) -> dict:
     st = res["counts"]
     n_tot = st["scored"]
     n = n_tot or 1
@@ -175,21 +195,28 @@ def summarise(label: str, res: dict) -> dict:
     denom_esc = n_tot + st["abstained"]
     r_escalate = (disagree + st["abstained"]) / denom_esc if denom_esc else 0.0
     r_lo, r_hi = wilson(disagree, n_tot)
+    # PRODUCTION policy gets the interval and the verdict. Gating on the
+    # abstentions-dropped rate while the docstring admits that rate flatters Echo
+    # was internally inconsistent -- computing the honest number then stamping the
+    # flattering one (Carnot + Tesla, round 2).
+    e_lo, e_hi = wilson(disagree + st["abstained"], denom_esc)
 
     pac = st["agree_given_correct"] / (st["correct"] or 1)
     paw = st["agree_given_wrong"] / (st["wrong"] or 1)
 
     if st["scored"] < MIN_SCORED:
         cost = f"INSUFFICIENT — only {st['scored']} scored (need {MIN_SCORED})"
-    elif r_hi < BREAK_EVEN:
-        cost = f"PROFITABLE — 95% upper bound {r_hi*100:.0f}% < {BREAK_EVEN*100:.0f}%"
-    elif r_lo > BREAK_EVEN:
-        cost = f"NOT PROFITABLE — 95% lower bound {r_lo*100:.0f}% > {BREAK_EVEN*100:.0f}%"
+    elif e_hi < BREAK_EVEN:
+        cost = f"PROFITABLE — production 95% upper bound {e_hi*100:.0f}% < {BREAK_EVEN*100:.0f}%"
+    elif e_lo > BREAK_EVEN:
+        cost = f"NOT PROFITABLE — production 95% lower bound {e_lo*100:.0f}% > {BREAK_EVEN*100:.0f}%"
     else:
-        cost = (f"INDETERMINATE — 95% CI [{r_lo*100:.0f}%, {r_hi*100:.0f}%] "
+        cost = (f"INDETERMINATE — production 95% CI [{e_lo*100:.0f}%, {e_hi*100:.0f}%] "
                 f"straddles the {BREAK_EVEN*100:.0f}% break-even")
 
-    if st["correct"] >= MIN_CELL and st["wrong"] >= MIN_CELL:
+    if not echo_accept:
+        mech = "n/a — first call is not Echo's accept path"
+    elif st["correct"] >= MIN_CELL and st["wrong"] >= MIN_CELL:
         mech = ("mechanism holds" if (pac - paw) > 0.10
                 else "agreement barely predicts correctness")
     else:
@@ -204,6 +231,7 @@ def summarise(label: str, res: dict) -> dict:
                 correct=st["correct"], wrong=st["wrong"],
                 escalation_rate=r, escalation_rate_ci=[r_lo, r_hi],
                 escalation_rate_abstain_escalates=r_escalate,
+                escalation_rate_production_ci=[e_lo, e_hi], echo_accept_path=echo_accept,
                 p_agree_given_correct=pac, p_agree_given_wrong=paw,
                 separation=pac - paw, verdict=cost, mechanism_verdict=mech)
 
@@ -211,7 +239,9 @@ def summarise(label: str, res: dict) -> dict:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--benchmark", choices=["mmlu_pro", "bbh"], default="mmlu_pro")
-    ap.add_argument("--n", type=int, default=200)
+    ap.add_argument("--n", type=int, default=210,
+                    help="target total; stratified mode rounds DOWN to a whole "
+                         "number per category (n // 14 each across 14 categories)")
     ap.add_argument("--model", default="haiku")
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--single-category", action="store_true",
@@ -246,7 +276,8 @@ def main() -> None:
 
         def work(task):
             out = {}
-            for key, persona in (("a1", PERSONA_A), ("a2", PERSONA_A), ("b1", PERSONA_B)):
+            for key, persona in (("a1", PERSONA_A), ("a2", PERSONA_A),
+                                 ("b1", PERSONA_B), ("b2", PERSONA_B)):
                 try:
                     raw = call(model, persona, task["prompt"])
                     ok, parsed = score(raw, task)
@@ -267,12 +298,23 @@ def main() -> None:
                 print(".", end="", flush=True)
         print("\n")
 
-    arms = {
-        "persona (a1 vs b1)": agreement(rows, "a1", "b1"),
-        "control (a1 vs a2)": agreement(rows, "a1", "a2"),
-        "unshared (a2 vs b1)": agreement(rows, "a2", "b1"),
-    }
-    summaries = {k: summarise(k, v) for k, v in arms.items()}
+    # ECHO_ACCEPT marks arms whose FIRST key is the answer production Echo would
+    # accept. P(agree|correct) on any other ordering is not the Echo premise, so
+    # its mechanism verdict is suppressed rather than quietly cited (Tesla).
+    ARMS = [
+        ("persona (a1 vs b1)", "a1", "b1", True),
+        ("control (a1 vs a2)", "a1", "a2", True),
+        # NOT "unshared": control is a1-vs-a2, so a2-vs-b1 SHARES a2 with it.
+        # With three calls no pair can be disjoint from the control -- naming it
+        # unshared was mathematically false (Carnot + Tesla, round 2).
+        ("cross (a2 vs b1)", "a2", "b1", False),
+        # THIS is the genuinely disjoint arm: {b1,b2} n {a1,a2} = {}. It also
+        # answers Wu's round-1 point that agree(B,B) was never measured.
+        ("persona-B self (b1 vs b2)", "b1", "b2", False),
+    ]
+    arms = {label: agreement(rows, k1, k2) for label, k1, k2, _ in ARMS}
+    ECHO_ACCEPT = {label: ok for label, _, _, ok in ARMS}
+    summaries = {k: summarise(k, v, ECHO_ACCEPT[k]) for k, v in arms.items()}
 
     pa = arms["persona (a1 vs b1)"]["per_task"]
     pc = arms["control (a1 vs a2)"]["per_task"]
@@ -312,9 +354,11 @@ def main() -> None:
                  "This is a failure to reject, NOT proof of equivalence — for an "
                  "equivalence claim, pre-specify a margin and run TOST.")
     L += ["",
-          "The `unshared (a2 vs b1)` arm is an A-vs-B comparison sharing NO call with the "
-          "control, so it answers the shared-a1 objection with data rather than argument: "
-          "if it tracks the persona arm, the pairing is not manufacturing the similarity.",
+          "`cross (a2 vs b1)` shares a2 with the control and b1 with the persona arm — it "
+          "is NOT an independent falsifier, and an earlier revision wrongly claimed it "
+          "shared nothing. `persona-B self (b1 vs b2)` IS disjoint from the control "
+          "({b1,b2} ∩ {a1,a2} = ∅), and is also the agree(B,B) measurement that was "
+          "previously missing.",
           "",
           "## Reading the numbers", "",
           "- `r` gates on the Wilson upper bound vs the break-even, not a point estimate.",
@@ -323,8 +367,9 @@ def main() -> None:
           "Echo; both are shown so neither convention hides.",
           "- `wrong` means the FIRST call was wrong — the answer Echo would accept. It is "
           "not the free-floating claim that the model reproduces its own errors.",
-          "- agree(B,B) is NOT measured: persona B's self-agreement is assumed to mirror "
-          "A's. That symmetry is untested."]
+          "- agree(B,B) IS now measured, as the `persona-B self` arm. Wu's round-1 point "
+          "was that B's self-agreement was merely ASSUMED to mirror A's; compare the two "
+          "control-style rows rather than assuming the symmetry."]
 
     RESULTS.mkdir(exist_ok=True)
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
