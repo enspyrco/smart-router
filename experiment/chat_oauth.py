@@ -258,7 +258,11 @@ class ChatOAuth(BaseChatModel):
         # which is precisely the event we must not discard. Declaring no tools
         # should make it impossible; "impossible" is what this file keeps being
         # wrong about, so the assumption is checked rather than trusted.
-        unexpected = sorted({b.get("type") for b in blocks} - {"text"})
+        # sorted() over a set mixing None and str raises TypeError — which is NOT
+        # a ChatOAuthError, so a block missing `type` entirely (e.g. [{}, {"type":
+        # "tool_use"}]) escaped the sealed transport-error path through the very
+        # line meant to seal it (Carnot, round 8). Normalise to str before sorting.
+        unexpected = sorted({str(b.get("type")) for b in blocks} - {"text"})
         if unexpected:
             raise ChatOAuthError(
                 f"unexpected non-text content block(s) {unexpected} (model={self.model}) — "

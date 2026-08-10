@@ -296,9 +296,18 @@ def break_even(cheap: ModelAlias, day: date) -> BreakEven:
 # Neither is a power calculation. If a claim ever turns on one of these numbers,
 # that is the signal to do the power analysis, not to tune the constant.
 # A run is a measurement or it is a failure; it is not a measurement with a
-# broken connection folded into the numerator. 2% tolerates the odd genuine
-# transient on a shared window (429s are already retried inside the transport);
-# anything above it is a fault mode, not noise.
+# broken connection folded into the numerator.
+#
+# THIS IS A JUDGMENT CALL, NOT A MEASUREMENT, and it decides whether a run exists
+# at all — so both failure directions are named rather than left to the reader
+# (Maxwell, round 8). 429s are already retried inside the transport, so a call
+# that still fails has exhausted backoff.
+#   TOO LOW  -> a genuine transient burst aborts a good cohort; cost is a re-run.
+#   TOO HIGH -> a partial outage survives as "excluded" rows, and while they no
+#               longer enter r or McNemar, a large excluded set means the sample
+#               is no longer the stratified one that was designed.
+# 2% of 840 calls is ~17. Revisit against measured transient rates rather than
+# tuning it to make a particular run pass.
 TRANSPORT_ERROR_ABORT = 0.02
 MIN_CELL = 30        # minimum tasks in the correct AND wrong cells
 MIN_SCORED = 60      # minimum scored tasks before quoting r at all
@@ -360,6 +369,15 @@ def load_tasks(benchmark: str, n: int, stratified: bool):
         # bug as the physics-only sample it was written to fix, one layer down,
         # caught only because the run printed its category counts. Never infer a
         # loader's population from a constant you typed yourself.
+        # max(1, ...) silently turned --n 1..13 into 14 tasks (Carnot, round 8) —
+        # a run that quietly delivers MORE than asked is as bad as one that delivers
+        # less, because the artifact records the delivered n while the operator
+        # remembers the requested one.
+        if n < len(ALL_CATEGORIES):
+            raise SystemExit(
+                f"--n {n} is below the {len(ALL_CATEGORIES)} MMLU-Pro categories, so a "
+                "stratified sample cannot give even one task per category. Use --n >= "
+                f"{len(ALL_CATEGORIES)}, or --single-category to sample one category.")
         per_cat = max(1, n // len(ALL_CATEGORIES))
         tasks = load_mmlu_pro(categories=ALL_CATEGORIES, n_per_category=per_cat)
         return tasks, score_mmlu_pro
@@ -373,9 +391,38 @@ def agreement(rows: dict, k1: str, k2: str) -> dict:
     escalate: dict[str, bool] = {}          # PRODUCTION decision, every task
     for tid, r in rows.items():
         x, y = r.get(k1) or {}, r.get(k2) or {}
+
+        # A DEAD CONNECTION IS NOT A MODEL BEHAVIOUR (Tesla, round 8) — the last
+        # and deepest layer of the laundering this file kept half-closing.
+        #
+        # Rounds 5-7 typed the transport error, recorded `error_kind`, and gated
+        # the run at 2%. But `agreement()` never READ `error_kind`, so beneath the
+        # fuse a transport failure still entered the statistic as an abstention —
+        # and ASYMMETRICALLY, which is the part that makes it a real bug rather
+        # than a rounding concern:
+        #
+        #     a1 dies  -> persona AND control both escalate   (concordant, harmless)
+        #     b1 dies  -> ONLY persona escalates              (FALSE DISCORDANT PAIR)
+        #
+        # McNemar reads only discordant pairs, so a b1 outage manufactures
+        # evidence in exactly the test the persona claim rests on. Verified: a task
+        # where the model agreed everywhere but b1 died in transit yields b=1, c=0.
+        #
+        # Production policy ("escalate when the cheap answer is unusable") and
+        # measurement ("do these models disagree?") are DIFFERENT QUANTITIES, and
+        # this file was reading both off one meter. A task whose call died is not
+        # evidence either way: we do not know whether the models would have agreed.
+        # It is excluded from the arm and tallied separately.
+        if (x.get("error_kind") == "transport") or (y.get("error_kind") == "transport"):
+            st["transport_excluded"] += 1
+            continue
+
         if x.get("answer") is None or y.get("answer") is None:
+            # A genuine abstention: the call SUCCEEDED and its answer was
+            # unparseable. Production Echo cannot accept that, so it escalates —
+            # this one belongs in r.
             st["abstained"] += 1
-            escalate[tid] = True            # unparseable cheap answer => escalate
+            escalate[tid] = True
             continue
         st["scored"] += 1
         agree = x["answer"] == y["answer"]
@@ -498,7 +545,15 @@ def summarise(label: str, res: dict, echo_accept: bool, be: BreakEven) -> dict:
             short.append(f"{st['wrong']} wrong")
         mech = f"INSUFFICIENT — {', '.join(short)} (need {MIN_CELL} each)"
 
+    # COUNTED-BUT-INVISIBLE IS STILL A SILENT DROP (Maxwell + Tesla, round 8).
+    # Round 7 stopped an indeterminate `correct` landing in the WRONG cell and
+    # routed it to a counter that nothing ever read — trading a wrong number for
+    # an invisible one, in a file whose whole ethic is that nothing vanishes
+    # quietly. Both exclusions are now reported: `correct + wrong < scored` is
+    # visible rather than a silently thinned stratum.
     return dict(label=label, scored=st["scored"], abstained=st["abstained"],
+                indeterminate=st["indeterminate"],
+                transport_excluded=st["transport_excluded"],
                 correct=st["correct"], wrong=st["wrong"],
                 escalation_rate=r, escalation_rate_ci=[r_lo, r_hi],
                 escalation_rate_abstain_escalates=r_escalate,
@@ -626,9 +681,16 @@ def main() -> None:
         # as before. Sealed door, latched window. A call counts only if it carries
         # a scoring outcome or an explicit recorded error.
         def _hollow(r, k):
+            # ANY-ONE-OF was too permissive (Carnot, round 8): {"answer": "A"} passed
+            # validation and then `agreement()` raised KeyError on x["correct"]. A call
+            # is either a SCORED result (both answer and correct present) or a RECORDED
+            # FAILURE (an error). Nothing else is a call.
             call = r.get(k)
-            return (not isinstance(call, dict)
-                    or not ({"answer", "correct", "error"} & set(call)))
+            if not isinstance(call, dict):
+                return True
+            scored = {"answer", "correct"} <= set(call)
+            failed = bool({"error", "error_kind"} & set(call))
+            return not (scored or failed)
         short = {tid: sorted(k for k in required if k not in r or _hollow(r, k))
                  for tid, r in rows.items()
                  if any(k not in r or _hollow(r, k) for k in required)}
@@ -673,9 +735,18 @@ def main() -> None:
                 try:
                     raw = call(model, persona, task["prompt"])
                     ok, parsed = score(raw, task)
-                    # RAW is persisted. The old rows kept only the scorer's parsed
-                    # artifact, so "raw output is the datum" was false and a replay
-                    # could only ever reproduce that day's parser (Carnot + Wu).
+                    # RAW is persisted so the datum outlives this run's parser.
+                    #
+                    # HONEST SCOPE (Tesla, round 8): persisting it is necessary but
+                    # not sufficient, and an earlier version of this comment implied
+                    # the benefit was already realised. It is not — `--from-json`
+                    # re-AGGREGATES the frozen `answer`/`correct`; it does not
+                    # re-invoke `score()` on `raw`. Re-scoring needs the benchmark
+                    # items (prompt + gold answer), which the datum does not carry,
+                    # so it is a real feature and not a one-liner. What persisting
+                    # raw buys TODAY is auditability — you can read what the model
+                    # actually said. What it does NOT yet buy is parser-drift
+                    # replay. Do not claim the second from the first.
                     out[key] = {"correct": ok, "answer": parsed, "raw": raw}
                 except ChatOAuthError as exc:
                     out[key] = {"correct": None, "answer": None, "raw": None,
@@ -826,13 +897,15 @@ def main() -> None:
          "Tool-free raw endpoint (ChatOAuth). `claude --print` was measured reading "
          "files on both tiers, so it cannot be used for a measurement whose dependent "
          "variable is agreement.", "",
-         "| arm | scored | correct | wrong | abstained | r | r 95% CI | r (abstain escalates) | "
-         "P(agree\\|correct) | P(agree\\|wrong) | separation | economics | mechanism |",
-         "|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
+         "| arm | scored | correct | wrong | indet | abstained | txp-excl | r | r 95% CI | "
+         "r (abstain escalates) | P(agree\\|correct) | P(agree\\|wrong) | separation | "
+         "economics | mechanism |",
+         "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for a in summaries.values():
         lo, hi = a["escalation_rate_ci"]
         L.append(f"| {a['label']} | {a['scored']} | {a['correct']} | {a['wrong']} | "
-                 f"{a['abstained']} | **{a['escalation_rate']*100:.0f}%** | "
+                 f"{a['indeterminate']} | {a['abstained']} | {a['transport_excluded']} | "
+                 f"**{a['escalation_rate']*100:.0f}%** | "
                  f"[{lo*100:.0f}%, {hi*100:.0f}%] | "
                  f"{a['escalation_rate_abstain_escalates']*100:.0f}% | "
                  f"{a['p_agree_given_correct']*100:.0f}% | {a['p_agree_given_wrong']*100:.0f}% | "
