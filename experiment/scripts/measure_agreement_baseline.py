@@ -97,7 +97,33 @@ from chat_oauth import ChatOAuth  # noqa: E402
 
 RESULTS = Path(__file__).resolve().parent.parent / "results"
 
-BREAK_EVEN = 1 / 3
+# Break-even follows the PRICE PAIR, not a constant. Echo costs 2*cheap + r*exp,
+# so it wins while r < (exp - 2*cheap)/exp. Hardwiring 1/3 meant `--model sonnet`
+# still stamped PROFITABLE against haiku->sonnet economics -- and the PR body
+# itself notes sonnet->opus is UNSATISFIABLE (2*3 > 15... i.e. negative
+# threshold), which the script would happily have blessed (Tesla, round 3).
+# $/M input. UNVERIFIED AND CONFLICTING — surfaced, not silently tie-broken.
+# The README states "Sonnet vs Opus is only ~1.7x, not 3x", and an earlier PR body
+# repeated that to claim the sonnet->opus tier is UNSATISFIABLE. These numbers say
+# 5x and r < 60%, i.e. MORE permissive than haiku->sonnet. Both cannot be right.
+# Neither has been checked against current published pricing. Verify before any
+# claim about a tier other than haiku->sonnet, and treat the sonnet row as
+# provisional until then.
+PRICES = {"haiku": 1.0, "sonnet": 3.0, "opus": 15.0}
+ESCALATE_TO = {"haiku": "sonnet", "sonnet": "opus"}
+
+
+def break_even(cheap: str) -> tuple[float, str]:
+    """(threshold, explanation) for the cheap->expensive pair. May be <= 0."""
+    exp = ESCALATE_TO.get(cheap)
+    if exp is None or cheap not in PRICES:
+        return (float("nan"), f"no price pair known for {cheap!r}")
+    c, e = PRICES[cheap], PRICES[exp]
+    thr = (e - 2 * c) / e
+    if thr <= 0:
+        return (thr, f"{cheap}->{exp}: 2x{cheap} (${2*c}/M) already costs >= "
+                     f"{exp} (${e}/M) — Echo CANNOT be profitable at this tier")
+    return (thr, f"{cheap}->{exp}: r < {thr*100:.0f}% (2x${c} + r*${e} < ${e})")
 MIN_CELL = 30        # minimum tasks in the correct AND wrong cells
 MIN_SCORED = 60      # minimum scored tasks before quoting r at all
 
@@ -189,7 +215,7 @@ def agreement(rows: dict, k1: str, k2: str) -> dict:
     return {"counts": st, "per_task": per_task, "escalate": escalate}
 
 
-def summarise(label: str, res: dict, echo_accept: bool = True) -> dict:
+def summarise(label: str, res: dict, echo_accept: bool, thr: float, thr_note: str) -> dict:
     st = res["counts"]
     n_tot = st["scored"]
     n = n_tot or 1
@@ -209,13 +235,15 @@ def summarise(label: str, res: dict, echo_accept: bool = True) -> dict:
 
     if st["scored"] < MIN_SCORED:
         cost = f"INSUFFICIENT — only {st['scored']} scored (need {MIN_SCORED})"
-    elif e_hi < BREAK_EVEN:
-        cost = f"PROFITABLE — production 95% upper bound {e_hi*100:.0f}% < {BREAK_EVEN*100:.0f}%"
-    elif e_lo > BREAK_EVEN:
-        cost = f"NOT PROFITABLE — production 95% lower bound {e_lo*100:.0f}% > {BREAK_EVEN*100:.0f}%"
+    elif thr != thr or thr <= 0:            # NaN (unknown pair) or unsatisfiable
+        cost = f"NOT PROFITABLE AT ANY r — {thr_note}"
+    elif e_hi < thr:
+        cost = f"PROFITABLE — production 95% upper bound {e_hi*100:.0f}% < {thr*100:.0f}%"
+    elif e_lo > thr:
+        cost = f"NOT PROFITABLE — production 95% lower bound {e_lo*100:.0f}% > {thr*100:.0f}%"
     else:
         cost = (f"INDETERMINATE — production 95% CI [{e_lo*100:.0f}%, {e_hi*100:.0f}%] "
-                f"straddles the {BREAK_EVEN*100:.0f}% break-even")
+                f"straddles the {thr*100:.0f}% break-even")
 
     # Separation gets an INTERVAL, not a threshold. Round 2 replaced the economics
     # sample-size gate with a Wilson bound on exactly this argument, then left the
@@ -332,7 +360,8 @@ def main() -> None:
     ]
     arms = {label: agreement(rows, k1, k2) for label, k1, k2, _ in ARMS}
     ECHO_ACCEPT = {label: ok for label, _, _, ok in ARMS}
-    summaries = {k: summarise(k, v, ECHO_ACCEPT[k]) for k, v in arms.items()}
+    thr, thr_note = break_even(model_name)
+    summaries = {k: summarise(k, v, ECHO_ACCEPT[k], thr, thr_note) for k, v in arms.items()}
 
     # Compare ESCALATION decisions (abstention counts as escalate), not agreement
     # over the both-parsed subset — otherwise differential parse failure silently

@@ -194,6 +194,14 @@ class ChatOAuth(BaseChatModel):
         run_manager: Optional[CallbackManagerForLLMRun] = None,
         **kwargs: Any,
     ) -> ChatResult:
+        if kwargs:
+            # Silently dropping call-site generation overrides is the same class of
+            # bug as the silently-dropped `stop`: a contract violation that fails
+            # quiet, on a measurement whose dependent variable IS agreement
+            # (Tesla, cage-match #6 round 3).
+            raise ChatOAuthError(
+                f"unsupported generation overrides {sorted(kwargs)} — set them on the "
+                "ChatOAuth instance so generation_config() records them in the artifact")
         system, turns = self._split(messages)
         body: dict[str, Any] = {
             "model": MODEL_IDS.get(self.model, self.model),
@@ -213,6 +221,17 @@ class ChatOAuth(BaseChatModel):
         parts = [b.get("text", "") for b in payload.get("content", [])
                  if b.get("type") == "text"]
         text = "".join(parts).rstrip()
+        if payload.get("stop_reason") == "max_tokens":
+            # Failing closed on an EMPTY 200 was only half the fault. A completion
+            # truncated at max_tokens that emitted SOME text parses as a real
+            # answer, and then invents agreement or disagreement out of where the
+            # cut landed -- feeding r and McNemar with an artefact of the cap.
+            # This transport IMPOSES max_tokens where ChatClaudeCode did not, so
+            # the cap is ours and so is the failure (Tesla, cage-match #6 round 3).
+            raise ChatOAuthError(
+                f"truncated at max_tokens={self.max_tokens} (model={self.model}) — "
+                f"{len(text)} chars emitted before the cut; raise max_tokens rather "
+                "than scoring a half-answer")
         if not text:
             # A 200 with no text block used to return a cheerful empty ChatResult,
             # which the scorer then read as an abstention — a transport failure
