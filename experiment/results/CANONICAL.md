@@ -65,6 +65,24 @@ arm ordering explicitly) replaces it. Replaying an artifact that still has the
 old field prints a loud WARNING rather than quietly preferring one surface.
 **Cite `mcnemar_tests`. Never the flat field.**
 
+### What the canonical datum does NOT contain, and why we are not adding it
+
+The datum predates `pricing_as_of`, `price_table`, `break_even_*`, `error_kind`
+and `mcnemar_tests`. **Those fields exist only in artifacts from fresh runs.**
+This datum has none of them, and it still carries the inverted flat `mcnemar`.
+
+That is stated rather than fixed, deliberately. Back-filling derived fields into
+an existing measurement would make the file assert things it did not record —
+the precise move that produced the missing-root and inverted-`mcnemar` problems
+in the first place. A datum is what was measured; everything else is derived and
+belongs in the analysis.
+
+So for this datum: **`CANONICAL_ANALYSIS.md` is authoritative for the McNemar
+tests, the pricing regime and the economics verdict**, and the JSON is
+authoritative only for `rows` (the actual measurement) and the run identity.
+The next fresh measurement will carry all of it in the machine record; this one
+cannot without being rewritten, and rewriting it is worse than saying so.
+
 ### Regeneration is now safe, which it previously was not
 
 Two things made "just regenerate it" dangerous until round 5:

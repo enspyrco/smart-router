@@ -118,6 +118,13 @@ class ChatOAuth(BaseChatModel):
     max_tokens: int = Field(default=4096)
     temperature: float = Field(default=1.0)
     timeout: int = Field(default=300)
+    # `stop` was accepted per-call and honoured, but never appeared in
+    # generation_config() — so a caller could alter generation in a way the
+    # artifact did not record, in a module whose stated rule is that every
+    # generation-affecting knob must be recorded (Carnot, round 7). It is an
+    # instance field now, so it is resolved once and always recorded. A per-call
+    # `stop` is rejected in _generate for the same reason kwargs are.
+    stop_sequences: Optional[List[str]] = Field(default=None)
 
     @property
     def _llm_type(self) -> str:
@@ -140,6 +147,7 @@ class ChatOAuth(BaseChatModel):
             "model_id": MODEL_IDS.get(self.model, self.model),
             "temperature": self.temperature,
             "max_tokens": self.max_tokens,
+            "stop_sequences": self.stop_sequences,
         }
 
     def _split(self, messages: List[BaseMessage]) -> tuple[Optional[str], list[dict]]:
@@ -218,10 +226,14 @@ class ChatOAuth(BaseChatModel):
         }
         if system:
             body["system"] = system
-        if stop:
-            # Previously accepted and silently discarded — a BaseChatModel
-            # contract violation that fails quietly rather than loudly.
-            body["stop_sequences"] = list(stop)
+        if stop is not None and list(stop) != (self.stop_sequences or []):
+            raise ChatOAuthError(
+                "per-call `stop` differs from the instance's stop_sequences — set it "
+                "on the ChatOAuth instance so generation_config() records it in the "
+                "artifact (Carnot, cage-match #6 round 7). Accepting it here would "
+                "change generation without changing the recorded config.")
+        if self.stop_sequences:
+            body["stop_sequences"] = list(self.stop_sequences)
 
         payload = self._post(body)
 
@@ -252,7 +264,19 @@ class ChatOAuth(BaseChatModel):
                 f"unexpected non-text content block(s) {unexpected} (model={self.model}) — "
                 "this transport declares no tools, so a non-text block means the "
                 "tool-free premise is violated; refusing to score the text alongside it")
-        parts = [b.get("text", "") for b in blocks]
+        # `.get("text", "")` DOES NOT DEFAULT HERE (Tesla, round 7). The default
+        # fires only when the key is ABSENT; a block of {"type":"text","text":None}
+        # returns None, and "".join([None]) raises TypeError — which is not a
+        # ChatOAuthError, so the caller's handler laundered it into an abstention.
+        # The same shape-fault class the comment above declares closed, still open
+        # one line later. Check the type; do not trust a default to cover it.
+        bad = [i for i, b in enumerate(blocks) if not isinstance(b.get("text"), str)]
+        if bad:
+            raise ChatOAuthError(
+                f"text block(s) at index {bad} carry a non-string `text` "
+                f"(model={self.model}) — refusing to score a response whose text "
+                "fields this transport cannot read as text")
+        parts = [b["text"] for b in blocks]
         text = "".join(parts).rstrip()
         if payload.get("stop_reason") == "max_tokens":
             # Failing closed on an EMPTY 200 was only half the fault. A completion

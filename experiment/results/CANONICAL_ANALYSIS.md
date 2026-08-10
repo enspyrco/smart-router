@@ -15,7 +15,7 @@ Tool-free raw endpoint (ChatOAuth). `claude --print` was measured reading files 
 
 ## Do personas beat plain resampling?
 
-Three McNemar tests, not one. Every pair-vs-pair comparison available from four calls shares at least one call, so a single test cannot distinguish "no persona effect" from "the shared call thinned the discordant set". Running the same question against two different anchors is the check that the conclusion is not an artefact of the coupling (Tesla + Carnot, round 4).
+Three McNemar tests, not one. Every comparison INVOLVING THE PERSONA ARM shares a call with whatever it is compared against, so a single such test cannot distinguish "no persona effect" from "the shared call thinned the discordant set". Running the same question against two different anchors is the check that the conclusion is not an artefact of the coupling (Tesla + Carnot, round 4).
 
 | test | b | c | discordant | p | reads as |
 |---|---|---|---|---|---|

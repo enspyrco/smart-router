@@ -1,3 +1,22 @@
+# ⛔ DEFECT SPECIMEN — DO NOT CITE ANY NUMBER FROM THIS FILE
+
+This is not a result. It is evidence of a documented defect, retained so the
+mistake stays visible. See `results/CANONICAL.md`.
+
+**Why it is invalid:**
+- The sample is **150/150 physics**, labelled `mmlu_pro`. A single-category slice
+  presented as the whole benchmark. This is the defect that moved the headline
+  from +48pp to +17-25pp.
+- Only **3 calls per task** (`a1`,`a2`,`b1`) — no disjoint arm, no agree(B,B).
+- **No raw output persisted**, so it can only ever reproduce that day's parser.
+- Its economics predate the corrected price table AND the introductory-pricing
+  window, so any PROFITABLE verdict below is doubly wrong.
+
+The script now **refuses** to replay it. The original text is preserved below,
+struck through in intent if not in markup, purely so the record is complete.
+
+---
+
 # Agreement baseline — mmlu_pro, model=haiku, n=150
 
 Tool-free raw endpoint (ChatOAuth). `claude --print` was measured reading files on both tiers, so it cannot be used for a measurement whose dependent variable is agreement.

@@ -98,7 +98,7 @@ from langchain_core.messages import HumanMessage, SystemMessage  # noqa: E402
 from benchmarks.bbh import load_bbh, score_bbh  # noqa: E402
 from benchmarks.bbh_arms import PERSONA_A, PERSONA_B  # noqa: E402
 from benchmarks.mmlu_pro import ALL_CATEGORIES, load_mmlu_pro, score_mmlu_pro  # noqa: E402
-from chat_oauth import MODEL_IDS, ChatOAuth, ModelAlias  # noqa: E402
+from chat_oauth import MODEL_IDS, ChatOAuth, ChatOAuthError, ModelAlias  # noqa: E402
 
 RESULTS = Path(__file__).resolve().parent.parent / "results"
 
@@ -295,6 +295,11 @@ def break_even(cheap: ModelAlias, day: date) -> BreakEven:
 #
 # Neither is a power calculation. If a claim ever turns on one of these numbers,
 # that is the signal to do the power analysis, not to tune the constant.
+# A run is a measurement or it is a failure; it is not a measurement with a
+# broken connection folded into the numerator. 2% tolerates the odd genuine
+# transient on a shared window (429s are already retried inside the transport);
+# anything above it is a fault mode, not noise.
+TRANSPORT_ERROR_ABORT = 0.02
 MIN_CELL = 30        # minimum tasks in the correct AND wrong cells
 MIN_SCORED = 60      # minimum scored tasks before quoting r at all
 
@@ -377,12 +382,19 @@ def agreement(rows: dict, k1: str, k2: str) -> dict:
         per_task[tid] = bool(agree)
         escalate[tid] = not agree
         st["agree"] += agree
-        if x["correct"]:
+        # `is True` / `is False`, not truthiness (Tesla, round 7). A `correct`
+        # of None — a scorer that sets `answer` but leaves `correct` unset —
+        # is falsy, so it silently landed in the WRONG cell and invented
+        # mechanism mass. Neither cell is right for "unknown"; count it as an
+        # abstention, which is the honest reading and the production policy.
+        if x["correct"] is True:
             st["correct"] += 1
             st["agree_given_correct"] += agree
-        else:
+        elif x["correct"] is False:
             st["wrong"] += 1
             st["agree_given_wrong"] += agree
+        else:
+            st["indeterminate"] += 1
     return {"counts": st, "per_task": per_task, "escalate": escalate}
 
 
@@ -554,6 +566,18 @@ def main() -> None:
                          "under a different pricing regime' — explicitly, in the artifact.")
     args = ap.parse_args()
 
+    # A flag that is ACCEPTED AND IGNORED is worse than one that does not exist:
+    # the operator has positive evidence they asked for the canonical name and no
+    # evidence they did not get it. --write-canonical only means anything on the
+    # replay path, so demand the combination rather than silently dropping it
+    # (Maxwell, round 7 — the same read-as-active-while-doing-nothing class as the
+    # fail-open guard).
+    if args.write_canonical and not args.from_json:
+        raise SystemExit(
+            "--write-canonical applies to --from-json only. A fresh measurement mints a\n"
+            "new datum and its own analysis; promoting one to canonical is a deliberate\n"
+            "act — record the run, then replay it with --write-canonical.")
+
     if args.from_json:
         # Identity comes from the DATUM, not the CLI. Previously the script
         # re-loaded `--n` tasks (default 40) and reported len(tasks) as n, so a
@@ -589,8 +613,26 @@ def main() -> None:
         # mid-run quota lapse or transport fault produces precisely that shape.
         # The invariant is per-row: EVERY row carries EVERY required call.
         required = {k for _, k1, k2, _ in ARMS for k in (k1, k2)}
-        short = {tid: sorted(required - set(r)) for tid, r in rows.items() if required - set(r)}
-        if short or not rows:
+        if not rows:
+            raise SystemExit(
+                f"REFUSING TO REPLAY {args.from_json}: the datum contains NO rows. "
+                "An empty datum is a different fault from an incomplete one, and the "
+                "guard used to render it as \"0/0 rows are missing required call(s)\" "
+                "with a dangling empty sample (Maxwell, round 7).")
+        # PRESENCE OF A KEY IS NOT PRESENCE OF A CALL (Tesla, round 7). Round 6
+        # fixed "any row has b2"; the dual left open was "the key exists but the
+        # payload is a tombstone" — a row of {"a1": {}, "a2": {}, ...} satisfied
+        # `required - set(r)` and then fabricated the arm from abstentions exactly
+        # as before. Sealed door, latched window. A call counts only if it carries
+        # a scoring outcome or an explicit recorded error.
+        def _hollow(r, k):
+            call = r.get(k)
+            return (not isinstance(call, dict)
+                    or not ({"answer", "correct", "error"} & set(call)))
+        short = {tid: sorted(k for k in required if k not in r or _hollow(r, k))
+                 for tid, r in rows.items()
+                 if any(k not in r or _hollow(r, k) for k in required)}
+        if short:
             sample = list(short.items())[:3]
             raise SystemExit(
                 f"REFUSING TO REPLAY {args.from_json}: {len(short)}/{len(rows)} rows are "
@@ -612,6 +654,18 @@ def main() -> None:
         categories = dict(Counter(t.get("category", "n/a") for t in tasks))
         print(f"{len(tasks)} tasks | {gen_cfg} | categories={categories}\n")
 
+        # THE TRANSPORT'S TYPED ERRORS WERE BEING UNTYPED HERE (Tesla, round 7).
+        # chat_oauth spent five rounds making transport faults raise
+        # ChatOAuthError specifically so they could NOT be laundered into the
+        # dependent variable — and then this blanket `except Exception` wrote
+        # {answer: None}, which `agreement()` reads as an abstention. Auth death,
+        # endpoint shape faults, a mid-cohort outage: all became soft parse
+        # misses, inflating production `r (abstain escalates)`, with the process
+        # still exiting 0. All that fail-closed work, undone at the one boundary
+        # that mints the datum.
+        #
+        # Transport faults and scoring faults are different failures and are now
+        # recorded as such (`error_kind`), then counted and GATED below.
         def work(task):
             out = {}
             for key, persona in (("a1", PERSONA_A), ("a2", PERSONA_A),
@@ -623,9 +677,12 @@ def main() -> None:
                     # artifact, so "raw output is the datum" was false and a replay
                     # could only ever reproduce that day's parser (Carnot + Wu).
                     out[key] = {"correct": ok, "answer": parsed, "raw": raw}
+                except ChatOAuthError as exc:
+                    out[key] = {"correct": None, "answer": None, "raw": None,
+                                "error": repr(exc)[:200], "error_kind": "transport"}
                 except Exception as exc:                      # noqa: BLE001
                     out[key] = {"correct": None, "answer": None, "raw": None,
-                                "error": repr(exc)[:200]}
+                                "error": repr(exc)[:200], "error_kind": "scoring"}
             return task["task_id"], out
 
         rows = {}
@@ -635,6 +692,27 @@ def main() -> None:
                 rows[tid] = out
                 print(".", end="", flush=True)
         print("\n")
+
+        # EXIT CODE IS PART OF THE INSTRUMENT (Tesla, round 7). Previously a run
+        # in which every single call failed still printed dots, wrote markdown,
+        # stamped a live-looking artifact and exited 0. One bad task is noise; a
+        # permanent fault mode singing on every task is not a measurement, and a
+        # measurement harness that cannot say "this did not work" will eventually
+        # be believed when it shouldn't be.
+        calls = [c for r in rows.values() for c in r.values()]
+        n_transport = sum(1 for c in calls if c.get("error_kind") == "transport")
+        n_scoring = sum(1 for c in calls if c.get("error_kind") == "scoring")
+        if calls and n_transport / len(calls) > TRANSPORT_ERROR_ABORT:
+            raise SystemExit(
+                f"ABORTING: {n_transport}/{len(calls)} calls ({n_transport/len(calls)*100:.0f}%) "
+                f"failed at the TRANSPORT layer, above the {TRANSPORT_ERROR_ABORT*100:.0f}% "
+                "ceiling. These are not abstentions — folding them into r would report a "
+                "broken connection as model disagreement. Nothing was written; fix the "
+                "transport and re-run.")
+        if n_transport or n_scoring:
+            print(f"  NOTE: {n_transport} transport / {n_scoring} scoring failures "
+                  f"across {len(calls)} calls — recorded with `error_kind`, and "
+                  "escalated by production policy rather than silently dropped.\n")
 
     # ---- Resolve the pricing date. Precedence, most explicit first. ----
     # The economics verdict must be a pure function of (rows, pricing_as_of).
@@ -761,8 +839,8 @@ def main() -> None:
                  f"{a['separation']*100:+.0f}pp | {a['verdict']} | {a['mechanism_verdict']} |")
 
     L += ["", "## Do personas beat plain resampling?", "",
-          "Three McNemar tests, not one. Every pair-vs-pair comparison available from "
-          "four calls shares at least one call, so a single test cannot distinguish "
+          "Three McNemar tests, not one. Every comparison INVOLVING THE PERSONA ARM shares "
+          "a call with whatever it is compared against, so a single such test cannot distinguish "
           "\"no persona effect\" from \"the shared call thinned the discordant set\". "
           "Running the same question against two different anchors is the check that "
           "the conclusion is not an artefact of the coupling (Tesla + Carnot, round 4).",
