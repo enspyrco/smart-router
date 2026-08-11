@@ -210,12 +210,27 @@ class TopTier:
 
 BreakEven = Escalation | TopTier
 
-# INPUT prices alone are sufficient here, which is a claim worth justifying
-# rather than assuming. Total cost is in_tok*p_in + out_tok*p_out, and every
-# tier — including intro sonnet — prices output at exactly 5x input. So p_out
-# factors out and the break-even ratio is unchanged, PROVIDED the token mix is
-# comparable across tiers. It is, since all arms answer the same benchmark item.
-# If a future tier breaks the 5x ratio this shortcut dies with it.
+# ⚠️ THE ECONOMICS IS A PRICE-RATIO APPROXIMATION, NOT A MEASURED COST VERDICT.
+# This is the honest scope, and it went unstated for nine rounds (Carnot, round 9).
+#
+# The argument for using input prices alone: total cost is in_tok*p_in +
+# out_tok*p_out; every tier — including intro sonnet — prices output at exactly
+# 5x input; so p_out factors out and the ratio is unchanged PROVIDED the token
+# mix is comparable across tiers.
+#
+# That proviso is ASSUMED, NOT MEASURED. The transport discards the API's usage
+# metadata and the datum stores only answer/correct/raw, so no input or output
+# token counts exist anywhere in this repo. The real break-even condition is
+# `2 * cheap_FULL_CALL >= expensive_FULL_CALL`; what is actually computed is
+# `2 * cheap_INPUT_PRICE >= expensive_INPUT_PRICE`. Those coincide only under the
+# unverified mix assumption — and the tiers plausibly differ in output length,
+# which is exactly the term that would break it.
+#
+# So every economics verdict this file prints is an approximation from published
+# prices. It is a reasonable approximation and it is not a measurement. Recording
+# per-call usage would make it one; that is real work and a separate change, and
+# claiming the stronger thing in the meantime is how this file's other numbers
+# went wrong. Verdicts are labelled `(price-ratio approx)` accordingly.
 
 
 def prices_on(day: date) -> tuple[dict[ModelAlias, float], str]:
@@ -309,6 +324,9 @@ def break_even(cheap: ModelAlias, day: date) -> BreakEven:
 # 2% of 840 calls is ~17. Revisit against measured transient rates rather than
 # tuning it to make a particular run pass.
 TRANSPORT_ERROR_ABORT = 0.02
+# Same argument, other layer. A scorer that fails on a few odd outputs is
+# ordinary; one failing on a fifth of them is broken, not observant.
+SCORING_ERROR_ABORT = 0.20
 MIN_CELL = 30        # minimum tasks in the correct AND wrong cells
 MIN_SCORED = 60      # minimum scored tasks before quoting r at all
 
@@ -424,24 +442,35 @@ def agreement(rows: dict, k1: str, k2: str) -> dict:
             st["abstained"] += 1
             escalate[tid] = True
             continue
+        # THE CHECK HAS TO HAPPEN BEFORE THE COUNT (Carnot, round 9). Round 7
+        # stopped an indeterminate `correct` landing in the WRONG cell, but did it
+        # AFTER `scored += 1` and after publishing `escalate[tid]` — so the task
+        # still entered r, the Wilson intervals and McNemar, and only its cell
+        # assignment was skipped. The adjacent comment said "count it as an
+        # abstention"; the code counted it as scored. Verified: scored=1,
+        # indeterminate=1, correct=0, wrong=0, with escalate published.
+        #
+        # Moving the check out of the wrong cell was half the fix. A task whose
+        # correctness is unknown cannot be evidence about whether agreement
+        # predicts correctness, and it should not be silently supplying an
+        # escalation decision either.
+        if x["correct"] not in (True, False):
+            st["indeterminate"] += 1
+            continue
+
         st["scored"] += 1
         agree = x["answer"] == y["answer"]
         per_task[tid] = bool(agree)
         escalate[tid] = not agree
         st["agree"] += agree
-        # `is True` / `is False`, not truthiness (Tesla, round 7). A `correct`
-        # of None — a scorer that sets `answer` but leaves `correct` unset —
-        # is falsy, so it silently landed in the WRONG cell and invented
-        # mechanism mass. Neither cell is right for "unknown"; count it as an
-        # abstention, which is the honest reading and the production policy.
-        if x["correct"] is True:
+        # Reached only when `correct` is a genuine bool — the indeterminate case
+        # exits above, before anything is counted (Tesla round 7, Carnot round 9).
+        if x["correct"]:
             st["correct"] += 1
             st["agree_given_correct"] += agree
-        elif x["correct"] is False:
+        else:
             st["wrong"] += 1
             st["agree_given_wrong"] += agree
-        else:
-            st["indeterminate"] += 1
     return {"counts": st, "per_task": per_task, "escalate": escalate}
 
 
@@ -476,15 +505,15 @@ def summarise(label: str, res: dict, echo_accept: bool, be: BreakEven) -> dict:
             case TopTier():
                 cost = f"N/A — {be.note}"
             case Escalation(threshold=thr) if thr <= 0:
-                cost = f"NOT PROFITABLE AT ANY r — {be.note}"
+                cost = f"NOT PROFITABLE AT ANY r (price-ratio approx) — {be.note}"
             case Escalation(threshold=thr) if e_hi < thr:
-                cost = (f"PROFITABLE — production 95% upper bound "
+                cost = (f"PROFITABLE (price-ratio approx) — production 95% upper bound "
                         f"{e_hi*100:.0f}% < {thr*100:.0f}%")
             case Escalation(threshold=thr) if e_lo > thr:
-                cost = (f"NOT PROFITABLE — production 95% lower bound "
+                cost = (f"NOT PROFITABLE (price-ratio approx) — production 95% lower bound "
                         f"{e_lo*100:.0f}% > {thr*100:.0f}%")
             case Escalation(threshold=thr):
-                cost = (f"INDETERMINATE — production 95% CI "
+                cost = (f"INDETERMINATE (price-ratio approx) — production 95% CI "
                         f"[{e_lo*100:.0f}%, {e_hi*100:.0f}%] "
                         f"straddles the {thr*100:.0f}% break-even")
             case _:
@@ -551,15 +580,28 @@ def summarise(label: str, res: dict, echo_accept: bool, be: BreakEven) -> dict:
     # an invisible one, in a file whose whole ethic is that nothing vanishes
     # quietly. Both exclusions are now reported: `correct + wrong < scored` is
     # visible rather than a silently thinned stratum.
+    # `decided` is the arm's OWN task set — scored + abstained. Exclusions
+    # (transport, indeterminate) mean arms no longer share one population, so
+    # marginal rates across arms sit on different denominators. McNemar is safe
+    # (it intersects the two escalate maps), but the table is read side by side
+    # and must not imply a shared denominator it no longer has (Maxwell, round 9).
     return dict(label=label, scored=st["scored"], abstained=st["abstained"],
+                decided=st["scored"] + st["abstained"],
                 indeterminate=st["indeterminate"],
                 transport_excluded=st["transport_excluded"],
                 correct=st["correct"], wrong=st["wrong"],
                 escalation_rate=r, escalation_rate_ci=[r_lo, r_hi],
                 escalation_rate_abstain_escalates=r_escalate,
                 escalation_rate_production_ci=[e_lo, e_hi], echo_accept_path=echo_accept,
-                p_agree_given_correct=pac, p_agree_given_wrong=paw,
-                separation=pac - paw, separation_ci=[sep_lo, sep_hi],
+                # P(agree|correct) on a non-accept ordering is not the Echo
+                # premise, so its separation is not the mechanism number — and
+                # printing it in the same column as the ones that ARE invites
+                # exactly the mis-citation the n/a cell is meant to prevent
+                # (Tesla, round 9). Suppressed at the source, not in the prose.
+                p_agree_given_correct=(pac if echo_accept else None),
+                p_agree_given_wrong=(paw if echo_accept else None),
+                separation=((pac - paw) if echo_accept else None),
+                separation_ci=([sep_lo, sep_hi] if echo_accept else None),
                 verdict=cost, mechanism_verdict=mech)
 
 
@@ -704,6 +746,18 @@ def main() -> None:
                 "partially-failed run. Re-analysing it would fabricate the missing arm "
                 "from abstentions and reprint superseded numbers under a fresh timestamp.")
 
+        # The tier is a sealed type on the fresh path (`choices=sorted(MODEL_IDS)`)
+        # and was an open string at the datum boundary — a replay took whatever the
+        # artifact said and only tripped `break_even`'s check later, as an uncaught
+        # ValueError rather than a refusal in the same voice as every other replay
+        # guard (Tesla, round 9).
+        if model_name not in MODEL_IDS:
+            raise SystemExit(
+                f"REFUSING TO REPLAY {args.from_json}: it records model "
+                f"{model_name!r}, which is not one of {sorted(MODEL_IDS)}. The pricing "
+                "and transport paths are both keyed to that closed set, so economics "
+                "for an unknown tier would be unpriced or invented.")
+
         print(f"re-analysing {len(rows)} saved rows from {args.from_json}")
         print(f"  identity from datum: benchmark={benchmark} model={model_name} "
               f"categories={categories}\n")
@@ -780,6 +834,17 @@ def main() -> None:
                 "ceiling. These are not abstentions — folding them into r would report a "
                 "broken connection as model disagreement. Nothing was written; fix the "
                 "transport and re-run.")
+        # Transport had a fuse; scoring hummed to exit 0 (Tesla, round 9). A broken
+        # scorer or benchmark wire produced scored=0, abstained~=N, r=100%,
+        # economics INSUFFICIENT — and returned success. One air gap is not a closed
+        # circuit: an instrument that can sing while measuring nothing will be
+        # believed eventually.
+        if calls and n_scoring / len(calls) > SCORING_ERROR_ABORT:
+            raise SystemExit(
+                f"ABORTING: {n_scoring}/{len(calls)} calls ({n_scoring/len(calls)*100:.0f}%) "
+                f"failed at the SCORING layer, above the {SCORING_ERROR_ABORT*100:.0f}% "
+                "ceiling. A systematic scoring failure is a broken instrument, not a "
+                "measurement of abstention. Nothing was written.")
         if n_transport or n_scoring:
             print(f"  NOTE: {n_transport} transport / {n_scoring} scoring failures "
                   f"across {len(calls)} calls — recorded with `error_kind`, and "
@@ -897,19 +962,23 @@ def main() -> None:
          "Tool-free raw endpoint (ChatOAuth). `claude --print` was measured reading "
          "files on both tiers, so it cannot be used for a measurement whose dependent "
          "variable is agreement.", "",
-         "| arm | scored | correct | wrong | indet | abstained | txp-excl | r | r 95% CI | "
+         "| arm | decided | scored | correct | wrong | indet | abstained | txp-excl | r | r 95% CI | "
          "r (abstain escalates) | P(agree\\|correct) | P(agree\\|wrong) | separation | "
          "economics | mechanism |",
-         "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
+         "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
+    # Non-accept arms carry None for the mechanism columns; render them n/a
+    # rather than crashing or printing a misleading 0.
+    _pc = lambda v: "n/a" if v is None else f"{v*100:.0f}%"
+    _pp = lambda v: "n/a" if v is None else f"{v*100:+.0f}pp"
     for a in summaries.values():
         lo, hi = a["escalation_rate_ci"]
-        L.append(f"| {a['label']} | {a['scored']} | {a['correct']} | {a['wrong']} | "
+        L.append(f"| {a['label']} | {a['decided']} | {a['scored']} | {a['correct']} | {a['wrong']} | "
                  f"{a['indeterminate']} | {a['abstained']} | {a['transport_excluded']} | "
                  f"**{a['escalation_rate']*100:.0f}%** | "
                  f"[{lo*100:.0f}%, {hi*100:.0f}%] | "
                  f"{a['escalation_rate_abstain_escalates']*100:.0f}% | "
-                 f"{a['p_agree_given_correct']*100:.0f}% | {a['p_agree_given_wrong']*100:.0f}% | "
-                 f"{a['separation']*100:+.0f}pp | {a['verdict']} | {a['mechanism_verdict']} |")
+                 f"{_pc(a['p_agree_given_correct'])} | {_pc(a['p_agree_given_wrong'])} | "
+                 f"{_pp(a['separation'])} | {a['verdict']} | {a['mechanism_verdict']} |")
 
     L += ["", "## Do personas beat plain resampling?", "",
           "Three McNemar tests, not one. Every comparison INVOLVING THE PERSONA ARM shares "
@@ -992,6 +1061,13 @@ def main() -> None:
           "persona arm; it is the agree(B,B) measurement that was previously missing.",
           "",
           "## Reading the numbers", "",
+          "- **The economics is a PRICE-RATIO APPROXIMATION, not a measured cost verdict.** "
+          "No per-call token usage is recorded anywhere in this repo, so the real "
+          "condition `2 x cheap_full_call >= expensive_full_call` is approximated by "
+          "`2 x cheap_input_price >= expensive_input_price`. Those coincide only if the "
+          "input/output token mix is comparable across tiers — assumed, never measured, "
+          "and output length is exactly the term that would break it. Every verdict below "
+          "is labelled accordingly.",
           "- **Economics gates on `r (abstain escalates)`** — the production rate — and "
           "specifically on the Wilson UPPER bound of that rate vs the break-even, never "
           "on a point estimate and never on the flattering abstentions-dropped `r`. An "

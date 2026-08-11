@@ -85,7 +85,12 @@ MODEL_IDS: dict[ModelAlias, str] = {
 # x-should-retry: true. Raising immediately converts a rate limit into MISSING
 # DATA in any caller that catches exceptions per-task -- and 429s cluster in
 # time, so the dropped set is not random. Retry with jittered backoff instead.
-RETRY_STATUSES = {429, 500, 502, 503, 504}
+# 529 is Anthropic's `overloaded_error` and is explicitly retryable — it was
+# absent, so a transient shared-capacity wobble became error_kind=transport,
+# thinned arms asymmetrically, and could abort a stratified cohort that would
+# have survived five jittered sleeps (Tesla, round 9). 429 was sealed for
+# exactly this reason; 529 is the same event in a different register.
+RETRY_STATUSES = {429, 500, 502, 503, 504, 529}
 MAX_RETRIES = 5
 
 
