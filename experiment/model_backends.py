@@ -137,20 +137,94 @@ class OpenAIBackend(Backend):
         return Reply(text, usage.prompt_tokens, usage.completion_tokens, latency)
 
 
+def _free_ram_gb() -> float | None:
+    """Physical RAM currently free, or None if it cannot be determined."""
+    try:  # Linux / most POSIX
+        return (os.sysconf("SC_AVPHYS_PAGES") * os.sysconf("SC_PAGE_SIZE")) / 1e9
+    except (AttributeError, ValueError, OSError):
+        pass
+    try:  # Windows
+        import ctypes
+
+        class _MemStatus(ctypes.Structure):
+            _fields_ = [("dwLength", ctypes.c_ulong), ("dwMemoryLoad", ctypes.c_ulong),
+                        ("ullTotalPhys", ctypes.c_ulonglong), ("ullAvailPhys", ctypes.c_ulonglong),
+                        ("ullTotalPageFile", ctypes.c_ulonglong), ("ullAvailPageFile", ctypes.c_ulonglong),
+                        ("ullTotalVirtual", ctypes.c_ulonglong), ("ullAvailVirtual", ctypes.c_ulonglong),
+                        ("ullAvailExtendedVirtual", ctypes.c_ulonglong)]
+
+        status = _MemStatus()
+        status.dwLength = ctypes.sizeof(_MemStatus)
+        ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(status))
+        return status.ullAvailPhys / 1e9
+    except Exception:
+        return None
+
+
 class TransformersBackend(Backend):
-    """Local torch. On CPU expect a few tokens/sec — prototyping only."""
+    """Local torch. Prototyping only — on a CPU expect a few tokens/sec.
+
+    Memory is the binding constraint, not speed. ``from_pretrained`` defaults to
+    float32 on CPU, which doubles the weight footprint for no accuracy benefit
+    at inference, so this pins bfloat16 and refuses to start if the machine
+    clearly cannot hold the model. Swapping a language model to disk does not
+    "run slowly" — it makes the whole machine unusable.
+
+    For anything beyond a smoke test, use a quantised model through the Ollama
+    backend instead: 4-bit weights are roughly a quarter the size and llama.cpp
+    is far better at CPU inference than torch.
+    """
 
     name = "transformers"
+    # Activations, KV cache, tokenizer and framework overhead on top of weights.
+    OVERHEAD_GB = 1.5
 
-    def __init__(self, model: str, temperature: float = 0.0, max_new_tokens: int = 1024):
+    def __init__(self, model: str, temperature: float = 0.0, max_new_tokens: int = 1024,
+                 dtype: str = "bfloat16", skip_memory_check: bool = False):
         super().__init__(model, temperature)
         self.max_new_tokens = max_new_tokens
         try:
+            import torch
             from transformers import AutoModelForCausalLM, AutoTokenizer
         except ImportError as exc:
-            raise RuntimeError("transformers not installed") from exc
+            raise RuntimeError("transformers/torch not installed") from exc
+
+        if not skip_memory_check:
+            self._preflight(model)
+
         self._tok = AutoTokenizer.from_pretrained(model)
-        self._model = AutoModelForCausalLM.from_pretrained(model, device_map="auto")
+        self._model = AutoModelForCausalLM.from_pretrained(
+            model,
+            dtype=getattr(torch, dtype),
+            low_cpu_mem_usage=True,
+        )
+        self._model.eval()
+
+    def _preflight(self, model: str) -> None:
+        """Refuse to load a model that plainly will not fit in free RAM."""
+        free = _free_ram_gb()
+        if free is None:
+            return
+        try:
+            from huggingface_hub import model_info
+            total = sum(s.size or 0 for s in model_info(model, files_metadata=True).siblings
+                        if s.rfilename.endswith(".safetensors"))
+        except Exception:
+            return
+        if not total:
+            return
+        # Repo files are usually bf16 already; assume the on-disk size is the
+        # in-memory weight size and add headroom for everything else.
+        need = total / 1e9 + self.OVERHEAD_GB
+        if need > free:
+            raise RuntimeError(
+                f"{model} needs about {need:.1f} GB but only {free:.1f} GB of RAM is free.\n"
+                f"Loading it would swap to disk and stall the machine.\n"
+                f"Options: close other applications; use a smaller model; or run a\n"
+                f"quantised build through Ollama (--backend ollama), which needs "
+                f"roughly a quarter of this.\n"
+                f"Override with skip_memory_check=True only if you know the figure is wrong."
+            )
 
     def chat(self, system: str, user: str) -> Reply:
         messages = [{"role": "system", "content": system}, {"role": "user", "content": user}]
