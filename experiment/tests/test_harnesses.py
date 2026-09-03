@@ -4,21 +4,27 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from harnesses import ANSWER_CONTRACT, H0
+from harnesses import H0, H1, HARNESSES, H_ANSWER_FIRST
 
 
 class TestAnswerContract(unittest.TestCase):
-    def test_requires_answer_before_reasoning(self):
-        self.assertIn("Begin your reply", ANSWER_CONTRACT)
-        self.assertLess(ANSWER_CONTRACT.index("Answer: X"),
-                        ANSWER_CONTRACT.index("reasoning"))
+    def test_h0_retains_original_answer_last_contract(self):
+        self.assertIn("End your reply", H0.answer_contract)
+        self.assertLess(H0.system.index("reasoning"),
+                        H0.system.index("final answer"))
 
-    def test_limits_reasoning_length(self):
-        self.assertIn("eight concise sentences", ANSWER_CONTRACT)
+    def test_h1_limits_reasoning_and_keeps_answer_last(self):
+        self.assertIn("eight concise sentences", H1.answer_contract)
+        self.assertIn("Then end your reply", H1.answer_contract)
+        self.assertLess(H1.system.index("brief reasoning"),
+                        H1.system.index("final answer"))
 
-    def test_h0_requests_answer_first(self):
-        self.assertLess(H0.system.index("final answer"),
-                        H0.system.index("brief reasoning"))
+    def test_answer_first_experiment_is_preserved_separately(self):
+        self.assertIn("Begin your reply", H_ANSWER_FIRST.answer_contract)
+        self.assertIn("H-answer-first", HARNESSES)
+
+    def test_all_variants_are_registered(self):
+        self.assertEqual(set(HARNESSES), {"H0", "H1", "H-answer-first"})
 
 
 if __name__ == "__main__":
