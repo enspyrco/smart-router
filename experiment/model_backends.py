@@ -61,9 +61,15 @@ class Backend:
 class OllamaBackend(Backend):
     name = "ollama"
 
-    def __init__(self, model: str, temperature: float = 0.0, base_url: str | None = None):
+    def __init__(self, model: str, temperature: float = 0.0, base_url: str | None = None,
+                 think: bool = False):
         super().__init__(model, temperature)
         self.base_url = (base_url or DEFAULT_OLLAMA_URL).rstrip("/")
+        # Reasoning models can spend the entire generation budget in the
+        # hidden thinking channel and return an empty answer. Harness runs
+        # measure the visible answer, so thinking is opt-in and frozen across
+        # every question in a run.
+        self.think = think
 
     def chat(self, system: str, user: str) -> Reply:
         payload = json.dumps({
@@ -73,6 +79,7 @@ class OllamaBackend(Backend):
                 {"role": "user", "content": user},
             ],
             "stream": False,
+            "think": self.think,
             "options": {"temperature": self.temperature},
         }).encode()
         req = urllib.request.Request(
