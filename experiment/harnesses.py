@@ -19,14 +19,17 @@ from typing import Callable
 
 from benchmarks.bbh import extract_choice
 
-# Every harness ends with this instruction. The answer line is a *scoring*
+# Every harness includes this instruction. The answer line is a *scoring*
 # requirement, not a prompting technique — without a parseable answer an
 # otherwise-correct response scores zero, which would confound harness quality
-# with output-format compliance. Keep it identical across harnesses.
+# with output-format compliance. It comes first so a slow local model cannot
+# lose an otherwise-correct answer when its reasoning hits the output limit.
+# Keep it identical across harnesses.
 ANSWER_CONTRACT = (
-    "End your reply with exactly one line:\n"
+    "Begin your reply with exactly one line:\n"
     "Answer: X\n"
-    "where X is the letter of the correct choice."
+    "where X is the letter of the correct choice. Then give no more than "
+    "eight concise sentences of reasoning."
 )
 
 
@@ -62,8 +65,8 @@ H0 = Harness(
         "Solve the following multiple-choice question.\n\n"
         "Think through the problem carefully.\n"
         "Return:\n"
-        "1. reasoning\n"
-        "2. final answer"
+        "1. final answer\n"
+        "2. brief reasoning"
     ),
     template=("{question}\n\nChoices:\n{choices}\n\n{answer_contract}"),
 )
