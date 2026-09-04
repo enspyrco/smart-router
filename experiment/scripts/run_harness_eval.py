@@ -68,7 +68,16 @@ def run_one(task: dict, harness, backend) -> dict:
         "correct_answer": task["gold"],
     }
     try:
-        reply = backend.chat(harness.system, harness.render(task))
+        user_prompt = harness.render(task)
+        if harness.name == "H2-MCP":
+            from mcp_retrieval import retrieve_cs_context
+            context = retrieve_cs_context(task["question"])
+            record["retrieved_context"] = context
+            user_prompt = (
+                "Reference material retrieved through MCP:\n\n"
+                f"{context}\n\n---\n\n{user_prompt}"
+            )
+        reply = backend.chat(harness.system, user_prompt)
     except Exception as exc:
         return {**record, "reasoning": "", "answer": None, "correct": False,
                 "latency": 0.0, "tokens": 0, "error": f"{type(exc).__name__}: {exc}"}

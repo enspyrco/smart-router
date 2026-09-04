@@ -4,7 +4,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from harnesses import H0, H1, HARNESSES, H_ANSWER_FIRST
+from harnesses import H0, H1, H2_MCP, HARNESSES, H_ANSWER_FIRST
 
 
 class TestAnswerContract(unittest.TestCase):
@@ -24,7 +24,12 @@ class TestAnswerContract(unittest.TestCase):
         self.assertIn("H-answer-first", HARNESSES)
 
     def test_all_variants_are_registered(self):
-        self.assertEqual(set(HARNESSES), {"H0", "H1", "H-answer-first"})
+        self.assertEqual(
+            set(HARNESSES), {"H0", "H1", "H2-MCP", "H-answer-first"}
+        )
+
+    def test_mcp_variant_is_clearly_open_book(self):
+        self.assertIn("Open-book", H2_MCP.notes)
 
 
 if __name__ == "__main__":

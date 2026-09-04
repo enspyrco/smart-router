@@ -10,4 +10,5 @@ dependencies = [
   "datasets>=2.14",
   "langchain-openai>=0.3",
   "langchain-google-genai>=2.0",
+  "mcp>=2,<3",
 ]

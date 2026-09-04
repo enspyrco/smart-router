@@ -110,11 +110,28 @@ H_ANSWER_FIRST = Harness(
     answer_contract=ANSWER_FIRST_CONTRACT,
 )
 
+H2_MCP = Harness(
+    name="H2-MCP",
+    notes="Open-book variant of H1. A single MCP retrieval result is prepended "
+    "by the runner; retrieved passages may be irrelevant and must be checked.",
+    system=(
+        "Solve the following multiple-choice question using the supplied reference "
+        "material when it is relevant. Ignore any irrelevant or conflicting passages.\n\n"
+        "Think through the problem carefully but briefly.\n"
+        "Return:\n"
+        "1. brief reasoning\n"
+        "2. final answer"
+    ),
+    template=("{question}\n\nChoices:\n{choices}\n\n{answer_contract}"),
+    answer_contract=CONCISE_ANSWER_CONTRACT,
+)
+
 
 HARNESSES: dict[str, Harness] = {
     "H0": H0,
     "H1": H1,
     "H-answer-first": H_ANSWER_FIRST,
+    "H2-MCP": H2_MCP,
 }
 
 

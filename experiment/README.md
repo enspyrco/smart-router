@@ -250,6 +250,23 @@ Files: `benchmarks/mmlu_pro.py`, `scripts/inspect_mmlu_pro.py`, `scripts/run_mml
 
 Advanced analysis: `scripts/analyze_mmlu_pro.py` reports per-category pass rate, escalation rate, cost per task, pass-rate gap vs `sonnet-only`, oracle diagnostics (`false_accept_rate`, `false_escalation_rate`, `oracle_alignment`) when `echo-oracle` is included, and category-specialist probes. `--report` writes a Markdown report next to the JSONL file.
 
+### Open-book MCP retrieval experiment
+
+`H2-MCP` searches Wikipedia through a local read-only stdio MCP server, prepends
+up to three short sourced passages, and then asks the same frozen model to
+answer. This is an open-book retrieval result and must not be pooled with the
+closed-book H0/H1 baseline.
+
+```bash
+pip install -e .
+python scripts/run_harness_eval.py \
+  --category "computer science" --harness H2-MCP \
+  --backend ollama --model qwen3.5:4b --split dev --limit 1
+```
+
+The retrieved text is saved in each JSONL row as `retrieved_context` for audit.
+The OCI instance needs outbound HTTPS access to `en.wikipedia.org`.
+
 ## Layout
 
 ```
